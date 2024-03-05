@@ -1,0 +1,32 @@
+[gd_scene load_steps=2 format=3 uid="uid://bu6aptssesab"]
+
+[ext_resource type="Script" path="res://addons/picky_pixels/tabs/color_picker.gd" id="1_pbdti"]
+
+[node name="ColorPicker" type="Control"]
+custom_minimum_size = Vector2(76, 56)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 76.0
+offset_bottom = 56.0
+script = ExtResource("1_pbdti")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "Color 1"
+
+[node name="ColorPickerButton" type="ColorPickerButton" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+grow_horizontal = 2
+grow_vertical = 0
+edit_alpha = false
+
+[connection signal="color_changed" from="ColorPickerButton" to="." method="_on_color_picker_button_color_changed"]
