@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://b76ylo04w0a53"]
 
-[ext_resource type="PackedScene" uid="uid://bu6aptssesab" path="res://addons/picky_pixels/tabs/color_picker.tscn" id="1_8aa2l"]
-[ext_resource type="Script" path="res://addons/picky_pixels/tabs/config.gd" id="1_whsxy"]
+[ext_resource type="PackedScene" uid="uid://bu6aptssesab" path="res://addons/picky-pixels/tabs/color_picker.tscn" id="1_8aa2l"]
+[ext_resource type="Script" path="res://addons/picky-pixels/tabs/config.gd" id="1_whsxy"]
 
 [node name="Config" type="VBoxContainer"]
 anchors_preset = 15

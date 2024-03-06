@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bu6aptssesab"]
 
-[ext_resource type="Script" path="res://addons/picky_pixels/tabs/color_picker.gd" id="1_pbdti"]
+[ext_resource type="Script" path="res://addons/picky-pixels/tabs/color_picker.gd" id="1_pbdti"]
 
 [node name="ColorPicker" type="Control"]
 custom_minimum_size = Vector2(48, 48)

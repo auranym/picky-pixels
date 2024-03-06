@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://b4gf4ih7xjhw"]
 
-[ext_resource type="Script" path="res://addons/picky_pixels/texture_display.gd" id="1_lj1im"]
+[ext_resource type="Script" path="res://addons/picky-pixels/texture_display.gd" id="1_lj1im"]
 
 [node name="TextureDisplay" type="TextureRect"]
 custom_minimum_size = Vector2(300, 300)

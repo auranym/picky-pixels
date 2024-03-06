@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bojmrkju73ous"]
 
-[ext_resource type="Script" path="res://addons/picky_pixels/main_tab_bar.gd" id="1_j5hso"]
+[ext_resource type="Script" path="res://addons/picky-pixels/main_tab_bar.gd" id="1_j5hso"]
 
 [node name="MainTabBar" type="TabBar"]
 anchors_preset = 10
