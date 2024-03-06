@@ -11,7 +11,7 @@ func _on_spin_box_value_changed(value):
 	if value_diff > 0:
 		for i in value_diff:
 			var new_color_picker = COLOR_PICKER.instantiate()
-			new_color_picker.label = "Color " + str(_color_picker_container.get_child_count() + 1)
+			new_color_picker.label = str(_color_picker_container.get_child_count() + 1)
 			_color_picker_container.add_child(new_color_picker)
 	elif value_diff < 0:
 		_color_picker_container.get_children()

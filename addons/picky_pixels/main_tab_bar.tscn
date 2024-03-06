@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=3 uid="uid://bojmrkju73ous"]
+
+[ext_resource type="Script" path="res://addons/picky_pixels/main_tab_bar.gd" id="1_j5hso"]
+
+[node name="MainTabBar" type="TabBar"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 31.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+tab_count = 2
+tab_0/title = "Library"
+tab_1/title = "aaa"
+script = ExtResource("1_j5hso")
+
+[node name="Panel" type="Panel" parent="."]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[connection signal="tab_changed" from="." to="." method="_on_tab_changed"]

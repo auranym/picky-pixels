@@ -37,6 +37,8 @@ rounded = true
 
 [node name="ColorPickerContainer" type="HFlowContainer" parent="ScrollContainer/Config"]
 layout_mode = 2
+theme_override_constants/h_separation = -4
+theme_override_constants/v_separation = -4
 
 [node name="ColorPicker" parent="ScrollContainer/Config/ColorPickerContainer" instance=ExtResource("1_8aa2l")]
 layout_mode = 2
