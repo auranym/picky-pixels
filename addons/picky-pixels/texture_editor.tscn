@@ -1,9 +1,113 @@
-[gd_scene format=3 uid="uid://tcurvcy3fb28"]
+[gd_scene load_steps=4 format=3 uid="uid://cpmt878i3wdqs"]
 
-[node name="TextureEditor" type="Control"]
-layout_mode = 3
+[ext_resource type="PackedScene" uid="uid://b4gf4ih7xjhw" path="res://addons/picky-pixels/texture_display.tscn" id="1_2oxtw"]
+[ext_resource type="Script" path="res://addons/picky-pixels/texture_editor.gd" id="1_jve4u"]
+[ext_resource type="PackedScene" uid="uid://xpv16bu7ythy" path="res://addons/picky-pixels/light_level_tab.tscn" id="2_mhxwg"]
+
+[node name="TextureEditor" type="VBoxContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+alignment = 2
+script = ExtResource("1_jve4u")
+
+[node name="Main" type="HBoxContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="LightLevelData" type="Control" parent="Main"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TextureDisplay" parent="Main/LightLevelData" instance=ExtResource("1_2oxtw")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Main/LightLevelData"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -112.0
+offset_top = 12.0
+offset_right = -12.0
+offset_bottom = -12.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="LightLevelsTabs" type="VBoxContainer" parent="Main/LightLevelData/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LightLevelTab" parent="Main/LightLevelData/ScrollContainer/LightLevelsTabs" instance=ExtResource("2_mhxwg")]
+layout_mode = 2
+
+[node name="Config" type="VBoxContainer" parent="Main"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+
+[node name="LightLevelsConfig" type="HBoxContainer" parent="Main/Config"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Main/Config/LightLevelsConfig"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Light Levels"
+
+[node name="SpinBox" type="SpinBox" parent="Main/Config/LightLevelsConfig"]
+layout_mode = 2
+min_value = 1.0
+max_value = 16.0
+value = 1.0
+rounded = true
+alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="Main/Config"]
+layout_mode = 2
+
+[node name="ColorRampsIndicator" type="HBoxContainer" parent="Main/Config"]
+layout_mode = 2
+tooltip_text = "Color behavior for each pixel at each light level is stored by generating and assigning a color ramp to that pixel. This color ramp encodes the behavior of that pixel for each light level. Since this data is stored in a pixel's color value, there are a limited number of possible values that the color could be, so there is a cap on the number of color ramps.
+
+If you are running out of color ramps, consider using less colors in your palette or decrease the number of light levels."
+
+[node name="Label" type="Label" parent="Main/Config/ColorRampsIndicator"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Color Ramps Used:"
+
+[node name="Indicator" type="Label" parent="Main/Config/ColorRampsIndicator"]
+layout_mode = 2
+text = "0/256"
+
+[node name="Warning" type="Label" parent="."]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.870588, 0.4, 1)
+text = "Textures must be the same dimensions"
+horizontal_alignment = 1
+
+[node name="Buttons" type="HBoxContainer" parent="."]
+layout_mode = 2
+alignment = 1
+
+[node name="Save" type="Button" parent="Buttons"]
+layout_mode = 2
+text = "Save"
+
+[node name="Cancel" type="Button" parent="Buttons"]
+layout_mode = 2
+text = "Cancel"
+
+[connection signal="value_changed" from="Main/Config/LightLevelsConfig/SpinBox" to="." method="_on_light_level_value_changed"]

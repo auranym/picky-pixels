@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://xpv16bu7ythy"]
+
+[ext_resource type="Texture2D" uid="uid://5uojm5hpdmbq" path="res://addons/picky-pixels/light_layer_icon.png" id="1_6juv8"]
+
+[node name="LightLevelTab" type="Button"]
+offset_right = 38.0
+offset_bottom = 31.0
+toggle_mode = true
+text = "1"
+icon = ExtResource("1_6juv8")

@@ -1,7 +1,7 @@
 @tool
 extends VBoxContainer
 
-const COLOR_PICKER = preload("res://addons/picky_pixels/tabs/color_picker.tscn")
+const COLOR_PICKER = preload("res://addons/picky-pixels/tabs/color_picker.tscn")
 
 @onready var _color_picker_container = $ScrollContainer/Config/ColorPickerContainer
 
