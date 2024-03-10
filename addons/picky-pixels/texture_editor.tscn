@@ -1,8 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://cpmt878i3wdqs"]
+[gd_scene load_steps=3 format=3 uid="uid://cpmt878i3wdqs"]
 
 [ext_resource type="PackedScene" uid="uid://b4gf4ih7xjhw" path="res://addons/picky-pixels/texture_display.tscn" id="1_2oxtw"]
 [ext_resource type="Script" path="res://addons/picky-pixels/texture_editor.gd" id="1_jve4u"]
-[ext_resource type="PackedScene" uid="uid://xpv16bu7ythy" path="res://addons/picky-pixels/light_level_tab.tscn" id="2_mhxwg"]
 
 [node name="TextureEditor" type="VBoxContainer"]
 anchors_preset = 15
@@ -24,13 +23,6 @@ size_flags_horizontal = 3
 
 [node name="TextureDisplay" parent="Main/LightLevelData" instance=ExtResource("1_2oxtw")]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = 0.0
-offset_bottom = 0.0
-grow_horizontal = 2
-grow_vertical = 2
 size_flags_horizontal = 3
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Main/LightLevelData"]
@@ -50,9 +42,6 @@ grow_vertical = 2
 [node name="LightLevelsTabs" type="VBoxContainer" parent="Main/LightLevelData/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-
-[node name="LightLevelTab" parent="Main/LightLevelData/ScrollContainer/LightLevelsTabs" instance=ExtResource("2_mhxwg")]
-layout_mode = 2
 
 [node name="Config" type="VBoxContainer" parent="Main"]
 custom_minimum_size = Vector2(200, 0)
@@ -110,4 +99,4 @@ text = "Save"
 layout_mode = 2
 text = "Cancel"
 
-[connection signal="value_changed" from="Main/Config/LightLevelsConfig/SpinBox" to="." method="_on_light_level_value_changed"]
+[connection signal="value_changed" from="Main/Config/LightLevelsConfig/SpinBox" to="." method="_on_light_levels_value_changed"]
