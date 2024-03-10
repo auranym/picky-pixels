@@ -3,21 +3,26 @@
 [ext_resource type="Script" path="res://addons/picky-pixels/tabs/color_picker.gd" id="1_pbdti"]
 
 [node name="ColorPicker" type="Control"]
-custom_minimum_size = Vector2(48, 48)
+clip_contents = true
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("1_pbdti")
-label = "1"
 
 [node name="ColorPickerButton" type="ColorPickerButton" parent="."]
 layout_mode = 1
-anchors_preset = 15
+anchors_preset = -1
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = -4.0
+offset_top = -4.0
+offset_right = 4.0
+offset_bottom = 4.0
 grow_horizontal = 2
 grow_vertical = 2
+disabled = true
 flat = true
 edit_alpha = false
 
@@ -33,7 +38,7 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 6
-text = "1"
+text = "0"
 horizontal_alignment = 1
 
 [connection signal="color_changed" from="ColorPickerButton" to="." method="_on_color_picker_button_color_changed"]

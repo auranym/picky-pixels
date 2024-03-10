@@ -1,0 +1,41 @@
+[gd_scene load_steps=2 format=3 uid="uid://c3uiy7ykq0yr0"]
+
+[ext_resource type="Script" path="res://addons/picky-pixels/color_palette.gd" id="1_e7rg8"]
+
+[node name="ColorPalette" type="Control"]
+custom_minimum_size = Vector2(124, 64)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 124.0
+offset_bottom = 64.0
+script = ExtResource("1_e7rg8")
+colors = Array[Color]([Color(0, 0, 0, 1), Color(0, 0, 0, 1), Color(0, 0, 0, 1)])
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+offset_left = 2.0
+offset_right = -2.0
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "Color Palette"
+horizontal_alignment = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 2.0
+offset_top = -42.0
+offset_right = -2.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="ColorPickerContainer" type="HBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+alignment = 2

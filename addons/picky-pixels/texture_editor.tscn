@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://cpmt878i3wdqs"]
+[gd_scene load_steps=4 format=3 uid="uid://cpmt878i3wdqs"]
 
 [ext_resource type="PackedScene" uid="uid://b4gf4ih7xjhw" path="res://addons/picky-pixels/texture_display.tscn" id="1_2oxtw"]
 [ext_resource type="Script" path="res://addons/picky-pixels/texture_editor.gd" id="1_jve4u"]
+[ext_resource type="PackedScene" uid="uid://c3uiy7ykq0yr0" path="res://addons/picky-pixels/color_palette.tscn" id="3_u3oln"]
 
 [node name="TextureEditor" type="VBoxContainer"]
 anchors_preset = 15
@@ -35,13 +36,27 @@ anchor_bottom = 1.0
 offset_left = -112.0
 offset_top = 12.0
 offset_right = -12.0
-offset_bottom = -12.0
+offset_bottom = -76.0
 grow_horizontal = 0
 grow_vertical = 2
 
 [node name="LightLevelsTabs" type="VBoxContainer" parent="Main/LightLevelData/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="ColorPalette" parent="Main/LightLevelData" instance=ExtResource("3_u3oln")]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -124.0
+offset_top = -64.0
+offset_right = -12.0
+offset_bottom = -12.0
+grow_horizontal = 0
+grow_vertical = 0
 
 [node name="Config" type="VBoxContainer" parent="Main"]
 custom_minimum_size = Vector2(200, 0)
