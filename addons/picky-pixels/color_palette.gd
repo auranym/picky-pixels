@@ -27,4 +27,4 @@ var _colors: Array[Color] = []
 				color_picker_container.add_child(color_picker)
 		# Remove any extra color picker nodes, if needed
 		for i in range(_colors.size(), color_picker_container.get_child_count()):
-			color_picker_container.remove_child(color_picker_container.get_child(i))
+			color_picker_container.remove_child(color_picker_container.get_child(_colors.size()))

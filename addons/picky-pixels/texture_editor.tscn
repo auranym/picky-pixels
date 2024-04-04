@@ -44,41 +44,8 @@ grow_vertical = 2
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ColorPalette" parent="Main/LightLevelData" instance=ExtResource("3_u3oln")]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -124.0
-offset_top = -64.0
-offset_right = -12.0
-offset_bottom = -12.0
-grow_horizontal = 0
-grow_vertical = 0
-
 [node name="Config" type="VBoxContainer" parent="Main"]
 custom_minimum_size = Vector2(200, 0)
-layout_mode = 2
-
-[node name="LightLevelsConfig" type="HBoxContainer" parent="Main/Config"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Main/Config/LightLevelsConfig"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Light Levels"
-
-[node name="SpinBox" type="SpinBox" parent="Main/Config/LightLevelsConfig"]
-layout_mode = 2
-min_value = 1.0
-max_value = 16.0
-value = 1.0
-rounded = true
-alignment = 1
-
-[node name="HSeparator" type="HSeparator" parent="Main/Config"]
 layout_mode = 2
 
 [node name="ColorRampsIndicator" type="HBoxContainer" parent="Main/Config"]
@@ -94,12 +61,39 @@ text = "Color Ramps Used:"
 
 [node name="Indicator" type="Label" parent="Main/Config/ColorRampsIndicator"]
 layout_mode = 2
-text = "0/256"
+text = "0/255"
+
+[node name="HSeparator" type="HSeparator" parent="Main/Config"]
+layout_mode = 2
+
+[node name="LightLevelsConfig" type="HBoxContainer" parent="Main/Config"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Main/Config/LightLevelsConfig"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Light Levels"
+
+[node name="SpinBox" type="SpinBox" parent="Main/Config/LightLevelsConfig"]
+layout_mode = 2
+min_value = 1.0
+max_value = 16.0
+value = 3.0
+rounded = true
+alignment = 1
+
+[node name="HSeparator2" type="HSeparator" parent="Main/Config"]
+layout_mode = 2
+
+[node name="ColorPalette" parent="Main/Config" instance=ExtResource("3_u3oln")]
+layout_mode = 2
+size_flags_vertical = 3
+colors = Array[Color]([])
 
 [node name="Warning" type="Label" parent="."]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.870588, 0.4, 1)
-text = "Textures must be the same dimensions"
+text = "Light level 0 is missing a texture"
 horizontal_alignment = 1
 
 [node name="Buttons" type="HBoxContainer" parent="."]
@@ -108,10 +102,13 @@ alignment = 1
 
 [node name="Save" type="Button" parent="Buttons"]
 layout_mode = 2
+disabled = true
 text = "Save"
 
 [node name="Cancel" type="Button" parent="Buttons"]
 layout_mode = 2
 text = "Cancel"
 
+[connection signal="texture_changed" from="Main/LightLevelData/TextureDisplay" to="." method="_on_texture_display_texture_changed"]
 [connection signal="value_changed" from="Main/Config/LightLevelsConfig/SpinBox" to="." method="_on_light_levels_value_changed"]
+[connection signal="pressed" from="Buttons/Save" to="." method="_on_save_pressed"]

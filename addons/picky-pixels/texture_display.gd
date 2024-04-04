@@ -1,6 +1,8 @@
 @tool
 extends Panel
 
+signal texture_changed(texture)
+
 @onready var texture_rect = $TextureRect
 @onready var label = $Label
 @onready var remove_button = $RemoveButton
@@ -39,6 +41,8 @@ func _set_non_null_texture(texture: Texture2D):
 	
 	# Center the image and zoom based on the new image
 	_adjust_zoom()
+	
+	texture_changed.emit(texture)
 
 
 func _reset():
@@ -89,6 +93,7 @@ func _drop_data(at_position, data):
 
 func _on_remove_button_pressed():
 	_reset()
+	texture_changed.emit(null)
 
 
 func _on_zoom_out_button_pressed():
