@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://b4gf4ih7xjhw"]
 
-[ext_resource type="Script" path="res://addons/picky-pixels/texture_display.gd" id="1_lj1im"]
+[ext_resource type="Script" path="res://addons/picky-pixels/texture_editor/texture_display.gd" id="1_lj1im"]
 
 [sub_resource type="Image" id="Image_6b6l3"]
 data = {

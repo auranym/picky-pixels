@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://5uojm5hpdmbq"
-path="res://.godot/imported/light_layer_icon.png-d92aa550e185a70271f28aff8ef05101.ctex"
+uid="uid://iasuuw48kax5"
+path="res://.godot/imported/calliots.png-c0cfcbf4fe037095c632808959f6df80.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/picky-pixels/light_layer_icon.png"
-dest_files=["res://.godot/imported/light_layer_icon.png-d92aa550e185a70271f28aff8ef05101.ctex"]
+source_file="res://test/calliots.png"
+dest_files=["res://.godot/imported/calliots.png-c0cfcbf4fe037095c632808959f6df80.ctex"]
 
 [params]
 

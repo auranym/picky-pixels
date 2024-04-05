@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://bojmrkju73ous" path="res://addons/picky-pixels/main_tab_bar.tscn" id="1_0dtad"]
 [ext_resource type="Script" path="res://addons/picky-pixels/main_panel.gd" id="1_wl3co"]
-[ext_resource type="PackedScene" uid="uid://cpmt878i3wdqs" path="res://addons/picky-pixels/texture_editor.tscn" id="3_dkqth"]
+[ext_resource type="PackedScene" uid="uid://cpmt878i3wdqs" path="res://addons/picky-pixels/texture_editor/texture_editor.tscn" id="3_dkqth"]
 
 [node name="MainPanel" type="VBoxContainer"]
 anchors_preset = 15

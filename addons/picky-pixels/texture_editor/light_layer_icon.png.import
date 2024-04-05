@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://0ngqulu17sc5"
-path="res://.godot/imported/spudion.png-28113fd56c2a2cb98c4cab28a2e3da55.ctex"
+uid="uid://5uojm5hpdmbq"
+path="res://.godot/imported/light_layer_icon.png-7640cf7f25daa6ab233aa75a881faad6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://spudion.png"
-dest_files=["res://.godot/imported/spudion.png-28113fd56c2a2cb98c4cab28a2e3da55.ctex"]
+source_file="res://addons/picky-pixels/texture_editor/light_layer_icon.png"
+dest_files=["res://.godot/imported/light_layer_icon.png-7640cf7f25daa6ab233aa75a881faad6.ctex"]
 
 [params]
 
