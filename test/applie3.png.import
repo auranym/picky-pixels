@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://iasuuw48kax5"
-path="res://.godot/imported/calliots.png-c0cfcbf4fe037095c632808959f6df80.ctex"
+uid="uid://8b2bbugpmaue"
+path="res://.godot/imported/applie3.png-a5c5c126194f55e91b642ef476874bdd.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://test/calliots.png"
-dest_files=["res://.godot/imported/calliots.png-c0cfcbf4fe037095c632808959f6df80.ctex"]
+source_file="res://test/applie3.png"
+dest_files=["res://.godot/imported/applie3.png-a5c5c126194f55e91b642ef476874bdd.ctex"]
 
 [params]
 

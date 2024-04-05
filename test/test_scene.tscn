@@ -1,27 +1,128 @@
-[gd_scene load_steps=5 format=3 uid="uid://6iqh4vm8eq1q"]
+[gd_scene load_steps=11 format=3 uid="uid://6iqh4vm8eq1q"]
 
-[ext_resource type="Texture2D" uid="uid://dl4vv06enf4kb" path="res://test/applie.png" id="1_wcv0m"]
+[ext_resource type="Texture2D" uid="uid://8b2bbugpmaue" path="res://test/applie3.png" id="1_ddep2"]
+[ext_resource type="Script" path="res://test/test_scene.gd" id="1_od42w"]
 [ext_resource type="PackedScene" uid="uid://x6bew2clexio" path="res://addons/picky-pixels/nodes/picky_sprite_2d/picky_sprite_2d.tscn" id="2_7qkwx"]
+[ext_resource type="FontFile" uid="uid://ll7taftddk5f" path="res://LycheeSoda.ttf" id="4_3hwqo"]
 
 [sub_resource type="Gradient" id="Gradient_1svsk"]
 interpolation_mode = 2
-offsets = PackedFloat32Array(0, 0.785714)
+offsets = PackedFloat32Array(0.237668, 0.672646)
 colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_1gfi0"]
 gradient = SubResource("Gradient_1svsk")
+width = 96
+height = 68
 fill = 1
 fill_from = Vector2(0.5, 0.5)
 
-[node name="TestScene" type="Node2D"]
+[sub_resource type="Animation" id="Animation_1tc8v"]
+resource_name = "light_loop"
+length = 6.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PointLight2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 3, 6),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(48, -16), Vector2(48, 88), Vector2(48, -16)]
+}
 
-[node name="ControlSprite" type="Sprite2D" parent="."]
-position = Vector2(48, 0)
-texture = ExtResource("1_wcv0m")
+[sub_resource type="Animation" id="Animation_1g8am"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PointLight2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(48, -16)]
+}
 
-[node name="PickySprite2D" parent="." instance=ExtResource("2_7qkwx")]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_mblde"]
+_data = {
+"RESET": SubResource("Animation_1g8am"),
+"light_loop": SubResource("Animation_1tc8v")
+}
 
-[node name="PointLight2D" type="PointLight2D" parent="."]
-position = Vector2(24, 0)
-scale = Vector2(1.89063, 1.89063)
+[sub_resource type="LabelSettings" id="LabelSettings_qytw0"]
+font = ExtResource("4_3hwqo")
+font_size = 64
+font_color = Color(0.972549, 0.921569, 0.886275, 1)
+
+[node name="TestScene" type="Node"]
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.231373, 0.0588235, 0.0588235, 1)
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+stretch_shrink = 10
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+transparent_bg = true
+handle_input_locally = false
+snap_2d_transforms_to_pixel = true
+snap_2d_vertices_to_pixel = true
+canvas_item_default_texture_filter = 0
+size = Vector2i(96, 72)
+render_target_update_mode = 4
+
+[node name="Node2D" type="Node2D" parent="SubViewportContainer/SubViewport"]
+script = ExtResource("1_od42w")
+
+[node name="PointLight2D" type="PointLight2D" parent="SubViewportContainer/SubViewport/Node2D"]
+position = Vector2(48, -16)
 texture = SubResource("GradientTexture2D_1gfi0")
+
+[node name="PickySprite2D" parent="SubViewportContainer/SubViewport/Node2D" instance=ExtResource("2_7qkwx")]
+position = Vector2(64, 32)
+
+[node name="ControlSprite" type="Sprite2D" parent="SubViewportContainer/SubViewport/Node2D"]
+modulate = Color(0.635294, 0.635294, 0.635294, 1)
+position = Vector2(28, 32)
+texture = ExtResource("1_ddep2")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="SubViewportContainer/SubViewport/Node2D"]
+libraries = {
+"": SubResource("AnimationLibrary_mblde")
+}
+autoplay = "light_loop"
+
+[node name="Before" type="Label" parent="."]
+offset_left = 196.0
+offset_top = 510.0
+offset_right = 424.0
+offset_bottom = 574.0
+text = "before"
+label_settings = SubResource("LabelSettings_qytw0")
+horizontal_alignment = 1
+
+[node name="After" type="Label" parent="."]
+offset_left = 568.0
+offset_top = 510.0
+offset_right = 780.0
+offset_bottom = 574.0
+text = "after"
+label_settings = SubResource("LabelSettings_qytw0")
+horizontal_alignment = 1

@@ -117,7 +117,7 @@ func _save():
 				atlas_set[ramp] = index
 			encoded_image.set_pixel(x, y, Color8(0, index, 0))
 	
-	var err = encoded_image.save_png("res://encoded.png")
+	var err = encoded_image.save_png("res://test/compiled_texture.png")
 	if err:
 		print(err)
 	else:
@@ -125,7 +125,7 @@ func _save():
 	
 	# Shader TODO
 	var shader_code = _get_shader_code(atlas);
-	var file = FileAccess.open("res://shader.gdshader", FileAccess.WRITE)
+	var file = FileAccess.open("res://test/compiled_shader.gdshader", FileAccess.WRITE)
 	file.store_string(shader_code);
 
 
