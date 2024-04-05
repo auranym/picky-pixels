@@ -1,0 +1,19 @@
+[gd_scene load_steps=6 format=3 uid="uid://x6bew2clexio"]
+
+[ext_resource type="Shader" path="res://shader.gdshader" id="1_jri3b"]
+[ext_resource type="Shader" path="res://addons/picky-pixels/nodes/picky_sprite_2d/light_encode.gdshader" id="1_tjwnb"]
+[ext_resource type="Texture2D" uid="uid://cttm2xeg3ey7u" path="res://encoded.png" id="3_e6ge3"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_urstj"]
+shader = ExtResource("1_jri3b")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3druy"]
+shader = ExtResource("1_tjwnb")
+shader_parameter/USES_NORMAL_MAP = false
+
+[node name="PickySprite2D" type="CanvasGroup"]
+material = SubResource("ShaderMaterial_urstj")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_3druy")
+texture = ExtResource("3_e6ge3")

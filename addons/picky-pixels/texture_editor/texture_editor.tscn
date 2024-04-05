@@ -78,7 +78,7 @@ text = "Light Levels"
 layout_mode = 2
 min_value = 1.0
 max_value = 16.0
-value = 3.0
+value = 2.0
 rounded = true
 alignment = 1
 

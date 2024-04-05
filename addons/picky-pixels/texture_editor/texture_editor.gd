@@ -23,6 +23,14 @@ var colors: Dictionary
 var color_map: Array[Array]
 
 
+func _ready():
+	color_ramps_indicator.text = "0/255"
+	_on_light_levels_value_changed(2)
+	_on_light_level_tab_button_pressed(0)
+	_on_light_level_tab_toggled(0)
+	color_palette.colors = [] as Array[Color]
+
+
 func _warn(message: String):
 	save.disabled = true
 	warning.text = message
@@ -109,21 +117,78 @@ func _save():
 				atlas_set[ramp] = index
 			encoded_image.set_pixel(x, y, Color8(0, index, 0))
 	
-	# Shader TODO
-	
 	var err = encoded_image.save_png("res://encoded.png")
 	if err:
 		print(err)
 	else:
 		print("Encoded successfully!")
+	
+	# Shader TODO
+	var shader_code = _get_shader_code(atlas);
+	var file = FileAccess.open("res://shader.gdshader", FileAccess.WRITE)
+	file.store_string(shader_code);
 
 
-func _ready():
-	color_ramps_indicator.text = "0/255"
-	_on_light_levels_value_changed(3)
-	_on_light_level_tab_button_pressed(0)
-	_on_light_level_tab_toggled(0)
-	color_palette.colors = [] as Array[Color]
+func _get_shader_code(atlas) -> String:
+	var code = "
+shader_type canvas_item;
+render_mode unshaded;
+
+struct Ramp {
+	int[{light_levels}] arr;
+};
+
+uniform sampler2D screen_texture : hint_screen_texture, repeat_disable, filter_nearest;
+
+const int LIGHT_LEVELS = {light_levels};
+const vec4[] COLORS = { {colors} };
+const Ramp[] RAMPS = { {ramps} };
+
+void fragment() {
+	vec4 c = textureLod(screen_texture, SCREEN_UV, 0.0);
+	int light_level = int(round(c.r * float(LIGHT_LEVELS-1)));
+	int ramp = int(round(c.g * 255.0));
+	
+	if (c.a > 0.95) {
+		COLOR = COLORS[RAMPS[ramp].arr[light_level]];
+	}
+	else {
+		COLOR = vec4(0.0);
+	}
+}
+".trim_prefix("\n").trim_suffix("\n");
+	
+	var colors_to_indices = {};
+	var ramps = []
+	var ramp_template = "Ramp({ {ramp} })"
+	for ramp in atlas:
+		# Convert ramp to integer array, and add to colors_to_indices as needed
+		var ramp_arr = []
+		for color in ramp:
+			var index = colors_to_indices.get(color);
+			if index == null:
+				index = colors_to_indices.size()
+				colors_to_indices[color] = index
+			ramp_arr.append(index)
+		# Now add strings
+		ramps.append(ramp_template.format({"ramp": ", ".join(ramp_arr)}))
+	
+	# Generate colors array
+	var colors = []
+	colors.resize(colors_to_indices.size())
+	for key in colors_to_indices.keys():
+		colors[colors_to_indices[key]] = "vec4({r}, {g}, {b}, {a})".format({
+			"r": key.r,
+			"g": key.g,
+			"b": key.b,
+			"a": key.a
+		})
+	
+	return code.format({
+		"light_levels": light_levels_spin_box.value,
+		"colors": ", ".join(colors),
+		"ramps": ", ".join(ramps)
+	});
 
 
 func _on_texture_display_texture_changed(texture):

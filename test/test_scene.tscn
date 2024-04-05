@@ -1,67 +1,27 @@
-[gd_scene load_steps=12 format=3 uid="uid://6iqh4vm8eq1q"]
+[gd_scene load_steps=5 format=3 uid="uid://6iqh4vm8eq1q"]
 
-[ext_resource type="Texture2D" uid="uid://hasharo80e0s" path="res://godot.png" id="1_ngfhf"]
-[ext_resource type="Texture2D" uid="uid://hn5k7sru6fcg" path="res://godot_normal.png" id="2_4id8c"]
-[ext_resource type="Shader" path="res://test/color_decode.gdshader" id="2_27m68"]
-[ext_resource type="Shader" path="res://test/light_encode.gdshader" id="3_glsou"]
+[ext_resource type="Texture2D" uid="uid://dl4vv06enf4kb" path="res://test/applie.png" id="1_wcv0m"]
+[ext_resource type="PackedScene" uid="uid://x6bew2clexio" path="res://addons/picky-pixels/nodes/picky_sprite_2d/picky_sprite_2d.tscn" id="2_7qkwx"]
 
-[sub_resource type="CanvasTexture" id="CanvasTexture_wdfva"]
-diffuse_texture = ExtResource("1_ngfhf")
-normal_texture = ExtResource("2_4id8c")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_uqcox"]
-shader = ExtResource("2_27m68")
-shader_parameter/COLOR_0 = Color(0.25098, 0.25098, 0.25098, 1)
-shader_parameter/COLOR_1 = Color(0.329412, 0.329412, 0.329412, 1)
-shader_parameter/COLOR_2 = Color(0.447059, 0.447059, 0.447059, 1)
-shader_parameter/COLOR_3 = Color(0.345098, 0.345098, 0.345098, 1)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_2ria1"]
-shader = ExtResource("3_glsou")
-shader_parameter/USES_NORMAL_MAP = true
-
-[sub_resource type="CanvasTexture" id="CanvasTexture_6jl61"]
-diffuse_texture = ExtResource("1_ngfhf")
-normal_texture = ExtResource("2_4id8c")
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_e7so8"]
-shader = ExtResource("3_glsou")
-shader_parameter/USES_NORMAL_MAP = false
-
-[sub_resource type="Gradient" id="Gradient_s4gkr"]
+[sub_resource type="Gradient" id="Gradient_1svsk"]
 interpolation_mode = 2
 offsets = PackedFloat32Array(0, 0.785714)
 colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_1gfi0"]
-gradient = SubResource("Gradient_s4gkr")
+gradient = SubResource("Gradient_1svsk")
 fill = 1
 fill_from = Vector2(0.5, 0.5)
 
 [node name="TestScene" type="Node2D"]
 
 [node name="ControlSprite" type="Sprite2D" parent="."]
-self_modulate = Color(0.25098, 0.25098, 0.25098, 1)
-position = Vector2(163, -2)
-texture = SubResource("CanvasTexture_wdfva")
+position = Vector2(48, 0)
+texture = ExtResource("1_wcv0m")
 
-[node name="TestSprite" type="CanvasGroup" parent="."]
-material = SubResource("ShaderMaterial_uqcox")
-
-[node name="Sprite2D" type="Sprite2D" parent="TestSprite"]
-self_modulate = Color(0.25098, 0.25098, 0.25098, 1)
-material = SubResource("ShaderMaterial_2ria1")
-texture = SubResource("CanvasTexture_6jl61")
-
-[node name="Sprite2D2" type="Sprite2D" parent="TestSprite"]
-visible = false
-self_modulate = Color(0.25098, 0.25098, 0.25098, 1)
-material = SubResource("ShaderMaterial_e7so8")
-texture = ExtResource("1_ngfhf")
+[node name="PickySprite2D" parent="." instance=ExtResource("2_7qkwx")]
 
 [node name="PointLight2D" type="PointLight2D" parent="."]
-position = Vector2(80, 0)
+position = Vector2(24, 0)
 scale = Vector2(1.89063, 1.89063)
-energy = 2.0
 texture = SubResource("GradientTexture2D_1gfi0")
-texture_scale = 2.0
