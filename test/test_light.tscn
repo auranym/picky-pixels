@@ -1,0 +1,97 @@
+[gd_scene load_steps=9 format=3 uid="uid://c5c4xkqpy2qij"]
+
+[ext_resource type="Script" path="res://test/test_light.gd" id="1_ip1fh"]
+
+[sub_resource type="Gradient" id="Gradient_da8b5"]
+offsets = PackedFloat32Array(0.242152, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_p3qjs"]
+gradient = SubResource("Gradient_da8b5")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0, 0.5)
+
+[sub_resource type="Animation" id="Animation_n4qdx"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:offset")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_tsett"]
+resource_name = "diamond"
+length = 4.0
+loop_mode = 1
+step = 1.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:offset")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 2, 3, 4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector2(0, -32), Vector2(32, 0), Vector2(0, 32), Vector2(-32, 0), Vector2(0, -32)]
+}
+
+[sub_resource type="Animation" id="Animation_w6mu0"]
+resource_name = "pingpong_x"
+length = 4.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:offset")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2, 4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(-32, 0), Vector2(32, 0), Vector2(-32, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_6gwi4"]
+resource_name = "pingpong_y"
+length = 4.0
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:offset")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 2, 4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(0, -32), Vector2(0, 32), Vector2(0, -32)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_yl4o2"]
+_data = {
+"RESET": SubResource("Animation_n4qdx"),
+"diamond": SubResource("Animation_tsett"),
+"pingpong_x": SubResource("Animation_w6mu0"),
+"pingpong_y": SubResource("Animation_6gwi4")
+}
+
+[node name="TestLight" type="PointLight2D"]
+texture = SubResource("GradientTexture2D_p3qjs")
+script = ExtResource("1_ip1fh")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_yl4o2")
+}

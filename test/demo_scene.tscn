@@ -1,14 +1,13 @@
-[gd_scene load_steps=11 format=3 uid="uid://6iqh4vm8eq1q"]
+[gd_scene load_steps=10 format=3 uid="uid://6iqh4vm8eq1q"]
 
-[ext_resource type="Texture2D" uid="uid://8b2bbugpmaue" path="res://test/applie3.png" id="1_ddep2"]
-[ext_resource type="Script" path="res://test/test_scene.gd" id="1_od42w"]
-[ext_resource type="PackedScene" uid="uid://x6bew2clexio" path="res://addons/picky-pixels/nodes/picky_sprite_2d/picky_sprite_2d.tscn" id="2_7qkwx"]
-[ext_resource type="FontFile" uid="uid://ll7taftddk5f" path="res://LycheeSoda.ttf" id="4_3hwqo"]
+[ext_resource type="PackedScene" uid="uid://x6bew2clexio" path="res://addons/picky-pixels/nodes/picky_sprite_2d/picky_sprite_2d.tscn" id="1_q25m2"]
+[ext_resource type="PackedScene" uid="uid://mfqo1816u7or" path="res://test/control_sprite.tscn" id="2_efsv7"]
+[ext_resource type="FontFile" uid="uid://ll7taftddk5f" path="res://LycheeSoda.ttf" id="3_2nu0a"]
 
 [sub_resource type="Gradient" id="Gradient_1svsk"]
 interpolation_mode = 2
 offsets = PackedFloat32Array(0.237668, 0.672646)
-colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 0)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_1gfi0"]
 gradient = SubResource("Gradient_1svsk")
@@ -16,6 +15,21 @@ width = 96
 height = 68
 fill = 1
 fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="Animation" id="Animation_1g8am"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("PointLight2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(48, -16)]
+}
 
 [sub_resource type="Animation" id="Animation_1tc8v"]
 resource_name = "light_loop"
@@ -34,21 +48,6 @@ tracks/0/keys = {
 "values": [Vector2(48, -16), Vector2(48, 88), Vector2(48, -16)]
 }
 
-[sub_resource type="Animation" id="Animation_1g8am"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("PointLight2D:position")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(48, -16)]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_mblde"]
 _data = {
 "RESET": SubResource("Animation_1g8am"),
@@ -56,7 +55,7 @@ _data = {
 }
 
 [sub_resource type="LabelSettings" id="LabelSettings_qytw0"]
-font = ExtResource("4_3hwqo")
+font = ExtResource("3_2nu0a")
 font_size = 64
 font_color = Color(0.972549, 0.921569, 0.886275, 1)
 
@@ -89,19 +88,16 @@ size = Vector2i(96, 72)
 render_target_update_mode = 4
 
 [node name="Node2D" type="Node2D" parent="SubViewportContainer/SubViewport"]
-script = ExtResource("1_od42w")
 
 [node name="PointLight2D" type="PointLight2D" parent="SubViewportContainer/SubViewport/Node2D"]
 position = Vector2(48, -16)
 texture = SubResource("GradientTexture2D_1gfi0")
 
-[node name="PickySprite2D" parent="SubViewportContainer/SubViewport/Node2D" instance=ExtResource("2_7qkwx")]
+[node name="PickySprite2D" parent="SubViewportContainer/SubViewport/Node2D" instance=ExtResource("1_q25m2")]
 position = Vector2(64, 32)
 
-[node name="ControlSprite" type="Sprite2D" parent="SubViewportContainer/SubViewport/Node2D"]
-modulate = Color(0.635294, 0.635294, 0.635294, 1)
+[node name="ControlSprite" parent="SubViewportContainer/SubViewport/Node2D" instance=ExtResource("2_efsv7")]
 position = Vector2(28, 32)
-texture = ExtResource("1_ddep2")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="SubViewportContainer/SubViewport/Node2D"]
 libraries = {
