@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://cn0ggwmfm60xl"]
+
+[ext_resource type="PackedScene" uid="uid://105324ko4hnf" path="res://test/fps_label.tscn" id="2_cime8"]
+[ext_resource type="Script" path="res://test/compute_shader/compute_shader_test.gd" id="2_wwqpg"]
+
+[node name="ComputeShaderTest" type="Node2D"]
+scale = Vector2(2, 2)
+script = ExtResource("2_wwqpg")
+sprites = 30
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="FPSLabel" parent="CanvasLayer" instance=ExtResource("2_cime8")]

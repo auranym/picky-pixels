@@ -3,18 +3,12 @@ extends Node2D
 #const TEST_SPRITE = preload("res://test/control_sprite.tscn")
 const TEST_SPRITE = preload("res://addons/picky-pixels/nodes/picky_sprite_2d/picky_sprite_2d.tscn")
 const TEST_LIGHT = preload("res://test/test_light.tscn")
-@onready var fps_label = $CanvasLayer/FPSLabel
 
 @export var sprites: int = 50
 @export var lights: int = 5
 
 # GOAL:
 # Get this scene to run at a consistent 60 FPS with 300 sprites and 32 lights
-# 
-# RESOURCES:
-# Writing output textures - https://github.com/OverloadedOrama/Godot-ComputeShader-GameOfLife
-# Reading input textures - https://pastebin.com/pbGGjrE8
-#                          https://pastebin.com/92cvEagc
 
 func _ready():
 	var x_dim = max(1, floor(sqrt(sprites * 4.0/3.0)))
@@ -33,7 +27,3 @@ func _ready():
 		light.position = pos
 		add_child(light)
 		light.play_random()
-
-
-func _process(_delta):
-	fps_label.text = str(Engine.get_frames_per_second()) + " FPS"
