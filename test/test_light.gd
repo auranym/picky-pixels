@@ -3,6 +3,8 @@ extends PointLight2D
 @onready var animation_player = $AnimationPlayer
 
 func play_random():
+	if not is_inside_tree():
+		await ready
 	animation_player.speed_scale = randf_range(0.5, 2.0)
 	var r = randi_range(0, 2)
 	match r:

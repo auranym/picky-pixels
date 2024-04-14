@@ -6,7 +6,8 @@
 [node name="ComputeShaderTest" type="Node2D"]
 scale = Vector2(2, 2)
 script = ExtResource("2_wwqpg")
-sprites = 30
+rows = 9
+cols = 11
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
