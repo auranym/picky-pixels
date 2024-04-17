@@ -5,8 +5,9 @@
 
 [node name="PerformanceTestScene" type="Node2D"]
 script = ExtResource("1_o2o0r")
-sprites = 300
-lights = 32
+rows = 15
+cols = 20
+lights = 30
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
