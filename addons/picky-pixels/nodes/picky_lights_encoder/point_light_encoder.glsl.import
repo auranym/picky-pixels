@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://cwcedh0tupt0k"
+path="res://.godot/imported/point_light_encoder.glsl-21dd72baf8554d97d60602fd1809afee.res"
+
+[deps]
+
+source_file="res://addons/picky-pixels/nodes/picky_lights_encoder/point_light_encoder.glsl"
+dest_files=["res://.godot/imported/point_light_encoder.glsl-21dd72baf8554d97d60602fd1809afee.res"]
+
+[params]
+

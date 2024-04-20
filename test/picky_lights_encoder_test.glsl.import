@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://nv5rh1wydaok"
+path="res://.godot/imported/picky_lights_encoder_test.glsl-33ee987d1eae32f2d83ffdcb83caceff.res"
+
+[deps]
+
+source_file="res://test/picky_lights_encoder_test.glsl"
+dest_files=["res://.godot/imported/picky_lights_encoder_test.glsl-33ee987d1eae32f2d83ffdcb83caceff.res"]
+
+[params]
+
