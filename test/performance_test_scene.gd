@@ -1,7 +1,7 @@
 extends Node2D
 
-#const SPRITE = preload("res://test/control_sprite.tscn")
-const SPRITE = preload("res://addons/picky-pixels/nodes/picky_sprite_2d/picky_sprite_2d.tscn")
+const SPRITE = preload("res://test/control_sprite.tscn")
+#const SPRITE = preload("res://addons/picky-pixels/nodes/picky_sprite_2d/picky_sprite_2d.tscn")
 const TEST_LIGHT = preload("res://test/test_light.tscn")
 
 @export var rows: int = 10

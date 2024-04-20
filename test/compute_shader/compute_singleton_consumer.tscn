@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://d2x4lb3fmy8b8"]
+
+[ext_resource type="Script" path="res://test/compute_shader/compute_singleton_consumer.gd" id="1_g10ax"]
+
+[node name="ComputeSingletonConsumer" type="TextureRect"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -150.0
+offset_right = 150.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_g10ax")
