@@ -87,7 +87,7 @@ _data = {
 "pingpong_y": SubResource("Animation_6gwi4")
 }
 
-[node name="TestLight" type="PointLight2D"]
+[node name="TestLight" type="PointLight2D" groups=["picky_light"]]
 texture = SubResource("GradientTexture2D_p3qjs")
 script = ExtResource("1_ip1fh")
 
