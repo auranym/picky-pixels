@@ -60,6 +60,18 @@ texture = SubResource("GradientTexture2D_0tay7")
 position = Vector2(313, 63)
 texture = SubResource("GradientTexture2D_0tay7")
 
+[node name="PointLight2D12" type="PointLight2D" parent="." groups=["picky_light"]]
+position = Vector2(192, 199)
+texture = SubResource("GradientTexture2D_0tay7")
+
+[node name="PointLight2D13" type="PointLight2D" parent="." groups=["picky_light"]]
+position = Vector2(67, 155)
+texture = SubResource("GradientTexture2D_0tay7")
+
+[node name="PointLight2D14" type="PointLight2D" parent="." groups=["picky_light"]]
+position = Vector2(187, 92)
+texture = SubResource("GradientTexture2D_0tay7")
+
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="FPSLabel" parent="CanvasLayer" instance=ExtResource("2_iv1il")]

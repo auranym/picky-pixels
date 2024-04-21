@@ -18,7 +18,8 @@ func _ready():
 	RenderingServer.call_on_render_thread(_setup_compute)
 
 
-func _process(_delta):
+func _process(delta):
+	global_time += delta
 	RenderingServer.call_on_render_thread(_render_compute)
 
 
@@ -70,20 +71,22 @@ func _setup_compute():
 	image_input_uniform.add_id(image_input)
 	
 	# Params buffer
-	#var params = PackedFloat32Array([
-		#global_time
-	#]).to_byte_array()
-	#params_buffer = rd.storage_buffer_create(params.size(), params)
-	#var params_uniform = RDUniform.new()
-	#params_uniform.uniform_type = RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER
-	#params_uniform.binding = 2
-	#params_uniform.add_id(params_buffer)
+	var params = PackedFloat32Array([
+		global_time,
+		position.x,
+		position.y
+	]).to_byte_array()
+	params_buffer = rd.storage_buffer_create(params.size(), params)
+	var params_uniform = RDUniform.new()
+	params_uniform.uniform_type = RenderingDevice.UNIFORM_TYPE_STORAGE_BUFFER
+	params_uniform.binding = 2
+	params_uniform.add_id(params_buffer)
 	
 	# Bind uniforms and buffers to send to the GPU
 	uniform_set = rd.uniform_set_create([
 		image_input_uniform,
 		image_output_uniform,
-		#params_uniform
+		params_uniform
 	], shader, 0)
 	
 	# Set texture to Texture2DRD, which will read from the shader output
@@ -95,10 +98,12 @@ func _setup_compute():
 
 func _render_compute():
 	# Remake params and update buffer
-	#var params = PackedFloat32Array([
-		#global_time
-	#]).to_byte_array()
-	#rd.buffer_update(params_buffer, 0, params.size(), params)
+	var params = PackedFloat32Array([
+		global_time,
+		position.x,
+		position.y
+	]).to_byte_array()
+	rd.buffer_update(params_buffer, 0, params.size(), params)
 	
 	# Start a compute list, recording commands to send to the GPU
 	var compute_list = rd.compute_list_begin()
