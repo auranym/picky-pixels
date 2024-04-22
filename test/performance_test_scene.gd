@@ -1,9 +1,7 @@
 extends Node2D
 
 #const SPRITE = preload("res://test/control_sprite.tscn")
-#const SPRITE = preload("res://test/picky_sprite_2d.tscn")
-#const SPRITE = preload("res://addons/picky-pixels/nodes/picky_sprite_2d/picky_sprite_2d.tscn")
-const SPRITE = preload("res://test/picky_sprite_2d.tscn")
+const SPRITE = preload("res://addons/picky-pixels/nodes/picky_sprite_2d/picky_sprite_2d.tscn")
 const TEST_LIGHT = preload("res://test/test_light.tscn")
 
 @export var rows: int = 10
@@ -27,7 +25,7 @@ func _ready():
 			randf_range(32.0, 32.0 * (cols-1)),
 			randf_range(32.0, 32.0 * (rows-1))
 		)
-		#light.play_random()
+		light.play_random()
 		add_child(light)
 
 

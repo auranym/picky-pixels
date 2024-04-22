@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3 uid="uid://deik22k1h244a"]
+
+[ext_resource type="Texture2D" uid="uid://btj5giledb4sp" path="res://godot_pixelated.png" id="1_mbwcr"]
+[ext_resource type="Script" path="res://test/optimization/compute_shader_test/compute_shader_sprite.gd" id="2_mpsbb"]
+
+[node name="ComputeShaderSprite" type="Sprite2D"]
+texture = ExtResource("1_mbwcr")
+script = ExtResource("2_mpsbb")
