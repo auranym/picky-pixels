@@ -2,7 +2,7 @@ extends Node
 
 signal updated
 
-const POINT_LIGHT_ENCODER = preload("res://addons/picky-pixels/nodes/picky_lights_encoder/point_light_encoder.glsl")
+const POINT_LIGHT_ENCODER = preload("res://test/optimization/picky_lights_encoder_2/point_light_encoder_2.glsl")
 
 var encoded_lights_image := Texture2DRD.new()
 

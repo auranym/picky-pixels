@@ -1,6 +1,6 @@
 extends Sprite2D
 
-const PICKY_SPRITE_2D = preload("res://test/picky_sprite_2d.glsl")
+const PICKY_SPRITE_2D = preload("res://test/optimization/picky_sprite_2d/picky_sprite_2d.glsl")
 
 @export var textures: Array[Texture2D]
 
