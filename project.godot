@@ -14,10 +14,6 @@ config/name="PickyPixels"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"
 
-[autoload]
-
-PickyLightsEncoder="*res://addons/picky-pixels/nodes/picky_lights_encoder/picky_lights_encoder.gd"
-
 [display]
 
 window/size/viewport_width=960
