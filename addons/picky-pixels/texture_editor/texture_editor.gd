@@ -99,37 +99,76 @@ func _update():
 
 func _save():
 	# Iterate over each pixel in color_map and generate
-	# color ramp atlas. Assign the G value of the encoded texture
-	# to the index of the color ramp in the atlas.
-	# Then, write a bespoke shader using the atlas.
+	# color ramps. Assign the G value of the encoded texture
+	# to the index of the color ramp in the ramps array.
 	var texture_size = Vector2(color_map.size(), color_map[0].size())
 	var encoded_image = Image.create(texture_size.x, texture_size.y, false, Image.FORMAT_RGBA8)
-	var atlas = []
-	var atlas_set = {} # used to map ramps to indices in O(1) time.
+	var ramps = []
+	var ramps_set = {} # used to map ramps to indices in O(1) time.
 	for x in texture_size.x:
 		for y in texture_size.y:
 			var ramp = color_map[x][y]
-			var index = atlas_set.get(ramp)
+			var index = ramps_set.get(ramp)
 			# If ramp not in atlas, add it
 			if index == null:
-				atlas.append(ramp)
-				index = atlas.size()-1
-				atlas_set[ramp] = index
+				ramps.append(ramp)
+				index = ramps.size()-1
+				ramps_set[ramp] = index
 			encoded_image.set_pixel(x, y, Color8(0, index, 0))
 	
-	var err = encoded_image.save_png("res://test/compiled_texture.png")
+	var data = _get_picky_sprite_2d_data(encoded_image, ramps)
+	var err = ResourceSaver.save(data, "res://test/generated_resource.res")
 	if err:
 		print(err)
 	else:
-		print("Encoded successfully!")
+		print("Generated resource successfully!")
+	
+	#var err = encoded_image.save_png("res://test/compiled_texture.png")
+	#if err:
+		#print(err)
+	#else:
+		#print("Encoded successfully!")
 	
 	# Shader TODO
-	var shader_code = _get_shader_code(atlas);
-	var file = FileAccess.open("res://test/compiled_shader.gdshader", FileAccess.WRITE)
-	file.store_string(shader_code);
+	#var shader_code = _get_shader_code(ramps);
+	#var file = FileAccess.open("res://test/compiled_shader.gdshader", FileAccess.WRITE)
+	#file.store_string(shader_code);
 
 
-func _get_shader_code(atlas) -> String:
+func _get_picky_sprite_2d_data(image: Image, ramps) -> PickySprite2DData:
+	# Calculate ramps
+	var colors_to_indices = {};
+	var ramps_compressed: Array[Array] = []
+	for ramp in ramps:
+		# Convert ramp to integer array, and add to colors_to_indices as needed
+		var ramp_arr = []
+		for color in ramp:
+			var index = colors_to_indices.get(color);
+			if index == null:
+				index = colors_to_indices.size()
+				colors_to_indices[color] = index
+			ramp_arr.append(index)
+		# Now add strings
+		ramps_compressed.append(ramp_arr)
+	
+	# Generate colors array
+	var colors_array: Array[Color] = []
+	colors_array.resize(colors_to_indices.size())
+	for color in colors_to_indices.keys():
+		colors_array[colors_to_indices[color]] = color
+	
+	# Assign values
+	var light_levels = light_levels_spin_box.value
+	return PickySprite2DData.new(
+		image,
+		light_levels,
+		colors_array,
+		ramps_compressed,
+		_get_shader_material(light_levels, colors_array, ramps_compressed)
+	)
+
+
+func _get_shader_material(light_levels: int, colors: Array, ramps: Array) -> ShaderMaterial:
 	var code = "
 shader_type canvas_item;
 render_mode unshaded;
@@ -159,36 +198,30 @@ void fragment() {
 ".trim_prefix("\n").trim_suffix("\n");
 	
 	var colors_to_indices = {};
-	var ramps = []
-	var ramp_template = "Ramp({ {ramp} })"
-	for ramp in atlas:
-		# Convert ramp to integer array, and add to colors_to_indices as needed
-		var ramp_arr = []
-		for color in ramp:
-			var index = colors_to_indices.get(color);
-			if index == null:
-				index = colors_to_indices.size()
-				colors_to_indices[color] = index
-			ramp_arr.append(index)
-		# Now add strings
-		ramps.append(ramp_template.format({"ramp": ", ".join(ramp_arr)}))
+	var ramps_compiled = []
+	for ramp in ramps:
+		ramps_compiled.append("Ramp({ {ramp} })".format({"ramp": ", ".join(ramp)}))
 	
 	# Generate colors array
-	var colors = []
-	colors.resize(colors_to_indices.size())
-	for key in colors_to_indices.keys():
-		colors[colors_to_indices[key]] = "vec4({r}, {g}, {b}, {a})".format({
-			"r": key.r,
-			"g": key.g,
-			"b": key.b,
-			"a": key.a
-		})
+	var colors_compiled = []
+	for color in colors:
+		colors_compiled.append("vec4({r}, {g}, {b}, {a})".format({
+			"r": color.r,
+			"g": color.g,
+			"b": color.b,
+			"a": color.a
+		}))
 	
-	return code.format({
-		"light_levels": light_levels_spin_box.value,
-		"colors": ", ".join(colors),
-		"ramps": ", ".join(ramps)
+	var shader = Shader.new()
+	shader.code = code.format({
+		"light_levels": light_levels,
+		"colors": ", ".join(colors_compiled),
+		"ramps": ", ".join(ramps_compiled)
 	});
+	
+	var shader_material = ShaderMaterial.new()
+	shader_material.shader = shader
+	return shader_material
 
 
 func _on_texture_display_texture_changed(texture):

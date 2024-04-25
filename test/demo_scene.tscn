@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://mfqo1816u7or" path="res://test/control_sprite.tscn" id="2_efsv7"]
 [ext_resource type="FontFile" uid="uid://ll7taftddk5f" path="res://LycheeSoda.ttf" id="3_2nu0a"]
 
+
 [sub_resource type="Gradient" id="Gradient_1svsk"]
 interpolation_mode = 2
 offsets = PackedFloat32Array(0.237668, 0.672646)
