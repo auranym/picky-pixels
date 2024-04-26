@@ -1,10 +1,11 @@
 [gd_scene load_steps=7 format=3 uid="uid://x6bew2clexio"]
 
-[ext_resource type="Texture2D" uid="uid://cq423vlhsifda" path="res://test/applie0.png" id="1_84b4i"]
+[ext_resource type="Texture2D" uid="uid://cq423vlhsifda" path="res://test/sprites/applie0.png" id="1_84b4i"]
 [ext_resource type="Script" path="res://test/optimization/picky_sprite_2d/picky_sprite_2d.gd" id="2_7p0th"]
-[ext_resource type="Texture2D" uid="uid://c6p6j1a6mxdw" path="res://test/applie1.png" id="3_oacok"]
-[ext_resource type="Texture2D" uid="uid://cpurikd0i2qa4" path="res://test/applie2.png" id="4_uu03w"]
-[ext_resource type="Texture2D" uid="uid://8b2bbugpmaue" path="res://test/applie3.png" id="5_fjhjl"]
+[ext_resource type="Texture2D" uid="uid://c6p6j1a6mxdw" path="res://test/sprites/applie1.png" id="3_oacok"]
+[ext_resource type="Texture2D" uid="uid://cpurikd0i2qa4" path="res://test/sprites/applie2.png" id="4_uu03w"]
+[ext_resource type="Texture2D" uid="uid://8b2bbugpmaue" path="res://test/sprites/applie3.png" id="5_fjhjl"]
+
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_lap0s"]
 light_mode = 1

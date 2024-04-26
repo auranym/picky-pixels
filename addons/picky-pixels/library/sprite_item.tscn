@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://beek2fwj5unn2"]
+
+[ext_resource type="Script" path="res://addons/picky-pixels/library/sprite_item.gd" id="1_4pv5d"]
+
+[node name="SpriteItem" type="TextureRect"]
+custom_minimum_size = Vector2(128, 128)
+offset_right = 128.0
+offset_bottom = 128.0
+stretch_mode = 3
+script = ExtResource("1_4pv5d")

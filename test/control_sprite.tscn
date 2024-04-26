@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://mfqo1816u7or"]
 
-[ext_resource type="Texture2D" uid="uid://8b2bbugpmaue" path="res://test/applie3.png" id="1_ev6i8"]
+[ext_resource type="Texture2D" uid="uid://8b2bbugpmaue" path="res://test/sprites/applie3.png" id="1_ev6i8"]
 
 [node name="ControlSprite" type="Sprite2D"]
 modulate = Color(0.635294, 0.635294, 0.635294, 1)

@@ -157,6 +157,21 @@ func _get_picky_sprite_2d_data(image: Image, ramps) -> PickySprite2DData:
 	for color in colors_to_indices.keys():
 		colors_array[colors_to_indices[color]] = color
 	
+	# Generate library image by scaling larger dimension to 128
+	# and proportionally scaling the other one.
+	var library_image = textures[textures.size()-1].get_image()
+	var x = library_image.get_width()
+	var y = library_image.get_height()
+	if x > y:
+		y = int(floor(128.0 * float(y) / float(x)))
+		x = 128
+	else:
+		x = int(floor(128.0 * float(x) / float(y)))
+		y = 128
+	print(x)
+	print(y)
+	library_image.resize(x, y, Image.INTERPOLATE_NEAREST)
+	
 	# Assign values
 	var light_levels = light_levels_spin_box.value
 	return PickySprite2DData.new(
@@ -164,7 +179,8 @@ func _get_picky_sprite_2d_data(image: Image, ramps) -> PickySprite2DData:
 		light_levels,
 		colors_array,
 		ramps_compressed,
-		_get_shader_material(light_levels, colors_array, ramps_compressed)
+		_get_shader_material(light_levels, colors_array, ramps_compressed),
+		library_image
 	)
 
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://8b2bbugpmaue"
-path="res://.godot/imported/applie3.png-a5c5c126194f55e91b642ef476874bdd.ctex"
+uid="uid://dkmm1y35bcr0u"
+path="res://.godot/imported/blobby_vined_vent1_r3.png-23236e6289b9ae2f9f05176348b0effe.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://test/applie3.png"
-dest_files=["res://.godot/imported/applie3.png-a5c5c126194f55e91b642ef476874bdd.ctex"]
+source_file="res://test/sprites/blobby_vined_vent1_r3.png"
+dest_files=["res://.godot/imported/blobby_vined_vent1_r3.png-23236e6289b9ae2f9f05176348b0effe.ctex"]
 
 [params]
 

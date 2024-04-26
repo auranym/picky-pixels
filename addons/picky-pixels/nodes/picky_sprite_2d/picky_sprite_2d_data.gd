@@ -20,16 +20,21 @@ extends Resource
 ## This contains the generated shader.
 @export var shader_material: ShaderMaterial
 
+## A 128x128 image used as the display image in the PickyPixels
+## Library tab.
+@export var library_image: Image
 
 func _init(
-	p_image: Image,
-	p_light_levels: int,
-	p_colors: Array[Color],
-	p_ramps: Array[Array],
-	p_shader_material: ShaderMaterial
+	p_image: Image = null,
+	p_light_levels: int = 0,
+	p_colors: Array[Color] = [],
+	p_ramps: Array[Array] = [],
+	p_shader_material: ShaderMaterial = null,
+	p_library_image: Image = null
 ):
 	image = p_image
 	light_levels = p_light_levels
 	colors = p_colors
 	ramps = p_ramps
 	shader_material = p_shader_material
+	library_image = p_library_image
