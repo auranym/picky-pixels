@@ -5,7 +5,7 @@ extends EditorPlugin
 # https://docs.godotengine.org/en/stable/tutorials/plugins/editor/making_main_screen_plugins.html
 # https://forum.godotengine.org/t/how-can-i-implement-drag-and-drop-into-the-scene-from-my-editorplugin/3804/2
 
-const MainPanel = preload("res://addons/picky-pixels/main_panel.tscn")
+const MainPanel = preload("res://addons/picky-pixels/ui/main_panel.tscn")
 
 var main_panel_instance
 

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://xpv16bu7ythy"]
 
-[ext_resource type="Texture2D" uid="uid://5uojm5hpdmbq" path="res://addons/picky-pixels/texture_editor/light_layer_icon.png" id="1_6juv8"]
+[ext_resource type="Texture2D" uid="uid://5uojm5hpdmbq" path="res://addons/picky-pixels/ui/texture_editor/light_layer_icon.png" id="1_6juv8"]
 
 [node name="LightLevelTab" type="Button"]
 offset_right = 38.0

@@ -1,0 +1,38 @@
+[gd_scene load_steps=5 format=3 uid="uid://dcurkj3cropgg"]
+
+[ext_resource type="Script" path="res://addons/picky-pixels/ui/main_panel.gd" id="1_c557u"]
+[ext_resource type="PackedScene" uid="uid://bojmrkju73ous" path="res://addons/picky-pixels/ui/main_tab_bar/main_tab_bar.tscn" id="2_43ilv"]
+[ext_resource type="PackedScene" uid="uid://cpmt878i3wdqs" path="res://addons/picky-pixels/ui/texture_editor/texture_editor.tscn" id="3_0b7yj"]
+[ext_resource type="PackedScene" uid="uid://cd1kje1mqpcuq" path="res://addons/picky-pixels/ui/library/library.tscn" id="4_o15ev"]
+
+[node name="MainPanel" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 0
+script = ExtResource("1_c557u")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="MainTabBar" parent="HBoxContainer" instance=ExtResource("2_43ilv")]
+layout_mode = 2
+
+[node name="TabContainer" type="TabContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+tabs_visible = false
+all_tabs_in_front = true
+drag_to_rearrange_enabled = true
+
+[node name="TextureEditor" parent="TabContainer" instance=ExtResource("3_0b7yj")]
+layout_mode = 2
+
+[node name="Library" parent="TabContainer" instance=ExtResource("4_o15ev")]
+visible = false
+layout_mode = 2

@@ -1,8 +1,8 @@
 @tool
 extends VBoxContainer
 
-const LIGHT_LEVEL_TAB = preload("res://addons/picky-pixels/texture_editor/light_level_tab.tscn")
-@onready var color_ramps_indicator = $Main/Config/ColorRampsIndicator/Indicator
+const LIGHT_LEVEL_TAB = preload("res://addons/picky-pixels/ui/texture_editor/light_level_tab.tscn")
+@onready var color_ramps_indicator = $Main/Config/ColorRampsIndicator
 @onready var light_levels_tabs = $Main/LightLevelData/ScrollContainer/LightLevelsTabs
 @onready var light_levels_spin_box = $Main/Config/LightLevelsConfig/SpinBox
 @onready var texture_display = $Main/LightLevelData/TextureDisplay
@@ -24,7 +24,8 @@ var color_map: Array[Array]
 
 
 func _ready():
-	color_ramps_indicator.text = "0/255"
+	color_ramps_indicator.ramps = 0
+	color_ramps_indicator.max_ramps = 255
 	_on_light_levels_value_changed(2)
 	_on_light_level_tab_button_pressed(0)
 	_on_light_level_tab_toggled(0)
@@ -85,7 +86,7 @@ func _update():
 		colors_array.append(c)
 	color_palette.colors = colors_array
 	var num_color_ramps = color_ramps.keys().size()
-	color_ramps_indicator.text = "%s/255" % num_color_ramps
+	color_ramps_indicator.ramps = num_color_ramps
 	
 	# Finally, check that there are not too many color ramps
 	if num_color_ramps > 255:

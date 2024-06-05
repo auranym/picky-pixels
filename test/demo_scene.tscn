@@ -4,7 +4,6 @@
 [ext_resource type="PackedScene" uid="uid://mfqo1816u7or" path="res://test/control_sprite.tscn" id="2_efsv7"]
 [ext_resource type="FontFile" uid="uid://ll7taftddk5f" path="res://LycheeSoda.ttf" id="3_2nu0a"]
 
-
 [sub_resource type="Gradient" id="Gradient_1svsk"]
 interpolation_mode = 2
 offsets = PackedFloat32Array(0.237668, 0.672646)
@@ -95,7 +94,7 @@ position = Vector2(48, -16)
 texture = SubResource("GradientTexture2D_1gfi0")
 
 [node name="PickySprite2D" parent="SubViewportContainer/SubViewport/Node2D" instance=ExtResource("1_q25m2")]
-position = Vector2(64, 32)
+position = Vector2(48, 16)
 
 [node name="ControlSprite" parent="SubViewportContainer/SubViewport/Node2D" instance=ExtResource("2_efsv7")]
 position = Vector2(28, 32)

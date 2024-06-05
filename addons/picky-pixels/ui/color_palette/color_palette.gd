@@ -1,7 +1,7 @@
 @tool
 extends Control
 
-const COLOR_PICKER = preload("res://addons/picky-pixels/color_palette/color_picker.tscn")
+const COLOR_PICKER = preload("res://addons/picky-pixels/ui/color_palette/color_picker.tscn")
 @onready var color_picker_container = $ScrollContainer/ColorPickerContainer
 
 
