@@ -1,8 +1,8 @@
 @tool
 class_name PickySprite2D
-extends CanvasGroup
+extends Sprite2D
 
-@onready var _sprite_2d: Sprite2D = $Sprite2D
+@onready var _material: ShaderMaterial = material
 
 var _data: PickySprite2DData
 ## Data used for rendering a PickySprite2D.
@@ -16,9 +16,18 @@ var _data: PickySprite2DData
 			await ready
 		_data = d
 		
-		if _data == null:
-			_sprite_2d.texture = null
+		if _data == null or _data.texture == null:
+			texture = null
+			return
+		
+		# TODO also check if there is not the correct shader on the viewport
+		if Engine.is_editor_hint():
+			texture = _data.base_textures.back()
 			material = null
 		else:
-			_sprite_2d.texture = ImageTexture.create_from_image(_data.image)
-			material = _data.shader_material
+			texture = _data.texture
+			material = _material
+
+
+func _ready():
+	print(str(Color(0, 0, 0)))
