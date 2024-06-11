@@ -2,7 +2,8 @@
 class_name PickySprite2D
 extends Sprite2D
 
-@onready var _material: ShaderMaterial = material
+const LIGHT_ENCODER = preload("res://addons/picky-pixels/nodes/picky_sprite_2d/light_encoder.material")
+const UNLIT = preload("res://addons/picky-pixels/nodes/picky_sprite_2d/unlit.material")
 
 var _data: PickySprite2DData
 ## Data used for rendering a PickySprite2D.
@@ -23,11 +24,14 @@ var _data: PickySprite2DData
 		# TODO also check if there is not the correct shader on the viewport
 		if Engine.is_editor_hint():
 			texture = _data.base_textures.back()
-			material = null
+			material = UNLIT
 		else:
 			texture = _data.texture
-			material = _material
+			material = LIGHT_ENCODER
 
 
 func _ready():
-	print(str(Color(0, 0, 0)))
+	if Engine.is_editor_hint():
+		material = UNLIT
+	else:
+		material = LIGHT_ENCODER

@@ -13,7 +13,7 @@ extends Resource
 ## Shader that should be applied to the root viewport where all "picky" nodes
 ## are children. If a picky node is within a tree where its viewport does
 ## not have the correct shader, there is an error.
-@export var root_shader: ShaderMaterial
+@export var shader_material: ShaderMaterial
 
 ## TYPE TODO
 ## PickySprites managed by this project.
@@ -29,8 +29,7 @@ extends Resource
 			_color_index_map[color_to_str(palette[i])] = i
 
 
-## Ramps that should be processed in decoding colors, and which sprites use
-## them.
+## Ramps that should be processed in decoding colors.
 @export var ramps: Array[Array]:
 	get: return ramps
 	set(val):
@@ -144,5 +143,77 @@ func create_new_sprite(base_textures: Array[Texture2D], texture_size: Vector2) -
 		library_image
 	)
 	
+	# Update project data
 	sprites.push_back(new_sprite_data)
+	_compile_shader()
+	
 	return new_sprite_data
+
+
+func _init():
+	shader_material = ShaderMaterial.new()
+	shader_material.shader = Shader.new()
+	shader_material.shader.code = "shader_type canvas_item;\nrender_mode unshaded;\n"
+
+
+func _compile_shader():
+	var code = "
+shader_type canvas_item;
+render_mode unshaded;
+
+const vec4[] COLORS = { {colors} };
+const int[] RAMPS = { {ramps} };
+const int[] RAMPS_POINTERS = { {ramps_pointers} };
+
+void fragment() {
+	vec4 c = texture(TEXTURE, UV);
+	int ramp = int(255.0 * c.g);
+	int ramp_pos = RAMPS_POINTERS[2 * ramp];
+	int ramp_size = RAMPS_POINTERS[2 * ramp + 1];
+	int light_level = min(int(floor(mix(0.0, float(ramp_size), c.r))), ramp_size-1);
+	
+	COLOR = COLORS[RAMPS[ramp_pos+light_level]];
+}
+".trim_prefix("\n").trim_suffix("\n");
+	
+	# Generate colors array
+	# Index 0 is always transparency
+	var colors_compiled = ["vec4(0.0,0.0,0.0,0.0)"]
+	for i in palette.size():
+		var color = palette[i]
+		colors_compiled.push_back("vec4({r},{g},{b},{a})".format({
+			"r": color.r,
+			"g": color.g,
+			"b": color.b,
+			"a": color.a
+		}))
+	
+	# Generate ramps and ramp pointers
+	var ramps_pointers_compiled = []
+	var ramps_compiled = []
+	for i in ramps.size():
+		var ramp = ramps[i]
+		# The 2*n position of ramp pointers is the position of the ramp
+		ramps_pointers_compiled.push_back(ramps_compiled.size())
+		# The 2*n+1 position is the size of the ramp
+		ramps_pointers_compiled.push_back(ramp.size())
+		for color in ramp:
+			# Like with compile colors above, index 0 is transparency.
+			# To adjust for this, we add 1 to the associated index.
+			# If the color index map does not have a color string, then it
+			# is "TRANSPARENCY" which should be 0 (hence, -1 + 1).
+			ramps_compiled.push_back(
+				_color_index_map.get(color_to_str(color), -1) + 1
+			)
+	
+	# Make sure shader material exists
+	if shader_material == null:
+		shader_material = ShaderMaterial.new()
+		shader_material.shader = Shader.new()
+	
+	shader_material.shader.code = code.format({
+		"colors": ",".join(colors_compiled),
+		"ramps": ",".join(ramps_compiled),
+		"ramps_pointers": ",".join(ramps_pointers_compiled),
+		"num_ramps": ramps.size() # TEST just to see if the compiled shader works
+	})
