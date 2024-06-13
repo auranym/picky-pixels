@@ -88,7 +88,9 @@ func _can_drop_data(at_position, data):
 
 
 func _drop_data(at_position, data):
-	_set_non_null_texture(load(data.files[0]))
+	_set_non_null_texture(
+		load(data.files[0])
+	)
 
 
 func _on_remove_button_pressed():

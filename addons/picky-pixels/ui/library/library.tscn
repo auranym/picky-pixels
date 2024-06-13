@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://cd1kje1mqpcuq"]
+[gd_scene load_steps=3 format=3 uid="uid://cd1kje1mqpcuq"]
 
 [ext_resource type="Script" path="res://addons/picky-pixels/ui/library/library.gd" id="1_fod1r"]
+[ext_resource type="Resource" uid="uid://cc21t4vnhnvsy" path="res://test/test_project.res" id="2_0pgl8"]
 
 [node name="Library" type="HFlowContainer"]
 anchors_preset = 15
@@ -13,3 +14,4 @@ offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_fod1r")
+project_data = ExtResource("2_0pgl8")

@@ -164,7 +164,13 @@ func _update():
 
 func _save():
 	print("pressed save")
-	_project_data.create_new_sprite(textures, texture_size)
+	var images: Array[Image] = []
+	for tex in textures:
+		images.push_back(tex.get_image())
+	_project_data.create_new_sprite(
+		images,
+		texture_size
+	)
 
 
 func _on_texture_display_texture_changed(texture):

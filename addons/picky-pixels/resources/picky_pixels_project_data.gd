@@ -30,13 +30,8 @@ extends Resource
 
 
 ## Ramps that should be processed in decoding colors.
-@export var ramps: Array[Array]:
+@export var ramps: Array[Array] = []:
 	get: return ramps
-	set(val):
-		ramps = val
-		_ramp_index_map = {}
-		for i in ramps.size():
-			_ramp_index_map[ramp_to_str(ramps[i] as Array[Color])] = i
 
 
 # Used for O(1) lookup time.
@@ -106,41 +101,35 @@ func num_missing_ramps(ramps) -> int:
 ## 
 ## No validation is done ahead of time. It is assumed that a PickySprite2DData
 ## can be created without issue.
-func create_new_sprite(base_textures: Array[Texture2D], texture_size: Vector2) -> PickySprite2DData:
+func create_new_sprite(base_images: Array[Image], texture_size: Vector2) -> PickySprite2DData:
 	var encoded_image = Image.create(texture_size.x, texture_size.y, false, Image.FORMAT_RGBA8)
 	
 	# Generate the encoded image
+	#
+	# NOTE:
+	# For some reason (likely a compression issue)
+	# the colors are occasionally read incorrectly.
+	# I think a possible fix would be to do some careful
+	# loading in within texture_display such that all
+	# image files are loaded in as Images and then
+	# converted to Texture2Ds.
 	for x in texture_size.x:
 		for y in texture_size.y:
 			var ramp = []
-			for i in base_textures.size():
-				var color = base_textures[i].get_image().get_pixel(x, y)
+			for i in base_images.size():
+				var color = base_images[i].get_pixel(x, y)
 				ramp.push_back(color)
 			var index = _ramp_index_map.get(ramp_to_str(ramp))
 			# Add ramp to project if it does not exist
 			if index == null:
 				index = ramps.size()
 				ramps.push_back(ramp)
-				_ramp_index_map[ramp_to_str(ramp as Array[Color])] = index
+				_ramp_index_map[ramp_to_str(ramp)] = index
 			encoded_image.set_pixel(x, y, Color8(0, index, 0))
 	
-	# Generate library image by scaling larger dimension to 128
-	# and proportionally scaling the other one.
-	var library_image = base_textures.back().get_image()
-	var x = library_image.get_width()
-	var y = library_image.get_height()
-	if x > y:
-		y = int(floor(128.0 * float(y) / float(x)))
-		x = 128
-	else:
-		x = int(floor(128.0 * float(x) / float(y)))
-		y = 128
-	library_image.resize(x, y, Image.INTERPOLATE_NEAREST)
-	
 	var new_sprite_data = PickySprite2DData.new(
-		ImageTexture.create_from_image(encoded_image),
-		base_textures,
-		library_image
+		encoded_image,
+		base_images
 	)
 	
 	# Update project data
