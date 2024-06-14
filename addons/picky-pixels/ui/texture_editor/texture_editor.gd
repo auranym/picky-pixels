@@ -164,11 +164,8 @@ func _update():
 
 func _save():
 	print("pressed save")
-	var images: Array[Image] = []
-	for tex in textures:
-		images.push_back(tex.get_image())
 	_project_data.create_new_sprite(
-		images,
+		textures,
 		texture_size
 	)
 

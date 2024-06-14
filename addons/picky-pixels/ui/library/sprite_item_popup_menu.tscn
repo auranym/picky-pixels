@@ -1,6 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://b4gf4ih7xjhw"]
+[gd_scene load_steps=4 format=3 uid="uid://dcvgvnfo5rsqe"]
 
-[ext_resource type="Script" path="res://addons/picky-pixels/ui/texture_editor/texture_display.gd" id="1_lj1im"]
+[ext_resource type="Script" path="res://addons/picky-pixels/ui/library/sprite_item_popup_menu.gd" id="1_1o16b"]
 
 [sub_resource type="Image" id="Image_sa6xd"]
 data = {
@@ -14,82 +14,16 @@ data = {
 [sub_resource type="ImageTexture" id="ImageTexture_iw56e"]
 image = SubResource("Image_sa6xd")
 
-[node name="TextureDisplay" type="Panel"]
-texture_filter = 1
-clip_contents = true
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("1_lj1im")
+[node name="SpriteItemPopupMenu" type="PopupMenu"]
+size = Vector2i(112, 64)
+visible = true
+item_count = 2
+item_0/text = "Rename"
+item_0/icon = SubResource("ImageTexture_iw56e")
+item_0/id = 0
+item_1/text = "Delete"
+item_1/icon = SubResource("ImageTexture_iw56e")
+item_1/id = 1
+script = ExtResource("1_1o16b")
 
-[node name="TextureRect" type="TextureRect" parent="."]
-texture_filter = 1
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -32.0
-offset_top = -32.0
-offset_right = 32.0
-offset_bottom = 32.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-
-[node name="Label" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-text = "Drag and drop PNG file"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="RemoveButton" type="Button" parent="."]
-visible = false
-layout_mode = 1
-anchors_preset = -1
-offset_left = 12.0
-offset_top = 12.0
-offset_right = 43.0
-offset_bottom = 43.0
-tooltip_text = "Remove texture"
-disabled = true
-icon = SubResource("ImageTexture_iw56e")
-icon_alignment = 1
-
-[node name="ZoomOutButton" type="Button" parent="."]
-visible = false
-layout_mode = 1
-anchors_preset = -1
-offset_left = 67.0
-offset_top = 12.0
-offset_right = 98.0
-offset_bottom = 43.0
-tooltip_text = "Zoom Out"
-disabled = true
-icon = SubResource("ImageTexture_iw56e")
-icon_alignment = 1
-
-[node name="ZoomInButton" type="Button" parent="."]
-visible = false
-layout_mode = 1
-anchors_preset = -1
-offset_left = 98.0
-offset_top = 12.0
-offset_right = 129.0
-offset_bottom = 43.0
-tooltip_text = "Zoom In"
-disabled = true
-icon = SubResource("ImageTexture_iw56e")
-icon_alignment = 1
-
-[connection signal="pressed" from="RemoveButton" to="." method="_on_remove_button_pressed"]
-[connection signal="pressed" from="ZoomOutButton" to="." method="_on_zoom_out_button_pressed"]
-[connection signal="pressed" from="ZoomInButton" to="." method="_on_zoom_in_button_pressed"]
+[connection signal="id_pressed" from="." to="." method="_on_id_pressed"]

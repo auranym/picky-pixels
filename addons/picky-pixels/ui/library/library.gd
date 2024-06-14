@@ -27,3 +27,4 @@ func _import_project_data():
 		var sprite_item = SPRITE_ITEM.instantiate()
 		sprite_item.data = sprite
 		add_child(sprite_item)
+		
