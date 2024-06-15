@@ -1,6 +1,8 @@
 @tool
 extends Control
 
+const TOOLTIP = preload("res://addons/picky-pixels/ui/tooltip/tooltip.tscn")
+
 var _data: PickySprite2DData
 @export var data: PickySprite2DData:
 	get: return _data
@@ -10,18 +12,20 @@ var _data: PickySprite2DData
 			await ready
 		_generate_texture()
 		_update_label()
-		
 
 @onready var panel = $Panel
 @onready var texture_rect = $TextureRect
 @onready var label = $Label
+@onready var text_edit = $TextEdit
 @onready var sprite_item_popup_menu = $SpriteItemPopupMenu
+@onready var _tooltip_text = tooltip_text
 
 var _mouse_within = false
 
 
 func _ready():
 	panel.visible = false
+	text_edit.visible = false
 	sprite_item_popup_menu.visible = false
 	_generate_texture()
 	_update_label()
@@ -51,6 +55,19 @@ func _update_label():
 		label.text = ""
 	else:
 		label.text = _data.name
+	text_edit.text = label.text
+
+
+func _hide_text_edit():
+	label.text = text_edit.text
+	text_edit.visible = false
+	text_edit.editable = false
+	label.visible = true
+	tooltip_text = _tooltip_text
+	
+	if _mouse_within:
+		panel.visible = true
+
 
 
 func _get_drag_data(at_position):
@@ -61,12 +78,23 @@ func _get_drag_data(at_position):
 
 
 func _gui_input(event):
+	# Regardless of input, first check if we need to hide
+	# the text_edit (renaming)
+	if (
+		event is InputEventMouseButton and
+		(
+			event.button_index == MOUSE_BUTTON_RIGHT or
+			event.button_index == MOUSE_BUTTON_LEFT
+		) and
+		text_edit.has_focus()
+	):
+		_hide_text_edit()
+	
 	if (
 		event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT
 	):
 		sprite_item_popup_menu.position = global_position + Vector2(8, size.y)
 		sprite_item_popup_menu.visible = true
-	
 	elif (
 		event is InputEventMouseButton and
 		event.button_index == MOUSE_BUTTON_LEFT and 
@@ -75,9 +103,15 @@ func _gui_input(event):
 		print("double clicked")
 
 
+func _make_custom_tooltip(for_text):
+	var tooltip_node = TOOLTIP.instantiate()
+	tooltip_node.text = for_text
+	return tooltip_node
+
 
 func _on_mouse_entered():
-	panel.visible = true
+	if not text_edit.has_focus():
+		panel.visible = true
 	_mouse_within = true
 
 
@@ -97,8 +131,29 @@ func _on_sprite_item_popup_menu_edit_pressed():
 
 
 func _on_sprite_item_popup_menu_rename_pressed():
-	print("renamed")
+	text_edit.visible = true
+	text_edit.editable = true
+	label.visible = false
+	tooltip_text = ""
+	text_edit.set_caret_column(text_edit.text.length())
+	text_edit.grab_focus()
 
 
 func _on_sprite_item_popup_menu_delete_pressed():
 	print("deleted")
+
+
+func _on_text_edit_focus_exited():
+	_hide_text_edit()
+
+
+func _on_text_edit_gui_input(event):
+	if (
+		text_edit.has_focus() and
+		event is InputEventKey and
+		(
+			event.keycode == KEY_ENTER or 
+			event.keycode == KEY_ESCAPE
+		)
+	):
+			_hide_text_edit()
