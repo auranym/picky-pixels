@@ -12,3 +12,15 @@ func _on_tab_changed(tab):
 		tab_close_display_policy = TabBar.CLOSE_BUTTON_SHOW_NEVER
 	else:
 		tab_close_display_policy = TabBar.CLOSE_BUTTON_SHOW_ACTIVE_ONLY
+
+
+func _can_drop_data(at_position, data):
+	return (
+		typeof(data) == TYPE_DICTIONARY and
+		data.has("resource") and
+		data.resource is PickySprite2DData
+	)
+
+
+func _drop_data(at_position, data):
+	print("opened ", data.resource.name)

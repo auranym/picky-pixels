@@ -15,15 +15,17 @@ data = {
 image = SubResource("Image_sa6xd")
 
 [node name="SpriteItemPopupMenu" type="PopupMenu"]
-size = Vector2i(112, 64)
+size = Vector2i(112, 89)
 visible = true
-item_count = 2
-item_0/text = "Rename"
-item_0/icon = SubResource("ImageTexture_iw56e")
-item_0/id = 0
-item_1/text = "Delete"
+item_count = 3
+item_0/text = "Edit"
+item_0/id = 2
+item_1/text = "Rename"
 item_1/icon = SubResource("ImageTexture_iw56e")
-item_1/id = 1
+item_1/id = 0
+item_2/text = "Delete"
+item_2/icon = SubResource("ImageTexture_iw56e")
+item_2/id = 1
 script = ExtResource("1_1o16b")
 
 [connection signal="id_pressed" from="." to="." method="_on_id_pressed"]

@@ -61,9 +61,18 @@ func _get_drag_data(at_position):
 
 
 func _gui_input(event):
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
+	if (
+		event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT
+	):
 		sprite_item_popup_menu.position = global_position + Vector2(8, size.y)
 		sprite_item_popup_menu.visible = true
+	
+	elif (
+		event is InputEventMouseButton and
+		event.button_index == MOUSE_BUTTON_LEFT and 
+		event.double_click
+	):
+		print("double clicked")
 
 
 
@@ -81,6 +90,10 @@ func _on_mouse_exited():
 func _on_sprite_item_popup_menu_popup_hide():
 	if not _mouse_within:
 		panel.visible = false
+
+
+func _on_sprite_item_popup_menu_edit_pressed():
+	print("edited")
 
 
 func _on_sprite_item_popup_menu_rename_pressed():

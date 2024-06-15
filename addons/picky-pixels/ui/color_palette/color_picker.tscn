@@ -9,6 +9,7 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
+mouse_filter = 1
 script = ExtResource("1_pbdti")
 
 [node name="ColorPickerButton" type="ColorPickerButton" parent="."]
@@ -22,7 +23,7 @@ offset_right = 4.0
 offset_bottom = 4.0
 grow_horizontal = 2
 grow_vertical = 2
-disabled = true
+mouse_filter = 1
 flat = true
 edit_alpha = false
 
@@ -41,4 +42,12 @@ theme_override_constants/outline_size = 6
 text = "0"
 horizontal_alignment = 1
 
+[node name="HexCodePopup" type="PopupMenu" parent="."]
+size = Vector2i(140, 35)
+item_count = 1
+item_0/text = "Copy hex code"
+item_0/id = 0
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
 [connection signal="color_changed" from="ColorPickerButton" to="." method="_on_color_picker_button_color_changed"]
+[connection signal="id_pressed" from="HexCodePopup" to="." method="_on_hex_code_popup_id_pressed"]
