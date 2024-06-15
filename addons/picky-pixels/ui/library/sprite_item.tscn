@@ -11,8 +11,6 @@ offset_right = 40.0
 offset_bottom = 40.0
 tooltip_text = "Drag and drop onto a PickySprite2D's data property to add to a scene.
 
-Double click to open.
-
 Right click to show options."
 script = ExtResource("1_w04ta")
 

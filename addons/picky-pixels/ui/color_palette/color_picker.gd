@@ -54,7 +54,7 @@ func _on_gui_input(event):
 	if (
 		event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT
 	):
-		_hex_code_popup.position = global_position + Vector2(8, _hex_code_popup.size.y)
+		_hex_code_popup.position = global_position + Vector2(8, _hex_code_popup.size.y + 8)
 		_hex_code_popup.visible = true
 
 
