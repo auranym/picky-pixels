@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://cd1kje1mqpcuq"]
+[gd_scene load_steps=5 format=3 uid="uid://cd1kje1mqpcuq"]
 
 [ext_resource type="Script" path="res://addons/picky-pixels/ui/library/library.gd" id="1_fod1r"]
 [ext_resource type="Resource" uid="uid://cc21t4vnhnvsy" path="res://test/test_project.res" id="2_0pgl8"]
+[ext_resource type="PackedScene" uid="uid://dsw4qkdd4tllr" path="res://addons/picky-pixels/ui/library/new_item.tscn" id="3_c5nqn"]
 [ext_resource type="PackedScene" uid="uid://c3uiy7ykq0yr0" path="res://addons/picky-pixels/ui/color_palette/color_palette.tscn" id="3_dkglw"]
 
 [node name="Library" type="VBoxContainer"]
@@ -16,8 +17,11 @@ project_data = ExtResource("2_0pgl8")
 [node name="ItemContainer" type="HFlowContainer" parent="."]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/h_separation = 0
-theme_override_constants/v_separation = 0
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 12
+
+[node name="NewItem" parent="ItemContainer" instance=ExtResource("3_c5nqn")]
+layout_mode = 2
 
 [node name="HSeparator" type="HSeparator" parent="."]
 layout_mode = 2
@@ -29,3 +33,4 @@ colors = Array[Color]([Color(0.262745, 0.0392157, 0.0392157, 1), Color(0.419608,
 
 [connection signal="mouse_entered" from="ItemContainer/SpriteItem" to="ItemContainer/SpriteItem" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="ItemContainer/SpriteItem" to="ItemContainer/SpriteItem" method="_on_mouse_exited"]
+[connection signal="clicked" from="ItemContainer/NewItem" to="." method="_on_new_item_clicked"]

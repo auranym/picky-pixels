@@ -14,11 +14,13 @@ var _project_data: PickyPixelsProjectData = null
 
 @onready var color_palette = $ColorPalette
 @onready var item_container = $ItemContainer
+@onready var new_item = $ItemContainer/NewItem
 
 
 func _import_project_data():
 	for child in item_container.get_children():
-		item_container.remove_child(child)
+		if not child == new_item:
+			item_container.remove_child(child)
 	
 	if _project_data == null:
 		return
@@ -31,4 +33,10 @@ func _import_project_data():
 		sprite_item.data = sprite
 		item_container.add_child(sprite_item)
 	
+	item_container.move_child(new_item, -1)
+	
 	color_palette.colors = _project_data.palette
+
+
+func _on_new_item_clicked():
+	print("new!")
