@@ -1,7 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://cpmt878i3wdqs"]
+[gd_scene load_steps=5 format=3 uid="uid://cpmt878i3wdqs"]
 
 [ext_resource type="Script" path="res://addons/picky-pixels/ui/texture_editor/texture_editor.gd" id="1_28c4c"]
-[ext_resource type="Resource" uid="uid://cc21t4vnhnvsy" path="res://test/test_project.res" id="2_d1vtg"]
 [ext_resource type="PackedScene" uid="uid://b4gf4ih7xjhw" path="res://addons/picky-pixels/ui/texture_editor/texture_display.tscn" id="2_exxg4"]
 [ext_resource type="PackedScene" uid="uid://bg0bssr8s5nms" path="res://addons/picky-pixels/ui/texture_editor/color_ramps_indicator.tscn" id="3_ilcpd"]
 [ext_resource type="PackedScene" uid="uid://c3uiy7ykq0yr0" path="res://addons/picky-pixels/ui/color_palette/color_palette.tscn" id="4_b83tm"]
@@ -14,7 +13,6 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 2
 script = ExtResource("1_28c4c")
-project_data = ExtResource("2_d1vtg")
 
 [node name="Main" type="HBoxContainer" parent="."]
 layout_mode = 2
@@ -74,19 +72,17 @@ layout_mode = 2
 layout_mode = 2
 size_flags_vertical = 3
 editable = false
-colors = Array[Color]([Color(0.262745, 0.0392157, 0.0392157, 1), Color(0.419608, 0, 0, 1), Color(0.780392, 0.0901961, 0, 1), Color(0.858824, 0.258824, 0.141176, 1), Color(0.882353, 0.411765, 0.317647, 1), Color(0.286275, 0.243137, 0.235294, 1), Color(0.509804, 0.32549, 0.290196, 1), Color(0.670588, 0.498039, 0.411765, 1), Color(0.301961, 0.301961, 0.258824, 1), Color(0.47451, 0.47451, 0.32549, 1), Color(0.780392, 0.733333, 0.239216, 1), Color(0.858824, 0.858824, 0.301961, 1), Color(0.921569, 0.929412, 0.490196, 1), Color(0.27451, 0.431373, 0.188235, 1), Color(0.376471, 0.572549, 0.247059, 1), Color(0.501961, 0.713726, 0.286275, 1)])
 
 [node name="HSeparator2" type="HSeparator" parent="Main/Config"]
 layout_mode = 2
 
 [node name="ColorRampsIndicator" parent="Main/Config" instance=ExtResource("3_ilcpd")]
 layout_mode = 2
-ramps = 9
 
 [node name="Warning" type="Label" parent="."]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.870588, 0.4, 1)
-text = "Light level 0 is missing a texture"
+text = "Missing project data. This is likely due to a plugin bug. Try restarting your project."
 horizontal_alignment = 1
 
 [node name="Buttons" type="HBoxContainer" parent="."]

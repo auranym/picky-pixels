@@ -11,7 +11,6 @@ offset_bottom = 62.0
 mouse_filter = 1
 script = ExtResource("1_e7rg8")
 editable = true
-colors = Array[Color]([Color(0, 0, 0, 1), Color(0, 0, 0, 1), Color(0, 0, 0, 1)])
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 1

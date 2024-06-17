@@ -13,32 +13,30 @@ const LIGHT_LEVEL_TAB = preload("res://addons/picky-pixels/ui/texture_editor/lig
 var _project_data: PickyPixelsProjectData = null
 @export var project_data: PickyPixelsProjectData:
 	get: return _project_data
-	set(d):
+	set(val):
 		if not is_inside_tree():
 			await ready
-		_project_data = d
+		_project_data = val
 		_import_project_data()
 
-var _sprite_2d_data: PickySprite2DData = null
-@export var sprite_2d_data: PickySprite2DData:
-	get: return _sprite_2d_data
-	set(d):
+
+@export var sprite_index: int = -1:
+	get: return sprite_index
+	set(val):
 		if not is_inside_tree():
 			await ready
-		_sprite_2d_data = d
+		sprite_index = val
 		_import_sprite_2d_data()
 
 var selected_tab: int
 # Index is the light level tab
 var textures: Array[Texture2D] = []
-var texture_size: Vector2
-var colors_set = {}
-var ramps_set = {}
+
 
 func _ready():
 	color_ramps_indicator.max_ramps = 255
-	_import_project_data()
-	_import_sprite_2d_data()
+	#_import_project_data()
+	#_import_sprite_2d_data()
 
 
 func _import_project_data():
@@ -48,16 +46,17 @@ func _import_project_data():
 	else:
 		color_ramps_indicator.ramps = _project_data.ramps.size()
 		color_palette.colors = _project_data.palette
+	sprite_index = -1
 	_update()
 
 
 func _import_sprite_2d_data():
-	if _sprite_2d_data == null:
-		textures = [] as Array[Texture2D]
+	if sprite_index == -1 or _project_data == null:
+		textures = [null] as Array[Texture2D]
 		_set_light_levels(1)
 	else:
-		textures = _sprite_2d_data.base_textures
-		_set_light_levels(_sprite_2d_data.light_levels)
+		textures = _project_data.sprites[sprite_index].base_textures
+		_set_light_levels(textures.size())
 	_set_selected_light_level_tab(0)
 	_update()
 
@@ -99,7 +98,10 @@ func _set_selected_light_level_tab(index):
 	light_levels_tabs.get_child(selected_tab).set_pressed_no_signal(false)
 	selected_tab = index
 	# Update displayed texture
-	texture_display.set_texture(textures[selected_tab])
+	if index < textures.size():
+		texture_display.set_texture(textures[selected_tab])
+	else:
+		texture_display.set_texture(null)
 	light_levels_tabs.get_child(selected_tab).set_pressed_no_signal(true)
 
 
@@ -116,58 +118,27 @@ func _update():
 		_warn("Missing project data. This is likely due to a plugin bug. Try restarting your project.")
 		return
 	
-	# First determine whether all light levels have a texture
-	# and make sure all textures have the same dimensions.
-	for i in textures.size():
-		var texture = textures[i]
-		if texture == null:
-			_warn("Light level " + str(i) + " is missing a texture")
-			return
-		# If not null, cast as a Texture2D to make autocomplete nicer
-		texture = texture as Texture2D
-		if i == 0:
-			texture_size = texture.get_size()
-		elif texture.get_size() != texture_size:
-			_warn("Light level " + str(i) + " texture has dimensions different from previous light levels")
-			return 
-	
-	# Reset variables
-	colors_set = {}
-	ramps_set = {}
-	# For every pixel, iterate over light levels find which ramps and colors
-	# are used 
-	for x in texture_size.x:
-		for y in texture_size.y:
-			var ramp = []
-			for i in textures.size():
-				var color = textures[i].get_image().get_pixel(x, y)
-				# Do not consider anything translucent
-				if color.a8 != 255: continue
-				colors_set[color] = true
-				ramp.push_back(color)
-			ramps_set[ramp] = true
-	
-	# Check that only colors in the project palette are used
-	if not _project_data.has_colors(colors_set.keys()):
-		_warn("All colors must be from the selected project's color palette.")
-		return
-	
-	# Check that there are enough color ramps available
-	if _project_data.ramps.size() + _project_data.num_missing_ramps(ramps_set.keys()) > 255:
-		_warn("Saving will create too many color ramps. Try removing a light layer or making textures more similar.")
-		return
+	var result = _project_data.is_valid_base_textures(textures)
 	
 	# If there are no issues, then enable the save button
-	save.disabled = false
-	warning.visible = false
+	if result == PickyPixelsProjectData.TexturesStatus.OK:
+		save.disabled = false
+		warning.visible = false
+	else:
+		match result:
+			PickyPixelsProjectData.TexturesStatus.ERR_TEXTURE_NULL:
+				_warn("Light levels must all have textures.")
+			PickyPixelsProjectData.TexturesStatus.ERR_TEXTURE_SIZE_MISMATCH:
+				_warn("Light level textures must all be the same size.")
+			PickyPixelsProjectData.TexturesStatus.ERR_UNKNOWN_COLOR:
+				_warn("All colors must be from the selected project's color palette.")
+			PickyPixelsProjectData.TexturesStatus.ERR_NOT_ENOUGH_RAMPS:
+				_warn("Saving will create too many color ramps. Try removing a light layer or making textures more similar.")
 
 
 func _save():
 	print("pressed save")
-	_project_data.create_new_sprite(
-		textures,
-		texture_size
-	)
+	_project_data.update_sprite(sprite_index, textures)
 
 
 func _on_texture_display_texture_changed(texture):

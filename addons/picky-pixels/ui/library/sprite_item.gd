@@ -1,6 +1,9 @@
 @tool
 extends Control
 
+signal edit_selected
+signal delete_selected
+
 const TOOLTIP = preload("res://addons/picky-pixels/ui/tooltip/tooltip.tscn")
 
 var _data: PickySprite2DData
@@ -15,6 +18,7 @@ var _data: PickySprite2DData
 
 @onready var panel = $Panel
 @onready var texture_rect = $TextureRect
+@onready var no_textures_texture_rect = $NoTexturesTextureRect
 @onready var label = $Label
 @onready var text_edit = $TextEdit
 @onready var sprite_item_popup_menu = $SpriteItemPopupMenu
@@ -27,6 +31,8 @@ func _ready():
 	panel.visible = false
 	text_edit.visible = false
 	sprite_item_popup_menu.visible = false
+	no_textures_texture_rect.texture = get_theme_icon("Sprite2D", "EditorIcons")
+	no_textures_texture_rect.visible = false
 	_generate_texture()
 	_update_label()
 
@@ -34,6 +40,7 @@ func _ready():
 func _generate_texture():
 	if _data == null or _data.base_textures == null or _data.base_textures.size() == 0:
 		texture_rect.texture = null
+		no_textures_texture_rect.visible = true
 	else:
 		# Generate library image by scaling larger dimension to 128
 		# and proportionally scaling the other one.
@@ -47,6 +54,7 @@ func _generate_texture():
 			x = int(floor(128.0 * float(x) / float(y)))
 			y = 128
 		library_image.resize(x, y, Image.INTERPOLATE_NEAREST)
+		no_textures_texture_rect.visible = false
 		texture_rect.texture = ImageTexture.create_from_image(library_image)
 
 
@@ -64,6 +72,9 @@ func _hide_text_edit():
 	text_edit.editable = false
 	label.visible = true
 	tooltip_text = _tooltip_text
+	
+	# Update data
+	_data.name = label.text
 	
 	if _mouse_within:
 		panel.visible = true
@@ -100,7 +111,7 @@ func _gui_input(event):
 		event.button_index == MOUSE_BUTTON_LEFT and 
 		event.double_click
 	):
-		print("double clicked")
+		edit_selected.emit()
 
 
 func _make_custom_tooltip(for_text):
@@ -127,7 +138,7 @@ func _on_sprite_item_popup_menu_popup_hide():
 
 
 func _on_sprite_item_popup_menu_edit_pressed():
-	print("edited")
+	edit_selected.emit()
 
 
 func _on_sprite_item_popup_menu_rename_pressed():
@@ -140,7 +151,7 @@ func _on_sprite_item_popup_menu_rename_pressed():
 
 
 func _on_sprite_item_popup_menu_delete_pressed():
-	print("deleted")
+	delete_selected.emit()
 
 
 func _on_text_edit_focus_exited():
