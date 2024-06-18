@@ -61,7 +61,7 @@ const TRANSPARENT_RAMP = [Color(0.0, 0.0, 0.0, 0.0)]
 ## Ramps that should be processed in decoding colors.
 # Changed does not need to be emitted because this
 # is always updated when sprites is updated.
-@export var ramps := []:
+@export var ramps: Array[Array] = []:
 	get: return ramps
 	set(val):
 		ramps = val
@@ -70,26 +70,26 @@ const TRANSPARENT_RAMP = [Color(0.0, 0.0, 0.0, 0.0)]
 			_ramp_index_map[ramp_to_str(ramps[i])] = i
 		emit_changed()
 
-## Which sprites (given by their indices in sprites array) use the ramp
-## at each index. That is, the index in this array indicates a ramp's
-## index in the ramp array, and the values of this array is an array
-## of sprites (given by their indices) that use the respective ramp.
-@export var ramps_usage := []:
-	get: return ramps_usage
-	set(val):
-		ramps_usage = val
-		for i in ramps_usage.size():
-			var usage = ramps_usage[i]
-			if usage == null or usage.size() == 0:
-				_recycled_ramp_indices.push_back(i)
-		emit_changed()
+# Which sprites (given by their indices in sprites array) use the ramp
+# at each index. That is, the index in this array indicates a ramp's
+# index in the ramp array, and the values of this array is an array
+# of sprites (given by their indices) that use the respective ramp.
+#@export var ramps_usage := []:
+	#get: return ramps_usage
+	#set(val):
+		#ramps_usage = val
+		#for i in ramps_usage.size():
+			#var usage = ramps_usage[i]
+			#if usage == null or usage.size() == 0:
+				#_recycled_ramp_indices.push_back(i)
+		#emit_changed()
 
 
 # Used for O(1) lookup time.
 # Maps a value to its respective index.
 var _color_index_map := {}
 var _ramp_index_map := {}
-var _recycled_ramp_indices := []
+#var _recycled_ramp_indices := [] # <- this is a hard problem... TODO!!
 
 
 static func color_to_str(color) -> String:
@@ -220,7 +220,7 @@ func is_valid_base_textures(base_textures: Array[Texture2D]) -> TexturesStatus:
 			new_ramps[ramp] = true
 	
 	# Check that there are enough color ramps available
-	if ramps.size() + num_missing_ramps(new_ramps.keys()) - _recycled_ramp_indices.size() > 255:
+	if ramps.size() + num_missing_ramps(new_ramps.keys()) > 255:
 		return TexturesStatus.ERR_NOT_ENOUGH_RAMPS
 	
 	return TexturesStatus.OK
@@ -253,17 +253,18 @@ func update_sprite(index: int, base_textures: Array[Texture2D]):
 			# Add ramp to project if it does not exist
 			if ramp_index == null:
 				# Use any indices that should be recycled, if available
-				if _recycled_ramp_indices.size() > 0:
-					ramp_index = _recycled_ramp_indices.pop_front()
-				else:
-					ramp_index = ramps.size()
-					ramps.push_back(null)
-					ramps_usage.push_back(null)
+				#if _recycled_ramp_indices.size() > 0:
+					#ramp_index = _recycled_ramp_indices.pop_front()
+				#else:
+					#ramp_index = ramps.size()
+					#ramps.push_back(null)
+					#ramps_usage.push_back(null)
+				ramp_index = ramps.size()
 				# Once we know the index, assign the new value
 				if ramp_str == TRANSPARENT_ID:
-					ramps[ramp_index] = TRANSPARENT_RAMP
+					ramps.push_back(TRANSPARENT_RAMP)
 				else:
-					ramps[ramp_index] = ramp
+					ramps.push_back(ramp)
 				_ramp_index_map[ramp_str] = ramp_index
 				#ramps_usage[ramp_index] = index
 				print("new ramp: " + ramp_str)
