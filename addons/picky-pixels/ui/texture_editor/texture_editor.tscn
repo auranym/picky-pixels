@@ -98,6 +98,7 @@ text = "Save"
 layout_mode = 2
 text = "Cancel"
 
+[connection signal="load_multiple_textures" from="Main/LightLevelData/TextureDisplay" to="." method="_on_texture_display_load_multiple_textures"]
 [connection signal="texture_changed" from="Main/LightLevelData/TextureDisplay" to="." method="_on_texture_display_texture_changed"]
 [connection signal="value_changed" from="Main/Config/LightLevelsConfig/SpinBox" to="." method="_on_light_levels_value_changed"]
 [connection signal="pressed" from="Buttons/Save" to="." method="_on_save_pressed"]

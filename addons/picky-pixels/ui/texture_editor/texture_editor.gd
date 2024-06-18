@@ -31,10 +31,13 @@ var _project_data: PickyPixelsProjectData = null
 var selected_tab: int
 # Index is the light level tab
 var textures: Array[Texture2D] = []
+var png_regex: RegEx
 
 
 func _ready():
 	color_ramps_indicator.max_ramps = 255
+	png_regex = RegEx.new()
+	png_regex.compile(".*\\.png$")
 	#_import_project_data()
 	#_import_sprite_2d_data()
 
@@ -140,12 +143,26 @@ func _update():
 
 func _save():
 	_project_data.update_sprite(sprite_index, textures)
-	
+
+
+func _drop_data(at_position, data):
+	print(data.files)
 
 
 func _on_texture_display_texture_changed(texture):
 	textures[selected_tab] = texture
 	_update()
+
+
+func _on_texture_display_load_multiple_textures(texture_files):
+	# Assume that texture_files is already a valid Array of file names
+	for i in textures.size():
+		if i < texture_files.size():
+			textures[i] = load(texture_files[i])
+		else:
+			textures[i] = null
+	
+	texture_display.set_texture(textures[selected_tab])
 
 
 func _on_light_level_tab_button_pressed(index: int):

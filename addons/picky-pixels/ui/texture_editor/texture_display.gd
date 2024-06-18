@@ -2,6 +2,7 @@
 extends Panel
 
 signal texture_changed(texture)
+signal load_multiple_textures(textures)
 
 @onready var texture_rect = $TextureRect
 @onready var label = $Label
@@ -82,15 +83,18 @@ func _can_drop_data(at_position, data):
 		typeof(data) == TYPE_DICTIONARY and
 		data.has("files") and
 		typeof(data.files) == TYPE_PACKED_STRING_ARRAY and
-		data.files.size() == 1 and 
-		png_regex.search(data.files[0]) != null
+		data.files.size() > 0 and
+		Array(data.files).all(func(file): return png_regex.search(file) != null)
 	)
 
 
 func _drop_data(at_position, data):
-	_set_non_null_texture(
-		load(data.files[0])
-	)
+	if data.files.size() == 1:
+		_set_non_null_texture(
+			load(data.files[0])
+		)
+	else:
+		load_multiple_textures.emit(data.files)
 
 
 func _on_remove_button_pressed():
