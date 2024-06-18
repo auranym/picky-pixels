@@ -1,8 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://dcurkj3cropgg"]
+[gd_scene load_steps=5 format=3 uid="uid://dcurkj3cropgg"]
 
 [ext_resource type="Script" path="res://addons/picky-pixels/ui/main_panel.gd" id="1_c557u"]
 [ext_resource type="PackedScene" uid="uid://bojmrkju73ous" path="res://addons/picky-pixels/ui/main_tab_bar/main_tab_bar.tscn" id="2_43ilv"]
-[ext_resource type="PackedScene" uid="uid://cpmt878i3wdqs" path="res://addons/picky-pixels/ui/texture_editor/texture_editor.tscn" id="3_0b7yj"]
 [ext_resource type="Resource" uid="uid://h6e6gam7v54q" path="res://picky_pixels_project_data.res" id="4_cst1b"]
 [ext_resource type="PackedScene" uid="uid://cd1kje1mqpcuq" path="res://addons/picky-pixels/ui/library/library.tscn" id="4_o15ev"]
 
@@ -27,15 +26,9 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-current_tab = 1
 tabs_visible = false
 all_tabs_in_front = true
 drag_to_rearrange_enabled = true
-
-[node name="TextureEditor" parent="TabContainer" instance=ExtResource("3_0b7yj")]
-visible = false
-layout_mode = 2
-project_data = ExtResource("4_cst1b")
 
 [node name="Library" parent="TabContainer" instance=ExtResource("4_o15ev")]
 layout_mode = 2

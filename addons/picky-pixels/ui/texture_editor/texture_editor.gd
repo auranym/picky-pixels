@@ -14,7 +14,7 @@ var _project_data: PickyPixelsProjectData = null
 @export var project_data: PickyPixelsProjectData:
 	get: return _project_data
 	set(val):
-		if not is_inside_tree():
+		if not is_node_ready():
 			await ready
 		_project_data = val
 		_import_project_data()
@@ -23,7 +23,7 @@ var _project_data: PickyPixelsProjectData = null
 @export var sprite_index: int = -1:
 	get: return sprite_index
 	set(val):
-		if not is_inside_tree():
+		if not is_node_ready():
 			await ready
 		sprite_index = val
 		_import_sprite_2d_data()
@@ -52,18 +52,20 @@ func _import_project_data():
 
 func _import_sprite_2d_data():
 	if sprite_index == -1 or _project_data == null:
-		textures = [null] as Array[Texture2D]
+		textures = [null]
 		_set_light_levels(1)
 	else:
-		textures = _project_data.sprites[sprite_index].base_textures
+		textures = _project_data.sprites[sprite_index].base_textures.duplicate()
+		if textures == []:
+			textures = [null]
 		_set_light_levels(textures.size())
 	_set_selected_light_level_tab(0)
 	_update()
 
 
 func _set_light_levels(value):
+	# Update light level tabs
 	var value_diff = value - light_levels_tabs.get_child_count()
-	
 	if value_diff > 0:
 		for i in value_diff:
 			var new_tab = LIGHT_LEVEL_TAB.instantiate()
@@ -77,21 +79,21 @@ func _set_light_levels(value):
 				func(toggled_on): _on_light_level_tab_toggled(index)
 			)
 			light_levels_tabs.add_child(new_tab)
-			# Update array so it is the correct length
-			textures.append(null)
 	elif value_diff < 0:
 		light_levels_tabs.get_children()
 		for i in abs(value_diff):
 			light_levels_tabs.remove_child(
 				light_levels_tabs.get_children().back()
 			)
-			# Update array so it is the correct length
-			textures.pop_back()
 		# Update selected light level tab if needed
 		if selected_tab >= light_levels_tabs.get_child_count():
 			selected_tab = light_levels_tabs.get_child_count() - 1
 			light_levels_tabs.get_children().back().set_pressed_no_signal(true)
 			texture_display.set_texture(textures[selected_tab])
+	
+	# Update textures array. Done separately from above in case light tabs
+	# and textures get out of sync. (Redundancy for safety.)
+	textures.resize(value)
 
 
 func _set_selected_light_level_tab(index):
@@ -137,8 +139,8 @@ func _update():
 
 
 func _save():
-	print("pressed save")
 	_project_data.update_sprite(sprite_index, textures)
+	
 
 
 func _on_texture_display_texture_changed(texture):

@@ -26,7 +26,7 @@ extends Resource
 func _init(
 	p_name: String = "",
 	p_texture: Texture2D = null,
-	p_base_textures: Array[Texture2D] = [],
+	p_base_textures: Array[Texture2D] = [null],
 ):
 	name = p_name
 	texture = p_texture

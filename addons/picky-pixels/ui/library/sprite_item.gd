@@ -38,7 +38,12 @@ func _ready():
 
 
 func _generate_texture():
-	if _data == null or _data.base_textures == null or _data.base_textures.size() == 0:
+	if (
+		_data == null or
+		_data.base_textures == null or
+		_data.base_textures.size() == 0 or 
+		_data.base_textures.back() == null
+	):
 		texture_rect.texture = null
 		no_textures_texture_rect.visible = true
 	else:

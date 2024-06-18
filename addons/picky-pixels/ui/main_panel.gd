@@ -2,10 +2,11 @@
 extends VBoxContainer
 
 const DEFAULT_PROJECT = "res://picky_pixels_project_data.res"
+const TEXTURE_EDITOR = preload("res://addons/picky-pixels/ui/texture_editor/texture_editor.tscn")
 
-@onready var _texture_editor = $TabContainer/TextureEditor
 @onready var _library = $TabContainer/Library
 @onready var _main_tab_bar = $HBoxContainer/MainTabBar
+@onready var _tab_container = $TabContainer
 var _project_data: PickyPixelsProjectData
 var _tab_to_sprite = [-1]
 
@@ -31,12 +32,11 @@ func _ready():
 	
 	_project_data.sprite_deleted.connect(_on_project_sprite_deleted)
 	
-	_texture_editor.project_data = _project_data
 	_library.project_data = _project_data
 
 
 func _on_project_sprite_deleted(index):
-	var tab_to_remove
+	var tab_to_remove = -1
 	
 	for tab in _tab_to_sprite.size():
 		if _tab_to_sprite[tab] == index:
@@ -47,26 +47,41 @@ func _on_project_sprite_deleted(index):
 		if _tab_to_sprite[tab] > index:
 			_tab_to_sprite[tab] -= 1
 	
-	_main_tab_bar.remove_tab(tab_to_remove)
-	_tab_to_sprite.pop_at(tab_to_remove)
+	if tab_to_remove != -1:
+		_main_tab_bar.remove_tab(tab_to_remove)
+		_tab_to_sprite.pop_at(tab_to_remove)
+		var editor = _tab_container.get_child(tab_to_remove)
+		_tab_container.remove_child(editor)
+		editor.queue_free()
 
 
 func _on_library_edit_selected(index):
-	if not _tab_to_sprite.has(index):
-		print("created new tab for " + _project_data.sprites[index].name)
+	var tab = _tab_to_sprite.find(index)
+	if tab == -1:
 		_main_tab_bar.add_tab(_project_data.sprites[index].name)
 		_tab_to_sprite.push_back(index)
+		
+		# Create new editor and open it
+		var new_editor = TEXTURE_EDITOR.instantiate()
+		new_editor.project_data = _project_data
+		new_editor.sprite_index = index
+		_tab_container.add_child(new_editor)
+		
+		var new_tab = _tab_to_sprite.size()-1
+		_main_tab_bar.current_tab = new_tab
+		_tab_container.current_tab = new_tab
 	else:
-		print("selected tab for " + _project_data.sprites[index].name)
+		_main_tab_bar.current_tab = tab
+		_tab_container.current_tab = tab
 
 
 func _on_main_tab_bar_tab_clicked(tab):
-	if tab == 0:
-		print("selected library")
-	else:
-		print("selected tab for " + _project_data.sprites[_tab_to_sprite[tab]].name)
+	_tab_container.current_tab = tab
 
 
 func _on_main_tab_bar_tab_close_pressed(tab):
 	_main_tab_bar.remove_tab(tab)
 	_tab_to_sprite.pop_at(tab)
+	var editor = _tab_container.get_child(tab)
+	_tab_container.remove_child(editor)
+	editor.queue_free()

@@ -61,15 +61,35 @@ const TRANSPARENT_RAMP = [Color(0.0, 0.0, 0.0, 0.0)]
 ## Ramps that should be processed in decoding colors.
 # Changed does not need to be emitted because this
 # is always updated when sprites is updated.
-@export var ramps: Array[Array] = []:
+@export var ramps := []:
 	get: return ramps
+	set(val):
+		ramps = val
+		_ramp_index_map = {}
+		for i in ramps.size():
+			_ramp_index_map[ramp_to_str(ramps[i])] = i
+		emit_changed()
+
+## Which sprites (given by their indices in sprites array) use the ramp
+## at each index. That is, the index in this array indicates a ramp's
+## index in the ramp array, and the values of this array is an array
+## of sprites (given by their indices) that use the respective ramp.
+@export var ramps_usage := []:
+	get: return ramps_usage
+	set(val):
+		ramps_usage = val
+		for i in ramps_usage.size():
+			var usage = ramps_usage[i]
+			if usage == null or usage.size() == 0:
+				_recycled_ramp_indices.push_back(i)
+		emit_changed()
 
 
 # Used for O(1) lookup time.
 # Maps a value to its respective index.
 var _color_index_map := {}
 var _ramp_index_map := {}
-var _recycled_g_vals := [] # TODO when implementing "delete sprite"
+var _recycled_ramp_indices := []
 
 
 static func color_to_str(color) -> String:
@@ -132,7 +152,7 @@ func num_missing_ramps(ramps) -> int:
 ## The index of the new sprite is returned.
 func create_sprite():
 	var index = sprites.size()
-	sprites.push_back(PickySprite2DData.new("Sprite " + str(index+1)))
+	sprites.push_back(PickySprite2DData.new("New Sprite"))
 	emit_changed()
 
 
@@ -140,6 +160,26 @@ func delete_sprite(index: int):
 	if index < 0 or index >= sprites.size():
 		push_error("Error: Attempted to remove PickySprite2DData at invalid index: " + str(index))
 		return
+	
+	# Remove any ramps that are no longer used
+	#for i in ramps_usage.size():
+		## If the usage is null, then it is unused.
+		#if ramps_usage[i] == null: continue
+		#
+		## First, find where "index" is within a ramp's usage array.
+		#var sprite_usage_index = ramps_usage[i].find(index)
+		#if sprite_usage_index != -1:
+			## If the sprite index is found within the usage array, remove it
+			#ramps_usage[i].remove_at(sprite_usage_index)
+			#
+			## If the ramp is no longer used, remove it entirely, and indicate that
+			## the ramp index should be used for any new ramps.
+			#if ramps_usage[i].size() == 0:
+				#_ramp_index_map.erase(ramp_to_str(ramps[i]))
+				#ramps[i] = null
+				#ramps_usage[i] = null
+				#_recycled_ramp_indices.push_back(i)
+	
 	sprites.pop_at(index)
 	emit_changed()
 	sprite_deleted.emit(index)
@@ -161,7 +201,7 @@ func is_valid_base_textures(base_textures: Array[Texture2D]) -> TexturesStatus:
 		elif texture.get_size() != texture_size:
 			return TexturesStatus.ERR_TEXTURE_SIZE_MISMATCH 
 	
-	var new_ramps_needed = 0
+	var new_ramps = {}
 	# For every pixel, iterate over light levels find which ramps and colors
 	# are used 
 	for x in texture_size.x:
@@ -176,12 +216,11 @@ func is_valid_base_textures(base_textures: Array[Texture2D]) -> TexturesStatus:
 					return TexturesStatus.ERR_UNKNOWN_COLOR
 				# If the color is known, add it to the ramp
 				ramp.push_back(color)
-			# Now check if this ramp exists
-			if not has_ramp(ramp):
-				new_ramps_needed += 1
+			# Now add this ramp to the set
+			new_ramps[ramp] = true
 	
 	# Check that there are enough color ramps available
-	if ramps.size() + new_ramps_needed > 255:
+	if ramps.size() + num_missing_ramps(new_ramps.keys()) - _recycled_ramp_indices.size() > 255:
 		return TexturesStatus.ERR_NOT_ENOUGH_RAMPS
 	
 	return TexturesStatus.OK
@@ -200,10 +239,9 @@ func update_sprite(index: int, base_textures: Array[Texture2D]):
 	# NOTE:
 	# For some reason (likely a compression issue)
 	# the colors are occasionally read incorrectly.
-	# I think a possible fix would be to do some careful
-	# loading in within texture_display such that all
-	# image files are loaded in as Images and then
-	# converted to Texture2Ds.
+	# I don't know of a fix within the plugin, but it's
+	# resolved when the image is re-imported. So just
+	# be sure to document this!
 	for x in texture_size.x:
 		for y in texture_size.y:
 			var ramp = []
@@ -214,66 +252,28 @@ func update_sprite(index: int, base_textures: Array[Texture2D]):
 			var ramp_index = _ramp_index_map.get(ramp_str)
 			# Add ramp to project if it does not exist
 			if ramp_index == null:
-				ramp_index = ramps.size()
-				if ramp_str == TRANSPARENT_ID:
-					ramps.push_back(TRANSPARENT_RAMP)
+				# Use any indices that should be recycled, if available
+				if _recycled_ramp_indices.size() > 0:
+					ramp_index = _recycled_ramp_indices.pop_front()
 				else:
-					ramps.push_back(ramp)
+					ramp_index = ramps.size()
+					ramps.push_back(null)
+					ramps_usage.push_back(null)
+				# Once we know the index, assign the new value
+				if ramp_str == TRANSPARENT_ID:
+					ramps[ramp_index] = TRANSPARENT_RAMP
+				else:
+					ramps[ramp_index] = ramp
 				_ramp_index_map[ramp_str] = ramp_index
-			encoded_image.set_pixel(x, y, Color8(0, index, 0))
+				#ramps_usage[ramp_index] = index
+				print("new ramp: " + ramp_str)
+			encoded_image.set_pixel(x, y, Color8(0, ramp_index, 0))
 	
 	# Update project data
 	sprites[index].base_textures = base_textures
 	sprites[index].texture = ImageTexture.create_from_image(encoded_image)
 	_compile_shader()
-
-
-## Creates a new PickySprite2DData resource based on base_textures. Number of
-## light levels is the length of base_textures.
-## 
-## No validation is done ahead of time. It is assumed that a PickySprite2DData
-## can be created without issue.
-#func create_new_sprite(base_textures: Array[Texture2D], texture_size: Vector2) -> PickySprite2DData:
-	#var encoded_image = Image.create(texture_size.x, texture_size.y, false, Image.FORMAT_RGBA8)
-	#
-	## Generate the encoded image
-	##
-	## NOTE:
-	## For some reason (likely a compression issue)
-	## the colors are occasionally read incorrectly.
-	## I think a possible fix would be to do some careful
-	## loading in within texture_display such that all
-	## image files are loaded in as Images and then
-	## converted to Texture2Ds.
-	#for x in texture_size.x:
-		#for y in texture_size.y:
-			#var ramp = []
-			#for i in base_textures.size():
-				#var color = base_textures[i].get_image().get_pixel(x, y)
-				#ramp.push_back(color)
-			#var ramp_str = ramp_to_str(ramp)
-			#var index = _ramp_index_map.get(ramp_str)
-			## Add ramp to project if it does not exist
-			#if index == null:
-				#index = ramps.size()
-				#if ramp_str == TRANSPARENT_ID:
-					#ramps.push_back(TRANSPARENT_RAMP)
-				#else:
-					#ramps.push_back(ramp)
-				#_ramp_index_map[ramp_str] = index
-			#encoded_image.set_pixel(x, y, Color8(0, index, 0))
-	#
-	#var new_sprite_data = PickySprite2DData.new(
-		#"name_todo",
-		#ImageTexture.create_from_image(encoded_image),
-		#base_textures
-	#)
-	#
-	## Update project data
-	#sprites.push_back(new_sprite_data)
-	#_compile_shader()
-	#
-	#return new_sprite_data
+	emit_changed()
 
 
 func _init():
