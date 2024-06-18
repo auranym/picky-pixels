@@ -7,6 +7,8 @@
 class_name PickyPixelsProjectData
 extends Resource
 
+signal sprite_deleted(index: int)
+
 enum TexturesStatus {
 	OK,
 	ERR_TEXTURE_NULL,
@@ -140,6 +142,7 @@ func delete_sprite(index: int):
 		return
 	sprites.pop_at(index)
 	emit_changed()
+	sprite_deleted.emit(index)
 
 
 func is_valid_base_textures(base_textures: Array[Texture2D]) -> TexturesStatus:
