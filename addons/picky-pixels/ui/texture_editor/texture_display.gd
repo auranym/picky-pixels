@@ -97,6 +97,16 @@ func _drop_data(at_position, data):
 		load_multiple_textures.emit(data.files)
 
 
+func _on_gui_input(event):
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+			zoom_percent *= 1.1
+			_adjust_zoom()
+		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+			zoom_percent /= 1.1
+			_adjust_zoom()
+
+
 func _on_remove_button_pressed():
 	_reset()
 	texture_changed.emit(null)

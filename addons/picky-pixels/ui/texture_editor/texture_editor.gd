@@ -9,6 +9,7 @@ const LIGHT_LEVEL_TAB = preload("res://addons/picky-pixels/ui/texture_editor/lig
 @onready var color_palette = $Main/Config/ColorPalette
 @onready var warning = $Warning
 @onready var save = $Buttons/Save
+@onready var cancel = $Buttons/Cancel
 
 var _project_data: PickyPixelsProjectData = null
 @export var project_data: PickyPixelsProjectData:
@@ -30,6 +31,7 @@ var _project_data: PickyPixelsProjectData = null
 
 var selected_tab: int
 # Index is the light level tab
+var original_textures: Array[Texture2D] = []
 var textures: Array[Texture2D] = []
 var png_regex: RegEx
 
@@ -57,11 +59,14 @@ func _import_sprite_2d_data():
 	if sprite_index == -1 or _project_data == null:
 		textures = [null]
 		_set_light_levels(1)
+		light_levels_spin_box.set_value_no_signal(1)
 	else:
-		textures = _project_data.sprites[sprite_index].base_textures.duplicate()
+		original_textures = _project_data.sprites[sprite_index].base_textures.duplicate()
+		textures = original_textures.duplicate()
 		if textures == []:
 			textures = [null]
 		_set_light_levels(textures.size())
+		light_levels_spin_box.set_value_no_signal(textures.size())
 	_set_selected_light_level_tab(0)
 	_update()
 
@@ -112,6 +117,9 @@ func _set_selected_light_level_tab(index):
 
 func _warn(message: String):
 	save.disabled = true
+	save.tooltip_text = "Fix issues before saving."
+	cancel.disabled = false
+	cancel.tooltip_text = "Discard changes."
 	warning.text = message
 	warning.visible = true
 
@@ -123,11 +131,23 @@ func _update():
 		_warn("Missing project data. This is likely due to a plugin bug. Try restarting your project.")
 		return
 	
+	# Next, make sure there are actually changes worth saving
+	if textures == original_textures:
+		save.disabled = true
+		save.tooltip_text = "No changes to save."
+		cancel.disabled = true
+		cancel.tooltip_text = "No changes to discard."
+		warning.visible = false
+		return
+	
 	var result = _project_data.is_valid_base_textures(textures)
 	
 	# If there are no issues, then enable the save button
 	if result == PickyPixelsProjectData.TexturesStatus.OK:
 		save.disabled = false
+		save.tooltip_text = ""
+		cancel.disabled = false
+		cancel.tooltip_text = "Discard changes."
 		warning.visible = false
 	else:
 		match result:
@@ -190,3 +210,11 @@ func _on_light_levels_value_changed(value):
 
 func _on_save_pressed():
 	_save()
+
+
+func _on_cancel_pressed():
+	textures = original_textures.duplicate()
+	_set_light_levels(textures.size())
+	light_levels_spin_box.set_value_no_signal(textures.size())
+	_set_selected_light_level_tab(0)
+	_update()

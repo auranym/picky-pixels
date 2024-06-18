@@ -90,6 +90,7 @@ disabled = true
 icon = SubResource("ImageTexture_trmtc")
 icon_alignment = 1
 
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
 [connection signal="pressed" from="RemoveButton" to="." method="_on_remove_button_pressed"]
 [connection signal="pressed" from="ZoomOutButton" to="." method="_on_zoom_out_button_pressed"]
 [connection signal="pressed" from="ZoomInButton" to="." method="_on_zoom_in_button_pressed"]
