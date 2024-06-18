@@ -12,16 +12,18 @@ var _project_data: PickyPixelsProjectData = null
 		if _project_data != null:
 			_project_data.changed.disconnect(_import_project_data)
 		
-		if not is_inside_tree():
+		if not is_node_ready():
 			await ready
 		
 		_project_data = d
 		_project_data.changed.connect(_import_project_data)
 		_import_project_data()
 
-@onready var color_palette = $ColorPalette
+@onready var color_palette = $HBoxContainer/ColorPalette
 @onready var item_container = $ItemContainer
 @onready var new_item = $ItemContainer/NewItem
+@onready var load_palette_button = $HBoxContainer/LoadPaletteButton
+@onready var palette_file_dialog = $PaletteFileDialog
 
 
 func _import_project_data():
@@ -48,6 +50,10 @@ func _import_project_data():
 	color_palette.colors = _project_data.palette
 
 
+func _ready():
+	load_palette_button.icon = get_theme_icon("Load", "EditorIcons")
+
+
 func _on_new_item_clicked():
 	_project_data.create_sprite()
 
@@ -58,3 +64,12 @@ func _on_sprite_item_edit_selected(index: int):
 
 func _on_sprite_item_delete_selected(index: int):
 	_project_data.delete_sprite(index)
+
+
+func _on_load_palette_button_pressed():
+	palette_file_dialog.show()
+
+
+func _on_palette_file_dialog_file_selected(path):
+	#var img = Image.load_from_file(path)
+	pass
