@@ -70,6 +70,8 @@ func _on_library_edit_selected(index):
 		var new_tab = _tab_to_sprite.size()-1
 		_main_tab_bar.current_tab = new_tab
 		_tab_container.current_tab = new_tab
+		
+		_library.buttons_disabled = true
 	else:
 		_main_tab_bar.current_tab = tab
 		_tab_container.current_tab = tab
@@ -85,3 +87,5 @@ func _on_main_tab_bar_tab_close_pressed(tab):
 	var editor = _tab_container.get_child(tab)
 	_tab_container.remove_child(editor)
 	editor.queue_free()
+	
+	_library.buttons_disabled = _tab_to_sprite.size() > 1

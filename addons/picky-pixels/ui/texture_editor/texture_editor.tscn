@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" path="res://addons/picky-pixels/ui/texture_editor/texture_editor.gd" id="1_28c4c"]
 [ext_resource type="PackedScene" uid="uid://b4gf4ih7xjhw" path="res://addons/picky-pixels/ui/texture_editor/texture_display.tscn" id="2_exxg4"]
-[ext_resource type="PackedScene" uid="uid://bg0bssr8s5nms" path="res://addons/picky-pixels/ui/texture_editor/color_ramps_indicator.tscn" id="3_ilcpd"]
 [ext_resource type="PackedScene" uid="uid://c3uiy7ykq0yr0" path="res://addons/picky-pixels/ui/color_palette/color_palette.tscn" id="4_b83tm"]
+[ext_resource type="PackedScene" uid="uid://bg0bssr8s5nms" path="res://addons/picky-pixels/ui/color_ramps_indicator/color_ramps_indicator.tscn" id="4_kxjmn"]
 
 [node name="TextureEditor" type="VBoxContainer"]
 anchors_preset = 15
@@ -76,7 +76,7 @@ editable = false
 [node name="HSeparator2" type="HSeparator" parent="Main/Config"]
 layout_mode = 2
 
-[node name="ColorRampsIndicator" parent="Main/Config" instance=ExtResource("3_ilcpd")]
+[node name="ColorRampsIndicator" parent="Main/Config" instance=ExtResource("4_kxjmn")]
 layout_mode = 2
 
 [node name="Warning" type="Label" parent="."]

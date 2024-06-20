@@ -5,16 +5,29 @@ signal edit_selected
 signal delete_selected
 
 const TOOLTIP = preload("res://addons/picky-pixels/ui/tooltip/tooltip.tscn")
+const TOOLTIP_TEXT = "Drag and drop onto a PickySprite2D's data property to add to a scene.\n\nRight click to show options."
+const WARNING_TOOLTIP_TEXT = "This sprite had issues after recompiling. Edit to resolve them."
 
 var _data: PickySprite2DData
 @export var data: PickySprite2DData:
 	get: return _data
 	set(d):
 		_data = d
-		if not is_inside_tree():
+		if not is_node_ready():
 			await ready
+		
 		_generate_texture()
 		_update_label()
+		
+		# Show or hide warning
+		warning_texture_rect.visible = _data.invalid_textures
+		if _data.invalid_textures:
+			tooltip_text = WARNING_TOOLTIP_TEXT
+			no_textures_texture_rect.visible = false
+		else:
+			tooltip_text = TOOLTIP_TEXT
+			if _show_no_texture_icon():
+				no_textures_texture_rect.visible = true
 
 @onready var panel = $Panel
 @onready var texture_rect = $TextureRect
@@ -22,6 +35,7 @@ var _data: PickySprite2DData
 @onready var label = $Label
 @onready var text_edit = $TextEdit
 @onready var sprite_item_popup_menu = $SpriteItemPopupMenu
+@onready var warning_texture_rect = $WarningTextureRect
 @onready var _tooltip_text = tooltip_text
 
 var _mouse_within = false
@@ -33,17 +47,22 @@ func _ready():
 	sprite_item_popup_menu.visible = false
 	no_textures_texture_rect.texture = get_theme_icon("Sprite2D", "EditorIcons")
 	no_textures_texture_rect.visible = false
-	_generate_texture()
-	_update_label()
+	warning_texture_rect.visible = false
+	#_generate_texture()
+	#_update_label()
 
 
-func _generate_texture():
-	if (
+func _show_no_texture_icon():
+	return (
 		_data == null or
 		_data.base_textures == null or
 		_data.base_textures.size() == 0 or 
 		_data.base_textures.back() == null
-	):
+	)
+
+
+func _generate_texture():
+	if _show_no_texture_icon():
 		texture_rect.texture = null
 		no_textures_texture_rect.visible = true
 	else:
@@ -85,8 +104,11 @@ func _hide_text_edit():
 		panel.visible = true
 
 
-
 func _get_drag_data(at_position):
+	# Disable drag and drop if there are any issues
+	if warning_texture_rect.visible == true:
+		return {}
+	
 	return {
 		"type": "resource",
 		"resource": _data

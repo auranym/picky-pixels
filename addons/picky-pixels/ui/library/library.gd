@@ -4,6 +4,20 @@ extends VBoxContainer
 signal edit_selected(index: int)
 
 const SPRITE_ITEM = preload("res://addons/picky-pixels/ui/library/sprite_item.tscn")
+const LOAD_PALETTE_TOOLTIP = "Load color palette from an image. Project will be recompiled."
+const RECOMPILE_TOOLTIP = "Recompile sprite encodings and color ramps. May free up space for new ramps."
+
+@export var buttons_disabled: bool = false:
+	get: return buttons_disabled
+	set(val):
+		buttons_disabled = val
+		if not is_node_ready():
+			await ready
+		var tooltip_warning = "\n\n(Must close all open tabs.)" if buttons_disabled else ""
+		recompile_button.disabled = buttons_disabled
+		recompile_button.tooltip_text = RECOMPILE_TOOLTIP + tooltip_warning
+		load_palette_button.disabled = buttons_disabled
+		load_palette_button.tooltip_text = LOAD_PALETTE_TOOLTIP + tooltip_warning
 
 var _project_data: PickyPixelsProjectData = null
 @export var project_data: PickyPixelsProjectData:
@@ -20,10 +34,19 @@ var _project_data: PickyPixelsProjectData = null
 		_import_project_data()
 
 @onready var color_palette = $HBoxContainer/ColorPalette
-@onready var item_container = $ItemContainer
-@onready var new_item = $ItemContainer/NewItem
-@onready var load_palette_button = $HBoxContainer/LoadPaletteButton
+@onready var item_container = $ScrollContainer/ItemContainer
+@onready var new_item = $ScrollContainer/ItemContainer/NewItem
+@onready var color_ramps_indicator = $HBoxContainer/VBoxContainer/ColorRampsIndicator
+@onready var recompile_button = $HBoxContainer/VBoxContainer/RecompileButton
+@onready var load_palette_button = $HBoxContainer/VBoxContainer/LoadPaletteButton
 @onready var palette_file_dialog = $PaletteFileDialog
+
+
+func _ready():
+	recompile_button.icon = get_theme_icon("Reload", "EditorIcons")
+	recompile_button.tooltip_text = RECOMPILE_TOOLTIP
+	load_palette_button.icon = get_theme_icon("ColorPick", "EditorIcons")
+	load_palette_button.tooltip_text = LOAD_PALETTE_TOOLTIP
 
 
 func _import_project_data():
@@ -48,10 +71,11 @@ func _import_project_data():
 	item_container.move_child(new_item, -1)
 	
 	color_palette.colors = _project_data.palette
+	color_ramps_indicator.ramps = _project_data.ramps.size()
 
 
-func _ready():
-	load_palette_button.icon = get_theme_icon("Load", "EditorIcons")
+func _recompile():
+	print("Recompiled!")
 
 
 func _on_new_item_clicked():
@@ -66,10 +90,16 @@ func _on_sprite_item_delete_selected(index: int):
 	_project_data.delete_sprite(index)
 
 
+func _on_recompile_button_pressed():
+	_recompile()
+
+
 func _on_load_palette_button_pressed():
 	palette_file_dialog.show()
 
 
 func _on_palette_file_dialog_file_selected(path):
 	#var img = Image.load_from_file(path)
-	pass
+	print("updated colors")
+	_recompile()
+
