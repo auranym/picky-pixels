@@ -271,6 +271,7 @@ func update_sprite(index: int, base_textures: Array[Texture2D]):
 	# Update project data
 	sprites[index].base_textures = base_textures
 	sprites[index].texture = ImageTexture.create_from_image(encoded_image)
+	sprites[index].invalid_textures = false
 	compile_shader()
 	emit_changed()
 
