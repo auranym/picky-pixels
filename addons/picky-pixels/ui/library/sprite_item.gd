@@ -66,23 +66,28 @@ func _generate_texture():
 		texture_rect.texture = null
 		no_textures_texture_rect.visible = true
 	else:
-		texture_rect.texture = _data.base_textures.back()
-		# The below commented code is not necessary... I think.
-		# ---
 		# Generate library image by scaling larger dimension to 128
 		# and proportionally scaling the other one.
-		#var library_image: Image = _data.base_textures.back().get_image()
-		#var x = library_image.get_width()
-		#var y = library_image.get_height()
-		#if x > y:
-			#y = int(floor(128.0 * float(y) / float(x)))
-			#x = 128
-		#else:
-			#x = int(floor(128.0 * float(x) / float(y)))
-			#y = 128
-		#library_image.resize(x, y, Image.INTERPOLATE_NEAREST)
-		#no_textures_texture_rect.visible = false
-		#texture_rect.texture = ImageTexture.create_from_image(library_image)
+		# This is necessary to ensure correct image scaling.
+		# Without manual scaling, it is blurry...
+		var base_image: Image = _data.base_textures.back().get_image()
+		var width = base_image.get_width()
+		var height = base_image.get_height()
+		var x = width
+		var y = height
+		if x > y:
+			y = int(floor(128.0 * float(y) / float(x)))
+			x = 128
+		else:
+			x = int(floor(128.0 * float(x) / float(y)))
+			y = 128
+		# Copying is necessary so that we don't modify the original
+		# image resource.
+		var library_image = Image.create(width, height, false, Image.FORMAT_RGBA8)
+		library_image.copy_from(base_image)
+		library_image.resize(x, y, Image.INTERPOLATE_NEAREST)
+		no_textures_texture_rect.visible = false
+		texture_rect.texture = ImageTexture.create_from_image(library_image)
 
 
 func _update_label():
