@@ -163,6 +163,7 @@ func _update():
 
 func _save():
 	_project_data.update_sprite(sprite_index, textures)
+	_import_sprite_2d_data()
 
 
 func _drop_data(at_position, data):

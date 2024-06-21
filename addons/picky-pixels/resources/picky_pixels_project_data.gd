@@ -266,7 +266,6 @@ func update_sprite(index: int, base_textures: Array[Texture2D]):
 					ramps.push_back(ramp)
 				_ramp_index_map[ramp_str] = ramp_index
 				#ramps_usage[ramp_index] = index
-				print("new ramp: " + ramp_str)
 			encoded_image.set_pixel(x, y, Color8(0, ramp_index, 0))
 	
 	# Update project data

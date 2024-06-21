@@ -42,29 +42,15 @@ var _project_data: PickyPixelsProjectData = null
 @onready var palette_file_dialog = $PaletteFileDialog
 @onready var recompile_overlay = $RecompileOverlay
 @onready var recompile_label = $RecompileOverlay/RecompileLabel
-var _recompile_thread: Thread
-var _recompile_mutex: Mutex
-var _recompile_cancelled: bool
-var _recompile_status: String
+var _recompile_in_progress: bool
 
 
 func _ready():
-	_recompile_thread = Thread.new()
-	_recompile_mutex = Mutex.new()
 	recompile_button.icon = get_theme_icon("Reload", "EditorIcons")
 	recompile_button.tooltip_text = RECOMPILE_TOOLTIP
 	load_palette_button.icon = get_theme_icon("ColorPick", "EditorIcons")
 	load_palette_button.tooltip_text = LOAD_PALETTE_TOOLTIP
 	recompile_overlay.visible = false
-
-
-func _exit_tree():
-	if _recompile_thread != null and _recompile_thread.is_started():
-		print("Cancelling compilation...")
-		_recompile_mutex.lock()
-		_recompile_cancelled = true
-		_recompile_mutex.unlock()
-		_recompile_thread.wait_to_finish()
 
 
 func _import_project_data():
@@ -99,55 +85,40 @@ func _import_project_data():
 
 func _recompile(new_palette: Array[Color]):
 	# Make sure there is no current thread
-	if _recompile_thread.is_started():
+	if _recompile_in_progress:
 		print("Recompile already in progress!")
 		return
 	
-	# Safe to do without locking since
-	# this should never be reached while
-	# thread is still running 
-	#_recompile_status = "Compilation started."
+	# Init recompilation
 	recompile_overlay.visible = true
-	_recompile_cancelled = false
-	var base_textures: Array[Array] = []
-	for sprite in _project_data.sprites:
-		base_textures.push_back(sprite.base_textures.duplicate())
-	_recompile_thread.start(_recompile_thread_func.bind(
-		new_palette,
-		base_textures
-	))
-	
-	# Wait for thread to finish
-	while _recompile_thread.is_alive():
-		#recompile_label.text = _recompile_status
-		await get_tree().process_frame
-	# Join thread
-	var new_project = _recompile_thread.wait_to_finish()
-	print(new_project.ramps)
-	print(new_project.palette)
-	recompile_overlay.visible = false
-
-
-func _recompile_thread_func(
-	new_palette: Array[Color],
-	base_textures: Array[Array]
-) -> PickyPixelsProjectData:
-	
+	_recompile_in_progress = true
 	var new_project = PickyPixelsProjectData.new()
 	new_project.palette = new_palette
 	
-	for i in base_textures.size():
-		#_recompile_mutex.lock()
-		#_recompile_status = "Compiling sprite (" + str(i+1) + "/" + str(base_textures.size()) + ")"
-		#_recompile_mutex.unlock()
+	# Iterate over all sprites to recalculate ramps and textures
+	var num_sprites = _project_data.sprites.size()
+	for i in num_sprites:
+		recompile_label.text = "Compiling sprite ({i}/{num}).".format({ "i": str(i), "num": num_sprites })
+		await get_tree().process_frame
 		
 		new_project.create_sprite()
-		if new_project.is_valid_base_textures(base_textures[i]):
-			new_project.update_sprite(i, base_textures[i])
+		var sprite = _project_data.sprites[i]
+		if new_project.is_valid_base_textures(sprite.base_textures) == PickyPixelsProjectData.TexturesStatus.OK:
+			new_project.update_sprite(i, sprite.base_textures)
 		else:
 			new_project.sprites[i].invalid_textures = true
 	
-	return new_project
+	recompile_label.text = "Finishing up."
+	await get_tree().process_frame
+	
+	# Update project data!
+	for i in _project_data.sprites.size():
+		_project_data.sprites[i].texture = new_project.sprites[i].texture
+	_project_data.ramps = new_project.ramps
+	
+	# Hide compile UI
+	_recompile_in_progress = false
+	recompile_overlay.visible = false
 
 
 func _on_new_item_clicked():
