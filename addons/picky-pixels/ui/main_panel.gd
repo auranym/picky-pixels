@@ -11,10 +11,12 @@ var _project_data: PickyPixelsProjectData
 var _tab_to_sprite = [-1]
 
 # DATA MUTATION SOURCES:
-# - Sprite create: library
-# - Sprite edit: TODO
+# - Sprite create: library/library
+# - Sprite data change: texture_editor/texture_editor
 # - Sprite rename: library/sprite_item
-# - Sprite delete: TODO
+# - Sprite delete: library/library
+# - Palette change: library/library
+# - Recompiling: library/library
 
 func _ready():
 	if ResourceLoader.exists(

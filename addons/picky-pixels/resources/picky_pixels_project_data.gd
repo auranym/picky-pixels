@@ -38,7 +38,6 @@ const TRANSPARENT_RAMP = [Color(0.0, 0.0, 0.0, 0.0)]
 		emit_changed()
 
 
-## TYPE TODO
 ## PickySprites managed by this project.
 @export var sprites: Array[PickySprite2DData]:
 	get: return sprites
