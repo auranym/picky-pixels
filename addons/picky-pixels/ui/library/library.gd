@@ -1,5 +1,5 @@
 @tool
-extends VBoxContainer
+extends Control
 
 signal edit_selected(index: int)
 
@@ -33,16 +33,20 @@ var _project_data: PickyPixelsProjectData = null
 		_project_data.changed.connect(_import_project_data)
 		_import_project_data()
 
-@onready var color_palette = $HBoxContainer/ColorPalette
-@onready var item_container = $ScrollContainer/ItemContainer
-@onready var new_item = $ScrollContainer/ItemContainer/NewItem
-@onready var color_ramps_indicator = $HBoxContainer/VBoxContainer/ColorRampsIndicator
-@onready var recompile_button = $HBoxContainer/VBoxContainer/RecompileButton
-@onready var load_palette_button = $HBoxContainer/VBoxContainer/LoadPaletteButton
+@onready var color_palette = $VBoxContainer/HBoxContainer/ColorPalette
+@onready var item_container = $VBoxContainer/ScrollContainer/ItemContainer
+@onready var new_item = $VBoxContainer/ScrollContainer/ItemContainer/NewItem
+@onready var color_ramps_indicator = $VBoxContainer/HBoxContainer/VBoxContainer/ColorRampsIndicator
+@onready var recompile_button = $VBoxContainer/HBoxContainer/VBoxContainer/RecompileButton
+@onready var load_palette_button = $VBoxContainer/HBoxContainer/VBoxContainer/LoadPaletteButton
 @onready var palette_file_dialog = $PaletteFileDialog
+@onready var recompile_overlay = $RecompileOverlay
+@onready var recompile_label = $RecompileOverlay/RecompileLabel
 var _recompile_thread: Thread
 var _recompile_mutex: Mutex
 var _recompile_cancelled: bool
+var _recompile_status: String
+
 
 func _ready():
 	_recompile_thread = Thread.new()
@@ -51,11 +55,12 @@ func _ready():
 	recompile_button.tooltip_text = RECOMPILE_TOOLTIP
 	load_palette_button.icon = get_theme_icon("ColorPick", "EditorIcons")
 	load_palette_button.tooltip_text = LOAD_PALETTE_TOOLTIP
+	recompile_overlay.visible = false
 
 
 func _exit_tree():
 	if _recompile_thread != null and _recompile_thread.is_started():
-		print("cancelling thread...")
+		print("Cancelling compilation...")
 		_recompile_mutex.lock()
 		_recompile_cancelled = true
 		_recompile_mutex.unlock()
@@ -101,27 +106,47 @@ func _recompile(new_palette: Array[Color]):
 	# Safe to do without locking since
 	# this should never be reached while
 	# thread is still running 
+	#_recompile_status = "Compilation started."
+	recompile_overlay.visible = true
 	_recompile_cancelled = false
-	_recompile_thread.start(_recompile_thread_func.bind(new_palette))
+	var base_textures: Array[Array] = []
+	for sprite in _project_data.sprites:
+		base_textures.push_back(sprite.base_textures.duplicate())
+	_recompile_thread.start(_recompile_thread_func.bind(
+		new_palette,
+		base_textures
+	))
+	
 	# Wait for thread to finish
 	while _recompile_thread.is_alive():
+		#recompile_label.text = _recompile_status
 		await get_tree().process_frame
 	# Join thread
 	var new_project = _recompile_thread.wait_to_finish()
-	print("new_project: " + str(new_project.name))
+	print(new_project.ramps)
+	print(new_project.palette)
+	recompile_overlay.visible = false
 
 
-func _recompile_thread_func(new_palette: Array[Color]) -> PickyPixelsProjectData:
-	print("doing expensive operation...")
-	var sum = 0
-	for i in 100000000:
-		if _recompile_cancelled:
-			return null
-		sum += i
-	print(sum)
+func _recompile_thread_func(
+	new_palette: Array[Color],
+	base_textures: Array[Array]
+) -> PickyPixelsProjectData:
+	
 	var new_project = PickyPixelsProjectData.new()
-	new_project.name = "new project"
 	new_project.palette = new_palette
+	
+	for i in base_textures.size():
+		#_recompile_mutex.lock()
+		#_recompile_status = "Compiling sprite (" + str(i+1) + "/" + str(base_textures.size()) + ")"
+		#_recompile_mutex.unlock()
+		
+		new_project.create_sprite()
+		if new_project.is_valid_base_textures(base_textures[i]):
+			new_project.update_sprite(i, base_textures[i])
+		else:
+			new_project.sprites[i].invalid_textures = true
+	
 	return new_project
 
 
