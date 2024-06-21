@@ -115,11 +115,11 @@ func _set_selected_light_level_tab(index):
 	light_levels_tabs.get_child(selected_tab).set_pressed_no_signal(true)
 
 
-func _warn(message: String):
+func _warn(message: String, can_cancel: bool):
 	save.disabled = true
 	save.tooltip_text = "Fix issues before saving."
-	cancel.disabled = false
-	cancel.tooltip_text = "Discard changes."
+	cancel.disabled = not can_cancel
+	cancel.tooltip_text = "Discard changes." if can_cancel else "No changes to discard."
 	warning.text = message
 	warning.visible = true
 
@@ -128,37 +128,39 @@ func _warn(message: String):
 func _update():
 	# First make sure there is a project
 	if _project_data == null:
-		_warn("Missing project data. This is likely due to a plugin bug. Try restarting your project.")
-		return
-	
-	# Next, make sure there are actually changes worth saving
-	if textures == original_textures:
-		save.disabled = true
-		save.tooltip_text = "No changes to save."
-		cancel.disabled = true
-		cancel.tooltip_text = "No changes to discard."
-		warning.visible = false
+		_warn("Missing project data. This is likely due to a plugin bug. Try restarting your project.", false)
 		return
 	
 	var result = _project_data.is_valid_base_textures(textures)
 	
 	# If there are no issues, then enable the save button
+	# if there are changes to save.
 	if result == PickyPixelsProjectData.TexturesStatus.OK:
-		save.disabled = false
-		save.tooltip_text = ""
-		cancel.disabled = false
-		cancel.tooltip_text = "Discard changes."
-		warning.visible = false
+		if textures == original_textures:
+			save.disabled = true
+			save.tooltip_text = "No changes to save."
+			cancel.disabled = true
+			cancel.tooltip_text = "No changes to discard."
+			warning.visible = false
+		else:
+			save.disabled = false
+			save.tooltip_text = ""
+			cancel.disabled = false
+			cancel.tooltip_text = "Discard changes."
+			warning.visible = false
 	else:
+		var can_cancel = textures != original_textures
 		match result:
 			PickyPixelsProjectData.TexturesStatus.ERR_TEXTURE_NULL:
-				_warn("Light levels must all have textures.")
+				_warn("Light levels must all have textures.", can_cancel)
 			PickyPixelsProjectData.TexturesStatus.ERR_TEXTURE_SIZE_MISMATCH:
-				_warn("Light level textures must all be the same size.")
+				_warn("Light level textures must all be the same size.", can_cancel)
 			PickyPixelsProjectData.TexturesStatus.ERR_UNKNOWN_COLOR:
-				_warn("All colors must be from the selected project's color palette.")
+				_warn("All colors must be from the selected project's color palette.", can_cancel)
 			PickyPixelsProjectData.TexturesStatus.ERR_NOT_ENOUGH_RAMPS:
-				_warn("Saving will create too many color ramps. Try removing a light layer or making textures more similar.")
+				_warn("Saving will create too many color ramps. Try removing a light layer or making textures more similar.", can_cancel)
+			_:
+				_warn("Encountered an unknown issue (Error code: " + str(result) + ").", can_cancel)
 
 
 func _save():
