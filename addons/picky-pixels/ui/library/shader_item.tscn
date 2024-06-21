@@ -1,0 +1,56 @@
+[gd_scene load_steps=2 format=3 uid="uid://daxkcdf38itlf"]
+
+[ext_resource type="Script" path="res://addons/picky-pixels/ui/library/shader_item.gd" id="1_3hwtd"]
+
+[node name="ShaderItem" type="Control"]
+custom_minimum_size = Vector2(80, 96)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 32.0
+offset_bottom = 32.0
+tooltip_text = "Drag and drop onto a SubViewportContainer's material property to enable dynamic lighting for PickySprite2Ds. If this shader is missing, dynamic lighting will not work!"
+mouse_default_cursor_shape = 2
+script = ExtResource("1_3hwtd")
+
+[node name="Panel" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -12.0
+offset_top = -12.0
+offset_right = 12.0
+offset_bottom = 12.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = -23.0
+offset_right = -4.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Shader"
+vertical_alignment = 2
+clip_text = true
+text_overrun_behavior = 3
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

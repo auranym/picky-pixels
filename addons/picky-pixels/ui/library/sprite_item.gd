@@ -117,6 +117,8 @@ func _get_drag_data(at_position):
 	if warning_texture_rect.visible == true:
 		return {}
 	
+	print(_data.resource_path)
+	
 	return {
 		"type": "resource",
 		"resource": _data

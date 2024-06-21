@@ -271,17 +271,11 @@ func update_sprite(index: int, base_textures: Array[Texture2D]):
 	# Update project data
 	sprites[index].base_textures = base_textures
 	sprites[index].texture = ImageTexture.create_from_image(encoded_image)
-	_compile_shader()
+	compile_shader()
 	emit_changed()
 
 
-func _init():
-	shader_material = ShaderMaterial.new()
-	shader_material.shader = Shader.new()
-	shader_material.shader.code = "shader_type canvas_item;\nrender_mode unshaded;\n"
-
-
-func _compile_shader():
+func compile_shader():
 	var code = "
 shader_type canvas_item;
 render_mode unshaded;
@@ -290,14 +284,18 @@ const vec4[] COLORS = { {colors} };
 const int[] RAMPS = { {ramps} };
 const int[] RAMPS_POINTERS = { {ramps_pointers} };
 
+uniform bool in_editor;
+
 void fragment() {
-	vec4 c = texture(TEXTURE, UV);
-	int ramp = int(255.0 * c.g);
-	int ramp_pos = RAMPS_POINTERS[2 * ramp];
-	int ramp_size = RAMPS_POINTERS[2 * ramp + 1];
-	int light_level = min(int(floor(mix(0.0, float(ramp_size), c.r))), ramp_size-1);
-	
-	COLOR = COLORS[RAMPS[ramp_pos+light_level]];
+	if (!in_editor) {
+		vec4 c = texture(TEXTURE, UV);
+		int ramp = int(255.0 * c.g);
+		int ramp_pos = RAMPS_POINTERS[2 * ramp];
+		int ramp_size = RAMPS_POINTERS[2 * ramp + 1];
+		int light_level = min(int(floor(mix(0.0, float(ramp_size), c.r))), ramp_size-1);
+		
+		COLOR = COLORS[RAMPS[ramp_pos+light_level]];
+	}
 }
 ".trim_prefix("\n").trim_suffix("\n");
 	
@@ -333,7 +331,7 @@ void fragment() {
 	
 	# Make sure shader material exists
 	if shader_material == null:
-		shader_material = ShaderMaterial.new()
+		shader_material = PickyPixelsShaderMaterial.new()
 		shader_material.shader = Shader.new()
 	
 	shader_material.shader.code = code.format({
@@ -342,3 +340,9 @@ void fragment() {
 		"ramps_pointers": ",".join(ramps_pointers_compiled),
 		"num_ramps": ramps.size() # TEST just to see if the compiled shader works
 	})
+
+
+func _init():
+	shader_material = PickyPixelsShaderMaterial.new()
+	shader_material.shader = Shader.new()
+	shader_material.shader.code = "shader_type canvas_item;\nrender_mode unshaded;\nuniform bool in_editor;"

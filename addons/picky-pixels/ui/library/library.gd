@@ -33,6 +33,7 @@ var _project_data: PickyPixelsProjectData = null
 		_project_data.changed.connect(_import_project_data)
 		_import_project_data()
 
+@onready var shader_item = $VBoxContainer/HBoxContainer/ShaderItem
 @onready var color_palette = $VBoxContainer/HBoxContainer/ColorPalette
 @onready var item_container = $VBoxContainer/ScrollContainer/ItemContainer
 @onready var new_item = $VBoxContainer/ScrollContainer/ItemContainer/NewItem
@@ -79,6 +80,7 @@ func _import_project_data():
 	
 	item_container.move_child(new_item, -1)
 	
+	shader_item.shader_material = _project_data.shader_material
 	color_palette.colors = _project_data.palette
 	color_ramps_indicator.ramps = _project_data.ramps.size()
 
@@ -117,6 +119,7 @@ func _recompile(new_palette: Array[Color]):
 	for i in _project_data.sprites.size():
 		_project_data.sprites[i].texture = new_project.sprites[i].texture
 		_project_data.sprites[i].invalid_textures = new_project.sprites[i].invalid_textures
+	_project_data.shader_material = new_project.shader_material
 	_import_project_data()
 	
 	# Hide compile UI
