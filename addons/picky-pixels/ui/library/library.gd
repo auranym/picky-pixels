@@ -112,9 +112,12 @@ func _recompile(new_palette: Array[Color]):
 	await get_tree().process_frame
 	
 	# Update project data!
+	_project_data.ramps = new_project.ramps
+	_project_data.palette = new_palette
 	for i in _project_data.sprites.size():
 		_project_data.sprites[i].texture = new_project.sprites[i].texture
-	_project_data.ramps = new_project.ramps
+		_project_data.sprites[i].invalid_textures = new_project.sprites[i].invalid_textures
+	_import_project_data()
 	
 	# Hide compile UI
 	_recompile_in_progress = false
@@ -142,7 +145,19 @@ func _on_load_palette_button_pressed():
 
 
 func _on_palette_file_dialog_file_selected(path):
-	#var img = Image.load_from_file(path)
-	print("updated colors")
-	#_recompile()
+	var img = Image.load_from_file(path)
+	var colors_set = {}
+	for x in img.get_width():
+		for y in img.get_height():
+			var color = img.get_pixel(x, y)
+			if color.a8 == 255:
+				colors_set[color] = true
+	
+	# Make sure it is the correct type...
+	var colors: Array[Color] = []
+	for key in colors_set.keys():
+		var color: Color = key
+		colors.push_back(color)
+	
+	_recompile(colors)
 

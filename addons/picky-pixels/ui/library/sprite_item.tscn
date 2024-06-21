@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://beek2fwj5unn2"]
+[gd_scene load_steps=7 format=3 uid="uid://beek2fwj5unn2"]
 
 [ext_resource type="Script" path="res://addons/picky-pixels/ui/library/sprite_item.gd" id="1_w04ta"]
 [ext_resource type="PackedScene" uid="uid://dcvgvnfo5rsqe" path="res://addons/picky-pixels/ui/library/sprite_item_popup_menu.tscn" id="2_6g3ok"]
 [ext_resource type="Texture2D" uid="uid://b0dh1cxplj7tx" path="res://addons/picky-pixels/ui/library/warning_icon.png" id="2_d777d"]
+[ext_resource type="Texture2D" uid="uid://cq423vlhsifda" path="res://test/sprites/applie0.png" id="2_r4emk"]
 
 [sub_resource type="Image" id="Image_k7pbn"]
 data = {
@@ -48,7 +49,7 @@ offset_left = -64.0
 offset_right = 64.0
 offset_bottom = 128.0
 grow_horizontal = 2
-stretch_mode = 3
+texture = ExtResource("2_r4emk")
 
 [node name="NoTexturesTextureRect" type="TextureRect" parent="."]
 visible = false
