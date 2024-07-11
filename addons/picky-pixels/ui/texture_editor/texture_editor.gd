@@ -126,6 +126,9 @@ func _warn(message: String, can_cancel: bool):
 
 # Called whenever a texture or light level is added or removed.
 func _update():
+	
+	print("update called")
+	
 	# First make sure there is a project
 	if _project_data == null:
 		_warn("Missing project data. This is likely due to a plugin bug. Try restarting your project.", false)
@@ -137,8 +140,8 @@ func _update():
 	# if there are changes to save.
 	if result == PickyPixelsProjectData.TexturesStatus.OK:
 		if textures == original_textures:
-			save.disabled = true
-			save.tooltip_text = "No changes to save."
+			save.disabled = false
+			save.tooltip_text = "Recompile texture."
 			cancel.disabled = true
 			cancel.tooltip_text = "No changes to discard."
 			warning.visible = false
@@ -168,11 +171,7 @@ func _save():
 	_import_sprite_2d_data()
 
 
-func _drop_data(at_position, data):
-	print(data.files)
-
-
-func _on_texture_display_texture_changed(texture):
+func _on_texture_display_loaded_texture(texture):
 	textures[selected_tab] = texture
 	_update()
 
@@ -186,6 +185,7 @@ func _on_texture_display_load_multiple_textures(texture_files):
 			textures[i] = null
 	
 	texture_display.set_texture(textures[selected_tab])
+	_update()
 
 
 func _on_light_level_tab_button_pressed(index: int):

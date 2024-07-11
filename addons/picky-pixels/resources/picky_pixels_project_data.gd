@@ -248,6 +248,10 @@ func update_sprite(index: int, base_textures: Array[Texture2D]):
 				var color = base_textures[i].get_image().get_pixel(x, y)
 				ramp.push_back(color)
 			var ramp_str = ramp_to_str(ramp)
+			# Skip transparency
+			if ramp_str == TRANSPARENT_ID:
+				continue
+			
 			var ramp_index = _ramp_index_map.get(ramp_str)
 			# Add ramp to project if it does not exist
 			if ramp_index == null:
@@ -260,10 +264,7 @@ func update_sprite(index: int, base_textures: Array[Texture2D]):
 					#ramps_usage.push_back(null)
 				ramp_index = ramps.size()
 				# Once we know the index, assign the new value
-				if ramp_str == TRANSPARENT_ID:
-					ramps.push_back(TRANSPARENT_RAMP)
-				else:
-					ramps.push_back(ramp)
+				ramps.push_back(ramp)
 				_ramp_index_map[ramp_str] = ramp_index
 				#ramps_usage[ramp_index] = index
 			encoded_image.set_pixel(x, y, Color8(0, ramp_index, 0))
@@ -289,13 +290,15 @@ uniform bool in_editor;
 
 void fragment() {
 	if (!in_editor) {
-		vec4 c = texture(TEXTURE, UV);
-		int ramp = int(255.0 * c.g);
-		int ramp_pos = RAMPS_POINTERS[2 * ramp];
-		int ramp_size = RAMPS_POINTERS[2 * ramp + 1];
-		int light_level = min(int(floor(mix(0.0, float(ramp_size), c.r))), ramp_size-1);
-		
-		COLOR = COLORS[RAMPS[ramp_pos+light_level]];
+		if (COLOR.a == 1.0) {
+			vec4 c = texture(TEXTURE, UV);
+			int ramp = int(255.0 * c.g);
+			int ramp_pos = RAMPS_POINTERS[2 * ramp];
+			int ramp_size = RAMPS_POINTERS[2 * ramp + 1];
+			int light_level = min(int(floor(mix(0.0, float(ramp_size), c.r))), ramp_size-1);
+			
+			COLOR = COLORS[RAMPS[ramp_pos+light_level]];
+		}
 	}
 }
 ".trim_prefix("\n").trim_suffix("\n");

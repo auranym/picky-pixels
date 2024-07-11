@@ -1,7 +1,7 @@
 @tool
 extends Panel
 
-signal texture_changed(texture)
+signal loaded_texture(texture)
 signal load_multiple_textures(textures)
 
 @onready var texture_rect = $TextureRect
@@ -42,8 +42,6 @@ func _set_non_null_texture(texture: Texture2D):
 	
 	# Center the image and zoom based on the new image
 	_adjust_zoom()
-	
-	texture_changed.emit(texture)
 
 
 func _reset():
@@ -90,9 +88,9 @@ func _can_drop_data(at_position, data):
 
 func _drop_data(at_position, data):
 	if data.files.size() == 1:
-		_set_non_null_texture(
-			load(data.files[0])
-		)
+		var texture = load(data.files[0])
+		_set_non_null_texture(texture)
+		loaded_texture.emit(texture)
 	else:
 		load_multiple_textures.emit(data.files)
 
@@ -109,7 +107,7 @@ func _on_gui_input(event):
 
 func _on_remove_button_pressed():
 	_reset()
-	texture_changed.emit(null)
+	loaded_texture.emit(null)
 
 
 func _on_zoom_out_button_pressed():

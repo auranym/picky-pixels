@@ -25,12 +25,17 @@ func _ready():
 	):
 		_project_data = load(DEFAULT_PROJECT)
 		print("Loaded PickyPixels project (%s)" % DEFAULT_PROJECT)
-	# Create project if it does not yet exist
 	else:
-		_project_data = PickyPixelsProjectData.new()
-		_project_data.resource_path = DEFAULT_PROJECT
-		ResourceSaver.save(_project_data)
-		print("Created new PickyPixels project (%s)" % DEFAULT_PROJECT)
+		# Try to load from file directly if resource loader isn't ready yet
+		_project_data = ResourceLoader.load(DEFAULT_PROJECT)
+		if _project_data == null:
+			# Create project if it does not yet exist
+			_project_data = PickyPixelsProjectData.new()
+			_project_data.resource_path = DEFAULT_PROJECT
+			ResourceSaver.save(_project_data)
+			print("Created new PickyPixels project (%s)" % DEFAULT_PROJECT)
+		else:
+			print("Loaded PickyPixels project (%s)" % DEFAULT_PROJECT)
 	
 	_project_data.sprite_deleted.connect(_on_project_sprite_deleted)
 	
