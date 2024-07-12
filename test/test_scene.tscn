@@ -1,0 +1,79 @@
+[gd_scene load_steps=7 format=3 uid="uid://cwqqcmyppo0bc"]
+
+[ext_resource type="Texture2D" uid="uid://dgiiew3ebkcna" path="res://test/new_image_texture.tres" id="1_7s3sx"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x4spp"]
+atlas = ExtResource("1_7s3sx")
+region = Rect2(0, 0, 16, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_megu0"]
+atlas = ExtResource("1_7s3sx")
+region = Rect2(16, 0, 16, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_sam0g"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x4spp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_megu0")
+}],
+"loop": true,
+"name": &"default",
+"speed": 2.0
+}]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_4lryq"]
+texture = ExtResource("1_7s3sx")
+0:0/0 = 0
+1:0/0 = 0
+0:1/0 = 0
+1:1/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_44cyl"]
+sources/0 = SubResource("TileSetAtlasSource_4lryq")
+
+[node name="TestScene" type="Node"]
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.2, 0.129412, 0.141176, 1)
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+stretch_shrink = 10
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+transparent_bg = true
+handle_input_locally = false
+snap_2d_transforms_to_pixel = true
+snap_2d_vertices_to_pixel = true
+canvas_item_default_texture_filter = 0
+size = Vector2i(96, 72)
+render_target_update_mode = 4
+
+[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport"]
+position = Vector2(24, 32)
+texture = ExtResource("1_7s3sx")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="SubViewportContainer/SubViewport"]
+position = Vector2(48, 32)
+sprite_frames = SubResource("SpriteFrames_sam0g")
+autoplay = "default"
+frame_progress = 0.484041
+
+[node name="TileMap" type="TileMap" parent="SubViewportContainer/SubViewport"]
+position = Vector2(64, 16)
+tile_set = SubResource("TileSet_44cyl")
+format = 2
+layer_0/tile_data = PackedInt32Array(65537, 0, 0, 0, 65536, 1, 65536, 65536, 0, 1, 0, 1)
