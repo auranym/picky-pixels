@@ -1,45 +1,25 @@
 @tool
 extends VBoxContainer
 
-const DEFAULT_PROJECT = "res://picky_pixels_project_data.res"
+# Scenes
 const TEXTURE_EDITOR = preload("res://addons/picky-pixels/ui/texture_editor/texture_editor.tscn")
 
 @onready var _library = $TabContainer/Library
 @onready var _main_tab_bar = $HBoxContainer/MainTabBar
 @onready var _tab_container = $TabContainer
-var _project_data: PickyPixelsProjectData
-var _tab_to_sprite = [-1]
-
-# DATA MUTATION SOURCES:
-# - Sprite create: library/library
-# - Sprite data change: texture_editor/texture_editor
-# - Sprite rename: library/sprite_item
-# - Sprite delete: library/library
-# - Palette change: library/library
-# - Recompiling: library/library
+var _tab_to_resource = [null]
 
 func _ready():
-	if ResourceLoader.exists(
-		DEFAULT_PROJECT,
-		"PickyPixelsProjectData"
-	):
-		_project_data = load(DEFAULT_PROJECT)
-		print("Loaded PickyPixels project (%s)" % DEFAULT_PROJECT)
-	else:
-		# Try to load from file directly if resource loader isn't ready yet
-		_project_data = ResourceLoader.load(DEFAULT_PROJECT)
-		if _project_data == null:
-			# Create project if it does not yet exist
-			_project_data = PickyPixelsProjectData.new()
-			_project_data.resource_path = DEFAULT_PROJECT
-			ResourceSaver.save(_project_data)
-			print("Created new PickyPixels project (%s)" % DEFAULT_PROJECT)
-		else:
-			print("Loaded PickyPixels project (%s)" % DEFAULT_PROJECT)
-	
-	_project_data.sprite_deleted.connect(_on_project_sprite_deleted)
-	
-	_library.project_data = _project_data
+	PickyPixelsManager.instance.updated.connect(_on_picky_pixels_manager_updated)
+	_library.edit_selected.connect(_on_library_edit_selected)
+
+
+func _on_picky_pixels_manager_updated():
+	pass
+
+
+
+
 
 
 func _on_project_sprite_deleted(index):

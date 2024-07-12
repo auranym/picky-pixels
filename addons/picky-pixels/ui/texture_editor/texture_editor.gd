@@ -127,8 +127,6 @@ func _warn(message: String, can_cancel: bool):
 # Called whenever a texture or light level is added or removed.
 func _update():
 	
-	print("update called")
-	
 	# First make sure there is a project
 	if _project_data == null:
 		_warn("Missing project data. This is likely due to a plugin bug. Try restarting your project.", false)
