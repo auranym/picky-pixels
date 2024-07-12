@@ -9,7 +9,6 @@ tooltip_text = "Color behavior for each pixel at each light level is stored by g
 
 If you are running out of color ramps, consider using less colors in your palette or decrease the number of light levels."
 script = ExtResource("1_2mkei")
-max_ramps = 255
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 2
@@ -20,4 +19,4 @@ text = "Color Ramps Used:"
 [node name="Indicator" type="Label" parent="."]
 layout_mode = 2
 size_flags_vertical = 0
-text = "0/255"
+text = "0/256"

@@ -7,6 +7,7 @@ const TOOLTIP = preload("res://addons/picky-pixels/ui/tooltip/tooltip.tscn")
 @onready var texture_rect = $TextureRect
 @onready var panel = $Panel
 
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	texture_rect.texture = get_theme_icon("ShaderMaterial", "EditorIcons")

@@ -11,23 +11,19 @@ const LIGHT_LEVEL_TAB = preload("res://addons/picky-pixels/ui/texture_editor/lig
 @onready var save = $Buttons/Save
 @onready var cancel = $Buttons/Cancel
 
-var _project_data: PickyPixelsProjectData = null
-@export var project_data: PickyPixelsProjectData:
-	get: return _project_data
+@export var texture: PickyPixelsImageTexture:
+	get: return texture
 	set(val):
 		if not is_node_ready():
 			await ready
-		_project_data = val
-		_import_project_data()
-
-
-@export var sprite_index: int = -1:
-	get: return sprite_index
-	set(val):
-		if not is_node_ready():
-			await ready
-		sprite_index = val
-		_import_sprite_2d_data()
+		texture = val
+		textures = texture.base_textures.duplicate()
+		if textures.size() == 0:
+			textures = [null]
+		original_textures = textures.duplicate()
+		
+		_set_light_levels(textures.size())
+		_update()
 
 var selected_tab: int
 # Index is the light level tab
@@ -37,37 +33,12 @@ var png_regex: RegEx
 
 
 func _ready():
-	color_ramps_indicator.max_ramps = 255
 	png_regex = RegEx.new()
 	png_regex.compile(".*\\.png$")
-	#_import_project_data()
-	#_import_sprite_2d_data()
-
-
-func _import_project_data():
-	if _project_data == null:
-		color_ramps_indicator.ramps = 0
-		color_palette.colors = [] as Array[Color]
-	else:
-		color_ramps_indicator.ramps = _project_data.ramps.size()
-		color_palette.colors = _project_data.palette
-	sprite_index = -1
-	_update()
-
-
-func _import_sprite_2d_data():
-	if sprite_index == -1 or _project_data == null:
-		textures = [null]
-		_set_light_levels(1)
-		light_levels_spin_box.set_value_no_signal(1)
-	else:
-		original_textures = _project_data.sprites[sprite_index].base_textures.duplicate()
-		textures = original_textures.duplicate()
-		if textures == []:
-			textures = [null]
-		_set_light_levels(textures.size())
-		light_levels_spin_box.set_value_no_signal(textures.size())
-	_set_selected_light_level_tab(0)
+	
+	# Every time there is a data update, reimport the texture resource
+	PickyPixelsManager.get_instance().updated.connect(_update)
+	
 	_update()
 
 
@@ -126,17 +97,25 @@ func _warn(message: String, can_cancel: bool):
 
 # Called whenever a texture or light level is added or removed.
 func _update():
+	if not is_node_ready():
+		await ready
 	
-	# First make sure there is a project
-	if _project_data == null:
+	var manager = PickyPixelsManager.get_instance()
+	
+	# First make sure there is a project and texture resource
+	if manager.project_data == null:
 		_warn("Missing project data. This is likely due to a plugin bug. Try restarting your project.", false)
 		return
 	
-	var result = _project_data.is_valid_base_textures(textures)
+	if texture == null:
+		_warn("Missing PickyPixelsImageTexture resource. This is likely due to a plugin bug. Try restarting your project.", false)
+		return
+	
+	var result = manager.is_valid_base_textures(textures)
 	
 	# If there are no issues, then enable the save button
 	# if there are changes to save.
-	if result == PickyPixelsProjectData.TexturesStatus.OK:
+	if result == PickyPixelsManager.TexturesStatus.OK:
 		if textures == original_textures:
 			save.disabled = false
 			save.tooltip_text = "Recompile texture."
@@ -152,21 +131,16 @@ func _update():
 	else:
 		var can_cancel = textures != original_textures
 		match result:
-			PickyPixelsProjectData.TexturesStatus.ERR_TEXTURE_NULL:
+			PickyPixelsManager.TexturesStatus.ERR_TEXTURE_NULL:
 				_warn("Light levels must all have textures.", can_cancel)
-			PickyPixelsProjectData.TexturesStatus.ERR_TEXTURE_SIZE_MISMATCH:
+			PickyPixelsManager.TexturesStatus.ERR_TEXTURE_SIZE_MISMATCH:
 				_warn("Light level textures must all be the same size.", can_cancel)
-			PickyPixelsProjectData.TexturesStatus.ERR_UNKNOWN_COLOR:
+			PickyPixelsManager.TexturesStatus.ERR_UNKNOWN_COLOR:
 				_warn("All colors must be from the selected project's color palette.", can_cancel)
-			PickyPixelsProjectData.TexturesStatus.ERR_NOT_ENOUGH_RAMPS:
+			PickyPixelsManager.TexturesStatus.ERR_NOT_ENOUGH_RAMPS:
 				_warn("Saving will create too many color ramps. Try removing a light layer or making textures more similar.", can_cancel)
 			_:
 				_warn("Encountered an unknown issue (Error code: " + str(result) + ").", can_cancel)
-
-
-func _save():
-	_project_data.update_sprite(sprite_index, textures)
-	_import_sprite_2d_data()
 
 
 func _on_texture_display_loaded_texture(texture):
@@ -210,7 +184,7 @@ func _on_light_levels_value_changed(value):
 
 
 func _on_save_pressed():
-	_save()
+	PickyPixelsManager.get_instance().compile_texture(texture, textures)
 
 
 func _on_cancel_pressed():

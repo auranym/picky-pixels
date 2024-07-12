@@ -1,6 +1,25 @@
 class_name PickyPixelsManager
 extends Node
 
+## Main class used to interface with data within the PickyPixels plugin.
+## This is a singleton that allows any part of the UI to update data and
+## respond to data updated via the "updated" signal (and other more
+## specialized signals).
+##
+## Types of data are defined within the resources folder and begin with
+## "picky_pixels_" and serve as types that can be saved as Resource files.
+## This manager class handles where and how these Resource files are
+## instanced and saved.
+
+# DATA MUTATION SOURCES:
+# - Resource create: library/new_item
+# - Resource rename: library/texture_item
+# - Resrouce data change: texture_editor/texture_editor
+# - Resource delete: library/texture_item
+# - Palette change: library/library
+# - Recompiling: library/library
+
+signal instantiated
 signal updated
 signal recompile_started
 signal recompile_finished
@@ -11,6 +30,8 @@ const PROJECT_DATA_PATH = DIR_PATH + "/project_data.res"
 const TEXTURES_DIR_PATH = DIR_PATH + "/textures"
 const SHADERS_DIR_PATH = DIR_PATH + "/shaders"
 const PROJECT_SHADER_MATERIAL_PATH = SHADERS_DIR_PATH + "/main.material"
+# Other constants
+const MAX_NUM_RAMPS = 256
 
 # Used for determining whether texture can be compiled with new
 # base_textures or not.
@@ -21,8 +42,6 @@ enum TexturesStatus {
 	ERR_UNKNOWN_COLOR = 3,
 	ERR_NOT_ENOUGH_RAMPS = 4
 }
-
-static var instance: PickyPixelsManager
 
 var project_data: PickyPixelsProjectData = null:
 	get: return project_data
@@ -36,23 +55,44 @@ var project_textures: Array[PickyPixelsImageTexture] = []:
 var project_shader_material: ShaderMaterial = null:
 	get: return project_shader_material
 
+# Singleton instance
+static var _instance: PickyPixelsManager
 # Used for O(1) lookup time to see if a texture exists or not.
 var _project_textures_set: Dictionary = {}
 # Used to space out recompiling across frames
 var _recompile_in_progress: bool = false
 var _recompiling_text_status: String = ""
 
-# DATA MUTATION SOURCES:
-# - Sprite create: library/library
-# - Sprite data change: texture_editor/texture_editor
-# - Sprite rename: library/sprite_item
-# - Sprite delete: library/library
-# - Palette change: library/library
-# - Recompiling: library/library
+
+func _enter_tree():
+	if _instance == null:
+		_instance = self
+	else:
+		push_error("Instance of PickyPixelsManager already in scene tree.")
 
 
-static func _static_init():
-	instance = PickyPixelsManager.new()
+func _ready():
+	if _instance == self:
+		_instance.load_project()
+		instantiated.emit()
+
+
+func _exit_tree():
+	if _instance == self:
+		_instance = null
+
+
+static func get_instance() -> PickyPixelsManager:
+	if _instance == null:
+		push_error("Instance not yet in scene tree. Await for \"instantianted\" signal before accessing.")
+	return _instance
+
+
+## Returns true if the passed resource is a PickyPixels resource object that
+## is displayed within the library. A valid resource is one of the following:
+## - PickyPixelsImageTexture
+static func is_valid_resource(resource: Resource) -> bool:
+	return resource is PickyPixelsImageTexture
 
 
 func load_project():
@@ -65,6 +105,9 @@ func load_project():
 	_load_project_file()
 	_load_texture_files()
 	_load_shader_material_file()
+	
+	# Pass along any changed notifications
+	project_data.changed.connect(func(): updated.emit())
 	
 	# Then, emit that there has been an update has changed so that the UI
 	# can respond.
@@ -115,14 +158,22 @@ func get_recompile_text_status():
 
 
 func is_texture_with_name(name_str: String) -> bool:
-	return _project_textures_set.has(TEXTURES_DIR_PATH + "/" + name_str)
+	return _project_textures_set.has(name_str)
+
+
+func has_texture(resource: Resource) -> bool:
+	if resource is PickyPixelsImageTexture:
+		return project_textures.has(resource)
+	else:
+		return false
 
 
 ## Creates a new PickyPixelsImageTexture resource with the file name provided.
 ## This function assumes that is_texture_with_name(name_str) returns false.
 func create_texture(name_str: String):
 	var texture = PickyPixelsImageTexture.new()
-	texture.resource_path = TEXTURES_DIR_PATH + "/" + name_str
+	texture.resource_name = name_str
+	texture.resource_path = TEXTURES_DIR_PATH + "/" + name_str + ".res"
 	ResourceSaver.save(texture)
 	_load_texture_files()
 	updated.emit()
@@ -132,7 +183,9 @@ func create_texture(name_str: String):
 ## and reloads textures.
 ## This function assumes that is_texture_with_name(new_name_str) returns false.
 func rename_texture(resource: PickyPixelsImageTexture, new_name_str: String):
-	resource.resource_path = TEXTURES_DIR_PATH + "/" + new_name_str
+	DirAccess.rename_absolute(resource.resource_path, TEXTURES_DIR_PATH + "/" + new_name_str + ".res")
+	resource.resource_name = new_name_str
+	resource.resource_path = TEXTURES_DIR_PATH + "/" + new_name_str + ".res"
 	ResourceSaver.save(resource)
 	_load_texture_files()
 	updated.emit()
@@ -335,10 +388,10 @@ func _load_texture_files():
 	_project_textures_set = {}
 	
 	for file in DirAccess.get_files_at(TEXTURES_DIR_PATH):
-		var texture = load(file)
+		var texture = load(TEXTURES_DIR_PATH + "/" + file)
 		if texture is PickyPixelsImageTexture:
 			project_textures.push_back(texture)
-			_project_textures_set[texture.resource_path] = texture
+			_project_textures_set[texture.resource_name] = texture
 
 
 func _load_shader_material_file():

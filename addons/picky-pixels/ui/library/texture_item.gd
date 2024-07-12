@@ -2,17 +2,16 @@
 extends Control
 
 signal edit_selected
-signal delete_selected
 
 const TOOLTIP = preload("res://addons/picky-pixels/ui/tooltip/tooltip.tscn")
 const TOOLTIP_TEXT = "Drag and drop onto a PickySprite2D's data property to add to a scene.\n\nRight click to show options."
 const WARNING_TOOLTIP_TEXT = "This sprite had issues after recompiling. Edit to resolve them."
 
-var _data: PickySprite2DData
-@export var data: PickySprite2DData:
-	get: return _data
-	set(d):
-		_data = d
+
+@export var texture: PickyPixelsImageTexture:
+	get: return texture
+	set(val):
+		texture = val
 		if not is_node_ready():
 			await ready
 		
@@ -20,8 +19,8 @@ var _data: PickySprite2DData
 		_update_label()
 		
 		# Show or hide warning
-		warning_texture_rect.visible = _data.invalid_textures
-		if _data.invalid_textures:
+		warning_texture_rect.visible = texture.invalid_textures
+		if texture.invalid_textures:
 			tooltip_text = WARNING_TOOLTIP_TEXT
 			no_textures_texture_rect.visible = false
 		else:
@@ -48,16 +47,14 @@ func _ready():
 	no_textures_texture_rect.texture = get_theme_icon("Sprite2D", "EditorIcons")
 	no_textures_texture_rect.visible = false
 	warning_texture_rect.visible = false
-	#_generate_texture()
-	#_update_label()
 
 
 func _show_no_texture_icon():
 	return (
-		_data == null or
-		_data.base_textures == null or
-		_data.base_textures.size() == 0 or 
-		_data.base_textures.back() == null
+		texture == null or
+		texture.base_textures == null or
+		texture.base_textures.size() == 0 or 
+		texture.base_textures.back() == null
 	)
 
 
@@ -70,7 +67,7 @@ func _generate_texture():
 		# and proportionally scaling the other one.
 		# This is necessary to ensure correct image scaling.
 		# Without manual scaling, it is blurry...
-		var base_image: Image = _data.base_textures.back().get_image()
+		var base_image: Image = texture.base_textures.back().get_image()
 		var width = base_image.get_width()
 		var height = base_image.get_height()
 		var x = width
@@ -91,22 +88,26 @@ func _generate_texture():
 
 
 func _update_label():
-	if _data == null or _data.name == null:
+	if texture == null or texture.resource_name == null:
 		label.text = ""
 	else:
-		label.text = _data.name
+		label.text = texture.resource_name
 	text_edit.text = label.text
 
 
 func _hide_text_edit():
-	label.text = text_edit.text
 	text_edit.visible = false
 	text_edit.editable = false
 	label.visible = true
 	tooltip_text = _tooltip_text
 	
-	# Update data
-	_data.name = label.text
+	# Update data if new name is valid
+	var manager = PickyPixelsManager.get_instance()
+	if not manager.is_texture_with_name(text_edit.text):
+		label.text = text_edit.text
+		manager.rename_texture(texture, text_edit.text)
+	else:
+		text_edit.text = label.text
 	
 	if _mouse_within:
 		panel.visible = true
@@ -114,14 +115,12 @@ func _hide_text_edit():
 
 func _get_drag_data(at_position):
 	# Disable drag and drop if there are any issues
-	if warning_texture_rect.visible == true:
+	if texture == null or texture.invalid_textures:
 		return {}
-	
-	print(_data.resource_path)
 	
 	return {
 		"type": "resource",
-		"resource": _data
+		"resource": texture
 	}
 
 
@@ -188,7 +187,7 @@ func _on_sprite_item_popup_menu_rename_pressed():
 
 
 func _on_sprite_item_popup_menu_delete_pressed():
-	delete_selected.emit()
+	PickyPixelsManager.get_instance().delete_texture(texture)
 
 
 func _on_text_edit_focus_exited():
