@@ -23,6 +23,7 @@ const LIGHT_LEVEL_TAB = preload("res://addons/picky-pixels/ui/texture_editor/lig
 		original_textures = textures.duplicate()
 		
 		_set_light_levels(textures.size())
+		_set_selected_light_level_tab(0)
 		_update()
 
 var selected_tab: int
@@ -43,6 +44,8 @@ func _ready():
 
 
 func _set_light_levels(value):
+	light_levels_spin_box.set_value_no_signal(value)
+	
 	# Update light level tabs
 	var value_diff = value - light_levels_tabs.get_child_count()
 	if value_diff > 0:
@@ -185,11 +188,13 @@ func _on_light_levels_value_changed(value):
 
 func _on_save_pressed():
 	PickyPixelsManager.get_instance().compile_texture(texture, textures)
+	original_textures = textures.duplicate()
+	_set_selected_light_level_tab(0)
+	_update()
 
 
 func _on_cancel_pressed():
 	textures = original_textures.duplicate()
 	_set_light_levels(textures.size())
-	light_levels_spin_box.set_value_no_signal(textures.size())
 	_set_selected_light_level_tab(0)
 	_update()

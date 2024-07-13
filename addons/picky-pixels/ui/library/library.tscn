@@ -1,12 +1,13 @@
-[gd_scene load_steps=8 format=3 uid="uid://cd1kje1mqpcuq"]
+[gd_scene load_steps=9 format=3 uid="uid://cd1kje1mqpcuq"]
 
 [ext_resource type="Script" path="res://addons/picky-pixels/ui/library/library.gd" id="1_fod1r"]
 [ext_resource type="PackedScene" uid="uid://dsw4qkdd4tllr" path="res://addons/picky-pixels/ui/library/new_item.tscn" id="3_c5nqn"]
 [ext_resource type="PackedScene" uid="uid://c3uiy7ykq0yr0" path="res://addons/picky-pixels/ui/color_palette/color_palette.tscn" id="3_dkglw"]
 [ext_resource type="PackedScene" uid="uid://daxkcdf38itlf" path="res://addons/picky-pixels/ui/library/shader_item.tscn" id="3_jwu7f"]
 [ext_resource type="PackedScene" uid="uid://bg0bssr8s5nms" path="res://addons/picky-pixels/ui/color_ramps_indicator/color_ramps_indicator.tscn" id="4_lwhet"]
+[ext_resource type="Material" uid="uid://dr8m63ss0y8si" path="res://picky_pixels/shaders/main.material" id="5_20oek"]
 
-[sub_resource type="Image" id="Image_r0ui7"]
+[sub_resource type="Image" id="Image_e5uo3"]
 data = {
 "data": PackedByteArray(255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 231, 255, 94, 94, 54, 255, 94, 94, 57, 255, 93, 93, 233, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 231, 255, 94, 94, 54, 255, 94, 94, 57, 255, 93, 93, 233, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 93, 93, 233, 255, 93, 93, 232, 255, 93, 93, 41, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 93, 93, 233, 255, 93, 93, 232, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 44, 255, 255, 255, 0, 255, 97, 97, 42, 255, 97, 97, 42, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 44, 255, 255, 255, 0, 255, 97, 97, 42, 255, 97, 97, 42, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 235, 255, 94, 94, 234, 255, 95, 95, 43, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 235, 255, 94, 94, 234, 255, 95, 95, 43, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 235, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 233, 255, 95, 95, 59, 255, 96, 96, 61, 255, 93, 93, 235, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 233, 255, 95, 95, 59, 255, 96, 96, 61, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0),
 "format": "RGBA8",
@@ -15,8 +16,8 @@ data = {
 "width": 16
 }
 
-[sub_resource type="ImageTexture" id="ImageTexture_ijlf3"]
-image = SubResource("Image_r0ui7")
+[sub_resource type="ImageTexture" id="ImageTexture_ju8so"]
+image = SubResource("Image_e5uo3")
 
 [node name="Library" type="Control"]
 layout_mode = 3
@@ -60,11 +61,13 @@ theme_override_constants/separation = 12
 layout_mode = 2
 size_flags_horizontal = 3
 editable = false
+colors = Array[Color]([Color(0.972549, 0.921569, 0.886275, 1), Color(0.882353, 0.411765, 0.317647, 1), Color(0.858824, 0.258824, 0.141176, 1), Color(0.780392, 0.0901961, 0, 1), Color(0.419608, 0, 0, 1), Color(0.262745, 0.0392157, 0.0392157, 1), Color(0.0470588, 0.172549, 0.215686, 1), Color(0.670588, 0.498039, 0.411765, 1), Color(0.509804, 0.32549, 0.290196, 1), Color(0.286275, 0.243137, 0.235294, 1), Color(0.972549, 1, 0.721569, 1), Color(0.921569, 0.929412, 0.490196, 1), Color(0.858824, 0.858824, 0.301961, 1), Color(0.780392, 0.733333, 0.239216, 1), Color(0.47451, 0.47451, 0.32549, 1), Color(0.301961, 0.301961, 0.258824, 1), Color(0.501961, 0.713726, 0.286275, 1), Color(0.376471, 0.572549, 0.247059, 1), Color(0.27451, 0.431373, 0.188235, 1), Color(0.466667, 0.894118, 0.85098, 1), Color(0.235294, 0.72549, 0.67451, 1), Color(0.294118, 0.568627, 0.545098, 1), Color(0.243137, 0.466667, 0.47451, 1), Color(0.207843, 0.309804, 0.313726, 1)])
 
 [node name="ShaderItem" parent="VBoxContainer/HBoxContainer" instance=ExtResource("3_jwu7f")]
 layout_mode = 2
 size_flags_horizontal = 4
 tooltip_text = "Drag and drop onto a SubViewportContainer's material property to enable dynamic lighting for PickySprite2Ds. If this shader is missing, dynamic lighting will not work!"
+shader_material = ExtResource("5_20oek")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
 layout_mode = 2
@@ -79,14 +82,14 @@ size_flags_vertical = 0
 layout_mode = 2
 tooltip_text = "Recompile sprite encodings and color ramps. May free up space for new ramps."
 text = "Recompile"
-icon = SubResource("ImageTexture_ijlf3")
+icon = SubResource("ImageTexture_ju8so")
 
 [node name="LoadPaletteButton" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 0
 tooltip_text = "Load color palette from an image. Project will be recompiled."
 text = "Load palette"
-icon = SubResource("ImageTexture_ijlf3")
+icon = SubResource("ImageTexture_ju8so")
 
 [node name="RecompileOverlay" type="Panel" parent="."]
 visible = false
@@ -118,6 +121,8 @@ file_mode = 0
 access = 2
 filters = PackedStringArray("*.png")
 
+[connection signal="mouse_entered" from="VBoxContainer/ScrollContainer/ItemContainer/SpriteItem" to="VBoxContainer/ScrollContainer/ItemContainer/SpriteItem" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/ScrollContainer/ItemContainer/SpriteItem" to="VBoxContainer/ScrollContainer/ItemContainer/SpriteItem" method="_on_mouse_exited"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/VBoxContainer/RecompileButton" to="." method="_on_recompile_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/VBoxContainer/LoadPaletteButton" to="." method="_on_load_palette_button_pressed"]
 [connection signal="file_selected" from="PaletteFileDialog" to="." method="_on_palette_file_dialog_file_selected"]

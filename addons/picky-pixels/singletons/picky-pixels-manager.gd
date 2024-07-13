@@ -1,3 +1,4 @@
+@tool
 class_name PickyPixelsManager
 extends Node
 
@@ -10,6 +11,8 @@ extends Node
 ## "picky_pixels_" and serve as types that can be saved as Resource files.
 ## This manager class handles where and how these Resource files are
 ## instanced and saved.
+##
+## There should be one instance of this node within the scene tree.
 
 # DATA MUTATION SOURCES:
 # - Resource create: library/new_item
@@ -19,7 +22,6 @@ extends Node
 # - Palette change: library/library
 # - Recompiling: library/library
 
-signal instantiated
 signal updated
 signal recompile_started
 signal recompile_finished
@@ -64,27 +66,38 @@ var _recompile_in_progress: bool = false
 var _recompiling_text_status: String = ""
 
 
-func _enter_tree():
+static func _static_init():
 	if _instance == null:
-		_instance = self
-	else:
-		push_error("Instance of PickyPixelsManager already in scene tree.")
+		_instance = PickyPixelsManager.new()
+		_instance.load_project()
 
 
 func _ready():
-	if _instance == self:
+	# Unlikely, but if _instance is not yet set, set it to this instance
+	if _instance == null:
+		_instance = self
 		_instance.load_project()
-		instantiated.emit()
+		print("Used manager instance in scene tree as singleton.")
+	# If needed, replace self with _instance within the scene tree.
+	elif _instance != self and not _instance.is_inside_tree():
+		get_parent().call_deferred("add_child", _instance)
+		_instance.call_deferred("set_owner", get_parent())
+		_instance.call_deferred("set_name", "PickyPixelsManagerInstance")
+		queue_free()
+		print("Replaced instance in scene tree with singleton.")
 
 
 func _exit_tree():
+	# Unset instance if it is being removed from the scene tree
 	if _instance == self:
 		_instance = null
+		print("Unloaded PickyPixels manager. (Exited scene tree.)")
 
 
 static func get_instance() -> PickyPixelsManager:
 	if _instance == null:
-		push_error("Instance not yet in scene tree. Await for \"instantianted\" signal before accessing.")
+		_instance = PickyPixelsManager.new()
+		_instance.load_project()
 	return _instance
 
 
@@ -117,9 +130,13 @@ func load_project():
 ## Recalculates ramps, and recompiles encoded textures and the main shader.
 ## This is used for loading palettes as well.
 func recompile_project(new_palette: Array[Color] = project_data.palette):
+	if not _instance.is_inside_tree():
+		push_error("There must be at least once instance of PickyPixelsManager within the scene tree.")
+		return
+	
 	# Make sure there is no current thread
 	if _recompile_in_progress:
-		print("Recompile already in progress!")
+		push_warning("Recompile already in progress!")
 		return
 	
 	# Init recompilation
@@ -144,6 +161,7 @@ func recompile_project(new_palette: Array[Color] = project_data.palette):
 	await get_tree().process_frame
 	
 	compile_project_shader()
+	_recompile_in_progress = false
 	updated.emit()
 	recompile_finished.emit()
 

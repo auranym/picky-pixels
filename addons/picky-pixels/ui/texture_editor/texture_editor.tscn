@@ -82,7 +82,7 @@ layout_mode = 2
 [node name="Warning" type="Label" parent="."]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.870588, 0.4, 1)
-text = "Missing project data. This is likely due to a plugin bug. Try restarting your project."
+text = "Missing PickyPixelsImageTexture resource. This is likely due to a plugin bug. Try restarting your project."
 horizontal_alignment = 1
 
 [node name="Buttons" type="HBoxContainer" parent="."]
@@ -91,11 +91,14 @@ alignment = 1
 
 [node name="Save" type="Button" parent="Buttons"]
 layout_mode = 2
+tooltip_text = "Fix issues before saving."
 disabled = true
 text = "Save"
 
 [node name="Cancel" type="Button" parent="Buttons"]
 layout_mode = 2
+tooltip_text = "No changes to discard."
+disabled = true
 text = "Cancel"
 
 [connection signal="load_multiple_textures" from="Main/LightLevelData/TextureDisplay" to="." method="_on_texture_display_load_multiple_textures"]
