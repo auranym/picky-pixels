@@ -26,20 +26,19 @@ enum ImageType {
 
 var _image_type: ImageType = ImageType.UNSET
 
-
 func _update_image():
 	if (
 		Engine.is_editor_hint() and
 		base_textures != null and 
 		base_textures.size() > 0 and
-		_image_type == ImageType.UNSET
+		_image_type != ImageType.ENCODED
 	):
 		_image_type = ImageType.UNENCODED
 		set_image(base_textures.back().get_image())
 	elif (
 		not Engine.is_editor_hint() and 
 		encoded_texture != null and 
-		_image_type == ImageType.UNSET
+		_image_type != ImageType.UNENCODED
 	):
 		_image_type = ImageType.ENCODED
 		set_image(encoded_texture.get_image())
