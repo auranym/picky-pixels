@@ -26,8 +26,8 @@ var _color: Color
 		if not is_inside_tree():
 			await ready
 		var hex_code = _color.to_html().substr(0, 6)
-		tooltip_text = hex_code
-		_hex_code_popup.set_item_text(0, "Copy hex code to clipboard (#" + hex_code + ")")
+		tooltip_text = "#" + hex_code + " (Right click to copy)"
+		_hex_code_popup.set_item_text(0, "Copy hex code (#" + hex_code + ") to clipboard")
 		_color_picker_button.color = val
 		color_changed.emit(val)
 

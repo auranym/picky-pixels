@@ -5,9 +5,9 @@
 [ext_resource type="PackedScene" uid="uid://c3uiy7ykq0yr0" path="res://addons/picky-pixels/ui/color_palette/color_palette.tscn" id="3_dkglw"]
 [ext_resource type="PackedScene" uid="uid://daxkcdf38itlf" path="res://addons/picky-pixels/ui/library/shader_item.tscn" id="3_jwu7f"]
 [ext_resource type="PackedScene" uid="uid://bg0bssr8s5nms" path="res://addons/picky-pixels/ui/color_ramps_indicator/color_ramps_indicator.tscn" id="4_lwhet"]
-[ext_resource type="Material" uid="uid://dr8m63ss0y8si" path="res://picky_pixels/shaders/main.material" id="5_20oek"]
+[ext_resource type="Material" uid="uid://cnj1i34i7f5vx" path="res://picky_pixels/shaders/main.material" id="5_20oek"]
 
-[sub_resource type="Image" id="Image_e5uo3"]
+[sub_resource type="Image" id="Image_e2s0j"]
 data = {
 "data": PackedByteArray(255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 231, 255, 94, 94, 54, 255, 94, 94, 57, 255, 93, 93, 233, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 231, 255, 94, 94, 54, 255, 94, 94, 57, 255, 93, 93, 233, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 93, 93, 233, 255, 93, 93, 232, 255, 93, 93, 41, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 93, 93, 233, 255, 93, 93, 232, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 44, 255, 255, 255, 0, 255, 97, 97, 42, 255, 97, 97, 42, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 44, 255, 255, 255, 0, 255, 97, 97, 42, 255, 97, 97, 42, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 235, 255, 94, 94, 234, 255, 95, 95, 43, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 235, 255, 94, 94, 234, 255, 95, 95, 43, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 235, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 233, 255, 95, 95, 59, 255, 96, 96, 61, 255, 93, 93, 235, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 233, 255, 95, 95, 59, 255, 96, 96, 61, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0),
 "format": "RGBA8",
@@ -16,8 +16,8 @@ data = {
 "width": 16
 }
 
-[sub_resource type="ImageTexture" id="ImageTexture_ju8so"]
-image = SubResource("Image_e5uo3")
+[sub_resource type="ImageTexture" id="ImageTexture_mkx5r"]
+image = SubResource("Image_e2s0j")
 
 [node name="Library" type="Control"]
 layout_mode = 3
@@ -66,7 +66,7 @@ colors = Array[Color]([Color(0.972549, 0.921569, 0.886275, 1), Color(0.882353, 0
 [node name="ShaderItem" parent="VBoxContainer/HBoxContainer" instance=ExtResource("3_jwu7f")]
 layout_mode = 2
 size_flags_horizontal = 4
-tooltip_text = "Drag and drop onto a SubViewportContainer's material property to enable dynamic lighting for PickySprite2Ds. If this shader is missing, dynamic lighting will not work!"
+tooltip_text = "Drag and drop onto a SubViewportContainer's material property to enable dynamic lighting for PickyPixels textures. Nodes within the SubViewport should only be those created with this plugin or use only colors from the color palette. If this shader is missing, dynamic lighting will not work."
 shader_material = ExtResource("5_20oek")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/HBoxContainer"]
@@ -80,16 +80,16 @@ size_flags_vertical = 0
 
 [node name="RecompileButton" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
-tooltip_text = "Recompile sprite encodings and color ramps. May free up space for new ramps."
+tooltip_text = "Recompile texture encodings and color ramps. May free up space for new ramps."
 text = "Recompile"
-icon = SubResource("ImageTexture_ju8so")
+icon = SubResource("ImageTexture_mkx5r")
 
 [node name="LoadPaletteButton" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 0
 tooltip_text = "Load color palette from an image. Project will be recompiled."
 text = "Load palette"
-icon = SubResource("ImageTexture_ju8so")
+icon = SubResource("ImageTexture_mkx5r")
 
 [node name="RecompileOverlay" type="Panel" parent="."]
 visible = false
@@ -121,8 +121,16 @@ file_mode = 0
 access = 2
 filters = PackedStringArray("*.png")
 
-[connection signal="mouse_entered" from="VBoxContainer/ScrollContainer/ItemContainer/SpriteItem" to="VBoxContainer/ScrollContainer/ItemContainer/SpriteItem" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="VBoxContainer/ScrollContainer/ItemContainer/SpriteItem" to="VBoxContainer/ScrollContainer/ItemContainer/SpriteItem" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="VBoxContainer/ScrollContainer/ItemContainer/TextureItem" to="VBoxContainer/ScrollContainer/ItemContainer/TextureItem" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/ScrollContainer/ItemContainer/TextureItem" to="VBoxContainer/ScrollContainer/ItemContainer/TextureItem" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="VBoxContainer/ScrollContainer/ItemContainer/@Control@24918" to="VBoxContainer/ScrollContainer/ItemContainer/@Control@24918" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/ScrollContainer/ItemContainer/@Control@24918" to="VBoxContainer/ScrollContainer/ItemContainer/@Control@24918" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="VBoxContainer/ScrollContainer/ItemContainer/@Control@24929" to="VBoxContainer/ScrollContainer/ItemContainer/@Control@24929" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/ScrollContainer/ItemContainer/@Control@24929" to="VBoxContainer/ScrollContainer/ItemContainer/@Control@24929" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="VBoxContainer/ScrollContainer/ItemContainer/@Control@24940" to="VBoxContainer/ScrollContainer/ItemContainer/@Control@24940" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/ScrollContainer/ItemContainer/@Control@24940" to="VBoxContainer/ScrollContainer/ItemContainer/@Control@24940" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="VBoxContainer/ScrollContainer/ItemContainer/@Control@24951" to="VBoxContainer/ScrollContainer/ItemContainer/@Control@24951" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/ScrollContainer/ItemContainer/@Control@24951" to="VBoxContainer/ScrollContainer/ItemContainer/@Control@24951" method="_on_mouse_exited"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/VBoxContainer/RecompileButton" to="." method="_on_recompile_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/VBoxContainer/LoadPaletteButton" to="." method="_on_load_palette_button_pressed"]
 [connection signal="file_selected" from="PaletteFileDialog" to="." method="_on_palette_file_dialog_file_selected"]

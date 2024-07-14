@@ -1,9 +1,15 @@
-[gd_scene load_steps=5 format=3 uid="uid://6iqh4vm8eq1q"]
+[gd_scene load_steps=9 format=3 uid="uid://6iqh4vm8eq1q"]
 
 [ext_resource type="Material" uid="uid://cnj1i34i7f5vx" path="res://picky_pixels/shaders/main.material" id="1_lbbxp"]
 [ext_resource type="PackedScene" uid="uid://c5c4xkqpy2qij" path="res://test/test_light.tscn" id="2_1k8y5"]
 [ext_resource type="Material" uid="uid://c26wvyxyeutxg" path="res://addons/picky-pixels/resources/light_encode.res" id="2_abkqe"]
-[ext_resource type="Texture2D" uid="uid://nbq0asigdsba" path="res://picky_pixels/textures/sprite.res" id="4_albpk"]
+[ext_resource type="Texture2D" uid="uid://c38jvwnin6xly" path="res://picky_pixels/textures/applie.res" id="4_t8tmr"]
+[ext_resource type="Texture2D" uid="uid://budscyfe3rkkn" path="res://picky_pixels/textures/calliot.res" id="5_nj2a5"]
+[ext_resource type="Texture2D" uid="uid://btj5giledb4sp" path="res://godot_pixelated.png" id="6_1mw8g"]
+[ext_resource type="Texture2D" uid="uid://c234u1v6vt1xp" path="res://picky_pixels/textures/herbs.res" id="6_v1wo3"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_nhr47"]
+light_mode = 1
 
 [node name="TestScene" type="Node"]
 
@@ -61,12 +67,21 @@ light_size = 42
 [node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/Node2D"]
 material = ExtResource("2_abkqe")
 position = Vector2(24, 36)
+texture = ExtResource("4_t8tmr")
 
 [node name="Sprite2D2" type="Sprite2D" parent="SubViewportContainer/SubViewport/Node2D"]
 material = ExtResource("2_abkqe")
 position = Vector2(48, 36)
-texture = ExtResource("4_albpk")
+texture = ExtResource("5_nj2a5")
 
 [node name="Sprite2D3" type="Sprite2D" parent="SubViewportContainer/SubViewport/Node2D"]
 material = ExtResource("2_abkqe")
 position = Vector2(72, 36)
+texture = ExtResource("6_v1wo3")
+
+[node name="UnencodedSprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/Node2D"]
+visible = false
+modulate = Color(0.972549, 0.921569, 0.886275, 1)
+material = SubResource("CanvasItemMaterial_nhr47")
+position = Vector2(48, 36)
+texture = ExtResource("6_1mw8g")

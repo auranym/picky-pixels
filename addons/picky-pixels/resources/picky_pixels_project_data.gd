@@ -19,7 +19,7 @@ const UNUSABLE_RAMP = []
 		name = val
 		emit_changed()
 
-## Color palette for this project and which sprites use them.
+## Color palette for this project.
 @export var palette: Array[Color]:
 	get: return palette
 	set(val):

@@ -5,7 +5,7 @@ signal edit_selected(resource: Resource)
 
 const TEXTURE_ITEM = preload("res://addons/picky-pixels/ui/library/texture_item.tscn")
 const LOAD_PALETTE_TOOLTIP = "Load color palette from an image. Project will be recompiled."
-const RECOMPILE_TOOLTIP = "Recompile sprite encodings and color ramps. May free up space for new ramps."
+const RECOMPILE_TOOLTIP = "Recompile texture encodings and color ramps. May free up space for new ramps."
 
 @export var buttons_disabled: bool = false:
 	get: return buttons_disabled

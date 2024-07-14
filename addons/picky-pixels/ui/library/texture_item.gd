@@ -4,8 +4,8 @@ extends Control
 signal edit_selected
 
 const TOOLTIP = preload("res://addons/picky-pixels/ui/tooltip/tooltip.tscn")
-const TOOLTIP_TEXT = "Drag and drop onto a PickySprite2D's data property to add to a scene.\n\nRight click to show options."
-const WARNING_TOOLTIP_TEXT = "This sprite had issues after recompiling. Edit to resolve them."
+const TOOLTIP_TEXT = "({file})\n\nDrag and drop into any Texture2D property (such as a Sprite2D). Right click to show options."
+const WARNING_TOOLTIP_TEXT = "This texture had issues after recompiling. Edit to resolve them."
 
 
 @export var texture: PickyPixelsImageTexture:
@@ -24,7 +24,7 @@ const WARNING_TOOLTIP_TEXT = "This sprite had issues after recompiling. Edit to 
 			tooltip_text = WARNING_TOOLTIP_TEXT
 			no_textures_texture_rect.visible = false
 		else:
-			tooltip_text = TOOLTIP_TEXT
+			tooltip_text = TOOLTIP_TEXT.format({ "file": texture.resource_path })
 			if _show_no_texture_icon():
 				no_textures_texture_rect.visible = true
 
@@ -33,7 +33,7 @@ const WARNING_TOOLTIP_TEXT = "This sprite had issues after recompiling. Edit to 
 @onready var no_textures_texture_rect = $NoTexturesTextureRect
 @onready var label = $Label
 @onready var text_edit = $TextEdit
-@onready var sprite_item_popup_menu = $SpriteItemPopupMenu
+@onready var texture_item_popup_menu = $TextureItemPopupMenu
 @onready var warning_texture_rect = $WarningTextureRect
 @onready var _tooltip_text = tooltip_text
 
@@ -43,7 +43,7 @@ var _mouse_within = false
 func _ready():
 	panel.visible = false
 	text_edit.visible = false
-	sprite_item_popup_menu.visible = false
+	texture_item_popup_menu.visible = false
 	no_textures_texture_rect.texture = get_theme_icon("Sprite2D", "EditorIcons")
 	no_textures_texture_rect.visible = false
 	warning_texture_rect.visible = false
@@ -140,8 +140,8 @@ func _gui_input(event):
 	if (
 		event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT
 	):
-		sprite_item_popup_menu.position = global_position + Vector2(8, size.y)
-		sprite_item_popup_menu.visible = true
+		texture_item_popup_menu.position = global_position + Vector2(8, size.y)
+		texture_item_popup_menu.visible = true
 	elif (
 		event is InputEventMouseButton and
 		event.button_index == MOUSE_BUTTON_LEFT and 
@@ -163,31 +163,9 @@ func _on_mouse_entered():
 
 
 func _on_mouse_exited():
-	if not sprite_item_popup_menu.visible:
+	if not texture_item_popup_menu.visible:
 		panel.visible = false
 	_mouse_within = false
-
-
-func _on_sprite_item_popup_menu_popup_hide():
-	if not _mouse_within:
-		panel.visible = false
-
-
-func _on_sprite_item_popup_menu_edit_pressed():
-	edit_selected.emit()
-
-
-func _on_sprite_item_popup_menu_rename_pressed():
-	text_edit.visible = true
-	text_edit.editable = true
-	label.visible = false
-	tooltip_text = ""
-	text_edit.set_caret_column(text_edit.text.length())
-	text_edit.grab_focus()
-
-
-func _on_sprite_item_popup_menu_delete_pressed():
-	PickyPixelsManager.get_instance().delete_texture(texture)
 
 
 func _on_text_edit_focus_exited():
@@ -204,3 +182,25 @@ func _on_text_edit_gui_input(event):
 		)
 	):
 			_hide_text_edit()
+
+
+func _on_texture_item_popup_menu_delete_pressed():
+	PickyPixelsManager.get_instance().delete_texture(texture)
+
+
+func _on_texture_item_popup_menu_edit_pressed():
+	edit_selected.emit()
+
+
+func _on_texture_item_popup_menu_rename_pressed():
+	text_edit.visible = true
+	text_edit.editable = true
+	label.visible = false
+	tooltip_text = ""
+	text_edit.set_caret_column(text_edit.text.length())
+	text_edit.grab_focus()
+
+
+func _on_texture_item_popup_menu_popup_hide():
+	if not _mouse_within:
+		panel.visible = false

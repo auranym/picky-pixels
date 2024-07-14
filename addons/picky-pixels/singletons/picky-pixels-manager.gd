@@ -82,21 +82,21 @@ func _ready():
 	if _instance == null:
 		_instance = self
 		_instance.load_project()
-		print("Used manager instance in scene tree as singleton.")
+		#print("Used manager instance in scene tree as singleton.")
 	# If needed, replace self with _instance within the scene tree.
 	elif _instance != self and not _instance.is_inside_tree():
 		get_parent().call_deferred("add_child", _instance)
 		_instance.call_deferred("set_owner", get_parent())
 		_instance.call_deferred("set_name", "PickyPixelsManagerInstance")
 		queue_free()
-		print("Replaced instance in scene tree with singleton.")
+		#print("Replaced instance in scene tree with singleton.")
 
 
 func _exit_tree():
 	# Unset instance if it is being removed from the scene tree
 	if _instance == self:
 		_instance = null
-		print("Unloaded PickyPixels manager. (Exited scene tree.)")
+		#print("Unloaded PickyPixels manager. (Exited scene tree.)")
 
 
 static func get_instance() -> PickyPixelsManager:
@@ -152,9 +152,9 @@ func recompile_project(new_palette: Array[Color] = project_data.palette):
 	recompile_started.emit()
 	
 	# Iterate over all textures to recalculate ramps and textures
-	var num_sprites = project_textures.size()
-	for i in num_sprites:
-		_recompiling_text_status = "Compiling sprite ({i}/{num}).".format({ "i": str(i), "num": num_sprites })
+	var num_textures = project_textures.size()
+	for i in num_textures:
+		_recompiling_text_status = "Compiling texture ({i}/{num}).".format({ "i": str(i), "num": num_textures })
 		await get_tree().process_frame
 
 		var texture = project_textures[i]
@@ -324,9 +324,9 @@ func compile_project_shader():
 shader_type canvas_item;
 render_mode unshaded;
 
-const vec4[] COLORS = { {colors} };
-const int[] RAMPS = { {ramps} };
-const int[] RAMPS_POINTERS = { {ramps_pointers} };
+uniform vec4[{colors_size}] colors;
+uniform int[{ramps_size}] ramps;
+uniform int[{ramps_pointers_size}] ramps_pointers;
 
 uniform bool in_editor;
 
@@ -336,8 +336,8 @@ bool is_in_palette(vec4 color) {
 		return true;
 	}
 	
-	for (int i = 0; i < COLORS.length(); i++) {
-		if (length(color - COLORS[i]) < 0.001) {
+	for (int i = 0; i < colors.length(); i++) {
+		if (length(color - colors[i]) < 0.0001) {
 			return true;
 		}
 	}
@@ -346,14 +346,14 @@ bool is_in_palette(vec4 color) {
 
 void fragment() {
 	if (!in_editor && !is_in_palette(COLOR)) {
-		if (COLOR.a == 1.0) {
+		if (abs(COLOR.a - 1.0) < 0.0001) {
 			vec4 c = texture(TEXTURE, UV);
 			int ramp = int(255.0 * c.g);
-			int ramp_pos = RAMPS_POINTERS[2 * ramp];
-			int ramp_size = RAMPS_POINTERS[2 * ramp + 1];
+			int ramp_pos = ramps_pointers[2 * ramp];
+			int ramp_size = ramps_pointers[2 * ramp + 1];
 			int light_level = min(int(floor(mix(0.0, float(ramp_size), c.r))), ramp_size-1);
 			
-			COLOR = COLORS[RAMPS[ramp_pos+light_level]];
+			COLOR = colors[ramps[ramp_pos+light_level]];
 		}
 	}
 }
@@ -361,15 +361,10 @@ void fragment() {
 	
 	# Generate colors array
 	# Index 0 is always transparency
-	var colors_compiled = ["vec4(0.0,0.0,0.0,0.0)"]
+	var colors_compiled = [Vector4(0.0, 0.0, 0.0, 0.0)]
 	for i in project_data.palette.size():
 		var color = project_data.palette[i]
-		colors_compiled.push_back("vec4({r},{g},{b},{a})".format({
-			"r": color.r,
-			"g": color.g,
-			"b": color.b,
-			"a": color.a
-		}))
+		colors_compiled.push_back(Vector4(color.r, color.g, color.b, color.a))
 	
 	# Generate ramps and ramp pointers
 	var ramps_pointers_compiled = []
@@ -388,11 +383,15 @@ void fragment() {
 			ramps_compiled.push_back(project_data.get_color_index(color) +1)
 	
 	project_shader.code = code.format({
-		"colors": ",".join(colors_compiled),
-		"ramps": ",".join(ramps_compiled),
-		"ramps_pointers": ",".join(ramps_pointers_compiled),
+		"colors_size": colors_compiled.size(),
+		"ramps_size": ramps_compiled.size(),
+		"ramps_pointers_size": ramps_pointers_compiled.size(),
 	})
 	ResourceSaver.save(project_shader)
+	project_shader_material.set_shader_parameter("colors", colors_compiled)
+	project_shader_material.set_shader_parameter("ramps", ramps_compiled)
+	project_shader_material.set_shader_parameter("ramps_pointers", ramps_pointers_compiled)
+	ResourceSaver.save(project_shader_material)
 
 
 func _load_project_file():
