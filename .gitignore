@@ -1,6 +1,7 @@
 .git
 .godot
 .vscode
+project.godot
 export_presets.cfg
 addons/explore-editor-theme
 exports/
