@@ -82,7 +82,7 @@ func _import_project_data():
 
 func _process(_delta):
 	if recompile_overlay.visible:
-		recompile_label = PickyPixelsManager.get_instance().get_recompile_text_status()
+		recompile_label.text = PickyPixelsManager.get_instance().get_recompile_text_status()
 
 
 func _on_recompile_button_pressed():

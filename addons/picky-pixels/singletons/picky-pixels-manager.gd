@@ -177,7 +177,7 @@ func recompile_project(new_palette: Array[Color] = project_data.palette):
 ## Returns a user-friendly String to display to the user when project is
 ## being recompiled. If the project is not being recompiled, null is returned.
 func get_recompile_text_status():
-	if _recompile_in_progress:
+	if not _recompile_in_progress:
 		return null
 	else:
 		return _recompiling_text_status
