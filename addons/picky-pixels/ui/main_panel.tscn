@@ -33,7 +33,7 @@ drag_to_rearrange_enabled = true
 [node name="Library" parent="TabContainer" instance=ExtResource("4_o15ev")]
 layout_mode = 2
 
-[node name="@Node@37850" type="Node" parent="."]
+[node name="PickyPixelsManagerInstance" type="Node" parent="."]
 script = ExtResource("4_ef0ww")
 
 [connection signal="tab_clicked" from="HBoxContainer/MainTabBar" to="." method="_on_main_tab_bar_tab_clicked"]

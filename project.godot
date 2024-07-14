@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="PickyPixels"
-run/main_scene="res://test/test_scene.tscn"
+run/main_scene="res://test/demo_scene.tscn"
 config/features=PackedStringArray("4.2", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -22,7 +22,7 @@ window/size/viewport_height=720
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/explore-editor-theme/plugin.cfg")
+enabled=PackedStringArray("res://addons/explore-editor-theme/plugin.cfg", "res://addons/picky-pixels/plugin.cfg")
 
 [rendering]
 

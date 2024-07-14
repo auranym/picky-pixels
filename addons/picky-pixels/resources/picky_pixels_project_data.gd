@@ -10,6 +10,7 @@ extends Resource
 
 const TRANSPARENT_ID = "TRANSPARENT"
 const TRANSPARENT_RAMP = [Color(0.0, 0.0, 0.0, 0.0)]
+const UNUSABLE_RAMP = []
 
 ## Name of the project. Must be unique.
 @export var name: String:
@@ -24,13 +25,13 @@ const TRANSPARENT_RAMP = [Color(0.0, 0.0, 0.0, 0.0)]
 	set(val):
 		palette = val
 		_color_index_map = {}
+		_unusable_ramp_indices_set = {}
 		for i in palette.size():
 			_color_index_map[_color_to_str(palette[i])] = i
+			_unusable_ramp_indices_set[palette[i].g8] = true
 		emit_changed()
 
 ## Ramps that should be processed in decoding colors.
-# Changed does not need to be emitted because this
-# is always updated when sprites is updated.
 @export var ramps: Array[Array] = []:
 	get: return ramps
 	set(val):
@@ -44,6 +45,9 @@ const TRANSPARENT_RAMP = [Color(0.0, 0.0, 0.0, 0.0)]
 # Maps a value to its respective index.
 var _color_index_map := {}
 var _ramp_index_map := {}
+# Set of integers (0-255) that are not usable as ramps due to
+# the green value being in the color palette.
+var _unusable_ramp_indices_set := {}
 
 
 func _color_to_str(color) -> String:
@@ -126,10 +130,20 @@ func num_missing_ramps(ramps) -> int:
 	)
 
 
+## Returns the number of unavailable ramps are currently stored within
+## ramps array
+func num_unavailable_ramps() -> int:
+	return ramps.count(UNUSABLE_RAMP)
+
+
 ## Adds the ramp to the ramps array and returns the index at which the 
 ## ramp was added.
 func add_ramp(ramp) -> int:
 	var ramp_index = ramps.size()
+	# Skip over indices that cannot be used due to the color palette
+	while _unusable_ramp_indices_set.has(ramp_index):
+		ramps.push_back(UNUSABLE_RAMP)
+		ramp_index = ramps.size()
 	ramps.push_back(ramp)
 	_ramp_index_map[_ramp_to_str(ramp)] = ramp_index
 	return ramp_index

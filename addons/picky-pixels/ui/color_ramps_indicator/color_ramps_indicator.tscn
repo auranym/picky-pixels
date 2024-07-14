@@ -19,4 +19,4 @@ text = "Color Ramps Used:"
 [node name="Indicator" type="Label" parent="."]
 layout_mode = 2
 size_flags_vertical = 0
-text = "0/256"
+text = "218/232"

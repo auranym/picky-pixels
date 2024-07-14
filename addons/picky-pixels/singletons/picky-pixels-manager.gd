@@ -31,9 +31,11 @@ const DIR_PATH = "res://picky_pixels"
 const PROJECT_DATA_PATH = DIR_PATH + "/project_data.res"
 const TEXTURES_DIR_PATH = DIR_PATH + "/textures"
 const SHADERS_DIR_PATH = DIR_PATH + "/shaders"
+const PROJECT_SHADER_PATH = SHADERS_DIR_PATH + "/main.gdshader"
 const PROJECT_SHADER_MATERIAL_PATH = SHADERS_DIR_PATH + "/main.material"
 # Other constants
 const MAX_NUM_RAMPS = 256
+const DEFAULT_SHADER_CODE = "shader_type canvas_item;\nrender_mode unshaded;\nuniform bool in_editor;"
 
 # Used for determining whether texture can be compiled with new
 # base_textures or not.
@@ -51,9 +53,12 @@ var project_data: PickyPixelsProjectData = null:
 var project_textures: Array[PickyPixelsImageTexture] = []:
 	get: return project_textures
 
-## Shader that should be applied to the root viewport where all "picky" nodes
-## are children. If a picky node is within a tree where its viewport does
-## not have the correct shader, there is an error.
+## Shader file attached to project_shader_material
+var project_shader: Shader = null:
+	get: return project_shader
+
+## Shader material that should be applied to the root viewport where all
+## "picky" nodes are children. 
 var project_shader_material: ShaderMaterial = null:
 	get: return project_shader_material
 
@@ -117,6 +122,7 @@ func load_project():
 	# Next, load variables used throughout the plugin
 	_load_project_file()
 	_load_texture_files()
+	_load_shader_file()
 	_load_shader_material_file()
 	
 	# Pass along any changed notifications
@@ -160,7 +166,9 @@ func recompile_project(new_palette: Array[Color] = project_data.palette):
 	_recompiling_text_status = "Finishing up."
 	await get_tree().process_frame
 	
+	ResourceSaver.save(project_data)
 	compile_project_shader()
+	EditorInterface.get_resource_filesystem().scan()
 	_recompile_in_progress = false
 	updated.emit()
 	recompile_finished.emit()
@@ -191,7 +199,7 @@ func has_texture(resource: Resource) -> bool:
 func create_texture(name_str: String):
 	var texture = PickyPixelsImageTexture.new()
 	texture.resource_name = name_str
-	texture.resource_path = TEXTURES_DIR_PATH + "/" + name_str + ".res"
+	texture.take_over_path(TEXTURES_DIR_PATH + "/" + name_str + ".res")
 	ResourceSaver.save(texture)
 	_load_texture_files()
 	updated.emit()
@@ -203,7 +211,7 @@ func create_texture(name_str: String):
 func rename_texture(resource: PickyPixelsImageTexture, new_name_str: String):
 	DirAccess.rename_absolute(resource.resource_path, TEXTURES_DIR_PATH + "/" + new_name_str + ".res")
 	resource.resource_name = new_name_str
-	resource.resource_path = TEXTURES_DIR_PATH + "/" + new_name_str + ".res"
+	resource.take_over_path(TEXTURES_DIR_PATH + "/" + new_name_str + ".res")
 	ResourceSaver.save(resource)
 	_load_texture_files()
 	updated.emit()
@@ -242,10 +250,11 @@ func is_valid_base_textures(base_textures: Array[Texture2D]) -> TexturesStatus:
 			var ramp = []
 			for i in base_textures.size():
 				var color = base_textures[i].get_image().get_pixel(x, y)
-				# Do not consider anything translucent
-				if color.a8 != 255: continue
+				# Consider anything not opaque as transparent
+				if color.a8 != 255:
+					color = Color(0.0, 0.0, 0.0, 0.0)
 				# Next check if color is in palette
-				if not project_data.has_color(color):
+				elif not project_data.has_color(color):
 					return TexturesStatus.ERR_UNKNOWN_COLOR
 				# If the color is known, add it to the ramp
 				ramp.push_back(color)
@@ -253,7 +262,11 @@ func is_valid_base_textures(base_textures: Array[Texture2D]) -> TexturesStatus:
 			new_ramps[ramp] = true
 	
 	# Check that there are enough color ramps available
-	if project_data.ramps.size() + project_data.num_missing_ramps(new_ramps.keys()) > 255:
+	if (
+		project_data.ramps.size()
+		+ project_data.num_missing_ramps(new_ramps.keys())
+		+ (project_data.palette.size() - project_data.num_unavailable_ramps())
+	) > MAX_NUM_RAMPS:
 		return TexturesStatus.ERR_NOT_ENOUGH_RAMPS
 	
 	return TexturesStatus.OK
@@ -263,7 +276,10 @@ func is_valid_base_textures(base_textures: Array[Texture2D]) -> TexturesStatus:
 ## passed PickyPixelsImageTexture resource. Before calling
 ## this function, you verify base_texture's validity with
 ## is_valid_base_textures().
-func compile_texture(resource: PickyPixelsImageTexture, base_textures: Array[Texture2D], skip_shader_compilation: bool = false):
+func compile_texture(resource: PickyPixelsImageTexture, base_textures: Array[Texture2D], skip_project_update: bool = false):
+	if base_textures.size() == 0:
+		return
+	
 	var texture_size = base_textures[0].get_size()
 	var encoded_image = Image.create(texture_size.x, texture_size.y, false, Image.FORMAT_RGBA8)
 	
@@ -287,13 +303,23 @@ func compile_texture(resource: PickyPixelsImageTexture, base_textures: Array[Tex
 	resource.base_textures = base_textures
 	resource.encoded_texture = ImageTexture.create_from_image(encoded_image)
 	resource.invalid_textures = false
-	if not skip_shader_compilation:
+	ResourceSaver.save(resource)
+	
+	if not skip_project_update:
+		ResourceSaver.save(project_data)
 		compile_project_shader()
+		EditorInterface.get_resource_filesystem().scan()
 	
 	updated.emit()
 
 
 func compile_project_shader():
+	# Set it to default code if there are no ramps
+	if project_data.ramps.size() == 0:
+		project_shader.code = DEFAULT_SHADER_CODE
+		ResourceSaver.save(project_shader)
+		return
+	
 	var code = "
 shader_type canvas_item;
 render_mode unshaded;
@@ -357,20 +383,16 @@ void fragment() {
 		for color in ramp:
 			# Like with compile colors above, index 0 is transparency.
 			# To adjust for this, we add 1 to the associated index.
-			# If the color index map does not have a color string, then it
-			# is "TRANSPARENCY" which should be 0 (hence, -1 + 1).
+			# If the color index map does not have a color string, then this
+			# function returns -1 (and thus, -1 + 1 = 0).
 			ramps_compiled.push_back(project_data.get_color_index(color) +1)
 	
-	# Make sure shader material exists
-	if project_shader_material == null:
-		project_shader_material = PickyPixelsShaderMaterial.new()
-		project_shader_material.shader = Shader.new()
-	
-	project_shader_material.shader.code = code.format({
+	project_shader.code = code.format({
 		"colors": ",".join(colors_compiled),
 		"ramps": ",".join(ramps_compiled),
 		"ramps_pointers": ",".join(ramps_pointers_compiled),
 	})
+	ResourceSaver.save(project_shader)
 
 
 func _load_project_file():
@@ -402,6 +424,9 @@ func _load_new_project():
 
 
 func _load_texture_files():
+	# Check for any changes in the file system...
+	EditorInterface.get_resource_filesystem().scan()
+	
 	project_textures = []
 	_project_textures_set = {}
 	
@@ -410,6 +435,27 @@ func _load_texture_files():
 		if texture is PickyPixelsImageTexture:
 			project_textures.push_back(texture)
 			_project_textures_set[texture.resource_name] = texture
+
+
+func _load_shader_file():
+	if ResourceLoader.exists(
+		PROJECT_SHADER_PATH,
+		"Shader"
+	):
+		project_shader = load(PROJECT_SHADER_PATH)
+	elif FileAccess.file_exists(PROJECT_SHADER_PATH):
+		project_shader = load(PROJECT_SHADER_PATH)
+		if project_shader == null:
+			_load_new_shader()
+	else:
+		_load_new_shader()
+	
+
+func _load_new_shader():
+	project_shader = Shader.new()
+	project_shader.code = DEFAULT_SHADER_CODE
+	project_shader.resource_path = PROJECT_SHADER_PATH
+	ResourceSaver.save(project_shader)
 
 
 func _load_shader_material_file():
@@ -428,7 +474,6 @@ func _load_shader_material_file():
 
 func _load_new_shader_material():
 	project_shader_material = PickyPixelsShaderMaterial.new()
-	project_shader_material.shader = Shader.new()
-	project_shader_material.shader.code = "shader_type canvas_item;\nrender_mode unshaded;\nuniform bool in_editor;"
+	project_shader_material.shader = project_shader
 	project_shader_material.resource_path = PROJECT_SHADER_MATERIAL_PATH
 	ResourceSaver.save(project_shader_material)

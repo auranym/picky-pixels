@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://6iqh4vm8eq1q"]
+[gd_scene load_steps=5 format=3 uid="uid://6iqh4vm8eq1q"]
 
+[ext_resource type="Material" uid="uid://cnj1i34i7f5vx" path="res://picky_pixels/shaders/main.material" id="1_lbbxp"]
 [ext_resource type="PackedScene" uid="uid://c5c4xkqpy2qij" path="res://test/test_light.tscn" id="2_1k8y5"]
+[ext_resource type="Material" uid="uid://c26wvyxyeutxg" path="res://addons/picky-pixels/resources/light_encode.res" id="2_abkqe"]
+[ext_resource type="Texture2D" uid="uid://nbq0asigdsba" path="res://picky_pixels/textures/sprite.res" id="4_albpk"]
 
 [node name="TestScene" type="Node"]
 
@@ -13,6 +16,7 @@ grow_vertical = 2
 color = Color(0.2, 0.129412, 0.141176, 1)
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+material = ExtResource("1_lbbxp")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -53,3 +57,16 @@ x_speed = 0.59
 y_speed = 0.79
 y_dist = 12.0
 light_size = 42
+
+[node name="Sprite2D" type="Sprite2D" parent="SubViewportContainer/SubViewport/Node2D"]
+material = ExtResource("2_abkqe")
+position = Vector2(24, 36)
+
+[node name="Sprite2D2" type="Sprite2D" parent="SubViewportContainer/SubViewport/Node2D"]
+material = ExtResource("2_abkqe")
+position = Vector2(48, 36)
+texture = ExtResource("4_albpk")
+
+[node name="Sprite2D3" type="Sprite2D" parent="SubViewportContainer/SubViewport/Node2D"]
+material = ExtResource("2_abkqe")
+position = Vector2(72, 36)

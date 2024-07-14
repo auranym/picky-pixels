@@ -12,12 +12,9 @@ func _ready():
 
 
 func _update_label():
-	var manager = PickyPixelsManager.get_instance()
-	var ramps = manager.project_data.ramps.size()
-	var colors = manager.project_data.palette.size()
 	_indicator.text = "{ramps}/{max_ramps}".format({
-		"ramps": ramps,
-		"max_ramps": PickyPixelsManager.MAX_NUM_RAMPS - colors
+		"ramps": PickyPixelsManager.get_instance().project_data.ramps.size(),
+		"max_ramps": PickyPixelsManager.MAX_NUM_RAMPS
 	})
 
 
