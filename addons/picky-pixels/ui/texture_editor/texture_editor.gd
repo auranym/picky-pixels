@@ -4,9 +4,8 @@ extends VBoxContainer
 const LIGHT_LEVEL_TAB = preload("res://addons/picky-pixels/ui/texture_editor/light_level_tab.tscn")
 @onready var color_ramps_indicator = $Main/Config/ColorRampsIndicator
 @onready var light_levels_tabs = $Main/LightLevelData/ScrollContainer/LightLevelsTabs
-@onready var light_levels_spin_box = $Main/Config/LightLevelsConfig/SpinBox
+@onready var light_levels_spin_box = $Main/Config/VBoxContainer/LightLevelsConfig/SpinBox
 @onready var texture_display = $Main/LightLevelData/TextureDisplay
-@onready var color_palette = $Main/Config/ColorPalette
 @onready var warning = $Warning
 @onready var save = $Buttons/Save
 @onready var cancel = $Buttons/Cancel
