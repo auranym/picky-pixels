@@ -1,6 +1,8 @@
 .git
 .godot
 .vscode
+export_presets.cfg
 addons/explore-editor-theme
 exports/
 picky_pixels/
+test/
