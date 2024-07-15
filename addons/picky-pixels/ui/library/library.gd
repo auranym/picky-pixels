@@ -19,10 +19,11 @@ const RECOMPILE_TOOLTIP = "Recompile texture encodings and color ramps. May free
 		load_palette_button.disabled = buttons_disabled
 		load_palette_button.tooltip_text = LOAD_PALETTE_TOOLTIP + tooltip_warning
 
-@onready var shader_item = $VBoxContainer/HBoxContainer/ShaderItem
+@onready var main_shader_item = $VBoxContainer/ScrollContainer/VBoxContainer/ShaderContainer/MainShaderItem
+@onready var canvas_item_shader_item = $VBoxContainer/ScrollContainer/VBoxContainer/ShaderContainer/CanvasItemShaderItem
 @onready var color_palette = $VBoxContainer/HBoxContainer/ColorPalette
-@onready var item_container = $VBoxContainer/ScrollContainer/ItemContainer
-@onready var new_item = $VBoxContainer/ScrollContainer/ItemContainer/NewItem
+@onready var item_container = $VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer
+@onready var new_item = $VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/NewItem
 @onready var color_ramps_indicator = $VBoxContainer/HBoxContainer/VBoxContainer/ColorRampsIndicator
 @onready var recompile_button = $VBoxContainer/HBoxContainer/VBoxContainer/RecompileButton
 @onready var load_palette_button = $VBoxContainer/HBoxContainer/VBoxContainer/LoadPaletteButton
@@ -76,7 +77,8 @@ func _import_project_data():
 	
 	item_container.move_child(new_item, -1)
 	
-	shader_item.shader_material = manager.project_shader_material
+	main_shader_item.shader_material = manager.project_shader_material
+	canvas_item_shader_item.shader_material = manager.canvas_item_shader_material
 	color_palette.colors = manager.project_data.palette
 
 

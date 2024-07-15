@@ -33,6 +33,8 @@ const TEXTURES_DIR_PATH = DIR_PATH + "/textures"
 const SHADERS_DIR_PATH = DIR_PATH + "/shaders"
 const PROJECT_SHADER_PATH = SHADERS_DIR_PATH + "/main.gdshader"
 const PROJECT_SHADER_MATERIAL_PATH = SHADERS_DIR_PATH + "/main.material"
+const CANVAS_ITEM_SHADER_PATH = SHADERS_DIR_PATH + "/canvas_item.gdshader"
+const CANVAS_ITEM_SHADER_MATERIAL_PATH = SHADERS_DIR_PATH + "/canvas_item.material"
 # Other constants
 const MAX_NUM_RAMPS = 256
 const DEFAULT_SHADER_CODE = "shader_type canvas_item;\nrender_mode unshaded;\nuniform bool in_editor;"
@@ -61,6 +63,11 @@ var project_shader: Shader = null:
 ## "picky" nodes are children. 
 var project_shader_material: ShaderMaterial = null:
 	get: return project_shader_material
+
+## Shader material that should be attached to every CanvasItem that displays
+## textures created with this plugin.
+var canvas_item_shader_material: ShaderMaterial = null:
+	get: return canvas_item_shader_material
 
 # Singleton instance
 static var _instance: PickyPixelsManager
@@ -124,6 +131,7 @@ func load_project():
 	_load_texture_files()
 	_load_shader_file()
 	_load_shader_material_file()
+	_load_canvas_item_shader_material_file()
 	
 	# Pass along any changed notifications
 	project_data.changed.connect(func(): updated.emit())
@@ -357,7 +365,7 @@ void fragment() {
 		}
 	}
 }
-".trim_prefix("\n").trim_suffix("\n");
+".trim_prefix("\n").trim_suffix("\n")
 	
 	# Generate colors array
 	# Index 0 is always transparency
@@ -476,3 +484,51 @@ func _load_new_shader_material():
 	project_shader_material.shader = project_shader
 	project_shader_material.resource_path = PROJECT_SHADER_MATERIAL_PATH
 	ResourceSaver.save(project_shader_material)
+
+
+func _load_canvas_item_shader_material_file():
+	if ResourceLoader.exists(
+		CANVAS_ITEM_SHADER_MATERIAL_PATH,
+		"PickyPixelsShaderMaterial"
+	):
+		canvas_item_shader_material = load(CANVAS_ITEM_SHADER_MATERIAL_PATH)
+	elif FileAccess.file_exists(CANVAS_ITEM_SHADER_MATERIAL_PATH):
+		canvas_item_shader_material = load(CANVAS_ITEM_SHADER_MATERIAL_PATH)
+		if canvas_item_shader_material == null:
+			_load_new_canvas_item_shader_material()
+	else:
+		_load_new_canvas_item_shader_material()
+
+
+func _load_new_canvas_item_shader_material():
+	var code = "
+shader_type canvas_item;
+
+uniform bool in_editor = false;
+uniform bool uses_normal_map = false;
+
+void light() {
+	if (in_editor) {
+		LIGHT = vec4(0.0);
+	}
+	else {
+		float cNdotL = 1.0;
+		if (uses_normal_map) {
+			cNdotL = max(0.0, dot(NORMAL, LIGHT_DIRECTION));
+		}
+		float avg = (LIGHT_COLOR.r + LIGHT_COLOR.g + LIGHT_COLOR.b) / 3.0;
+		float r = avg * LIGHT_ENERGY * LIGHT_COLOR.a * cNdotL;
+		LIGHT = vec4(r, 0.0, 0.0, 1.0);
+	}
+}
+".trim_prefix("\n").trim_suffix("\n")
+	
+	var shader = Shader.new()
+	shader.code = code
+	shader.resource_path = CANVAS_ITEM_SHADER_PATH
+	ResourceSaver.save(shader)
+	
+	canvas_item_shader_material = PickyPixelsShaderMaterial.new()
+	canvas_item_shader_material.shader = shader
+	canvas_item_shader_material.resource_path = CANVAS_ITEM_SHADER_MATERIAL_PATH
+	ResourceSaver.save(canvas_item_shader_material)

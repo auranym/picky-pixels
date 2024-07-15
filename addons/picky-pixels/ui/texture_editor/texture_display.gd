@@ -4,6 +4,9 @@ extends Panel
 signal loaded_texture(texture)
 signal load_multiple_textures(textures)
 
+const TOOLTIP = preload("res://addons/picky-pixels/ui/tooltip/tooltip.tscn")
+const TOOLTIP_EXPLANATION = "Drag and drop texture file(s). If dropping multiple files, they will be applied to multiple light levels, starting at level 0, based on alphabetical order."
+
 @onready var texture_rect = $TextureRect
 @onready var label = $Label
 @onready var remove_button = $RemoveButton
@@ -38,7 +41,7 @@ func _set_non_null_texture(texture: Texture2D):
 	# Update data to display
 	texture_rect.texture = texture
 	image_size = Vector2i(texture.get_size())
-	tooltip_text = texture.resource_path
+	tooltip_text = "(" + texture.resource_path + ")\n\n" + TOOLTIP_EXPLANATION
 	
 	# Center the image and zoom based on the new image
 	_adjust_zoom()
@@ -52,7 +55,7 @@ func _reset():
 	zoom_in_button.disabled = true
 	zoom_out_button.visible = false
 	zoom_out_button.disabled = true
-	tooltip_text = ""
+	tooltip_text = TOOLTIP_EXPLANATION
 	texture_rect.texture = null
 
 
@@ -74,6 +77,12 @@ func _adjust_zoom():
 	texture_rect.offset_top = -1 * half_new_size.y
 	texture_rect.offset_right = half_new_size.x
 	texture_rect.offset_bottom = half_new_size.y
+
+
+func _make_custom_tooltip(for_text):
+	var tooltip_node = TOOLTIP.instantiate()
+	tooltip_node.text = for_text
+	return tooltip_node
 
 
 func _can_drop_data(at_position, data):
