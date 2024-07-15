@@ -3,7 +3,11 @@
 .vscode
 project.godot
 export_presets.cfg
-addons/explore-editor-theme
+icon.svg
+*.import
+
 exports/
 picky_pixels/
 test/
+
+addons/explore-editor-theme
