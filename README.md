@@ -43,16 +43,19 @@ the plugin's UI, and it will handle the rest for you.
 
 1. Download the zip from the latest release on the
 [releases](https://github.com/auranym/picky-pixels/releases) page.
+
 2. Within your project, extract the `picky-pixels` folder into your `addons` folder.
   If your project does not have an `addons` folder, create one first.
   This will create a new folder called `picky_pixels` within your project's root.
   You may also see some errors in the console, but they can be ignored. At this point,
   your project should look something like this:
-  ![Screenshot of a Godot engine project setup after the PickyPixels plugin has been added to the addons folder. There are three folders. One is called addons, another is called picky-pixels and is within the addons folder, and lastly is a folder at the root level called picky_pixels.](images/project_root.png)
+
+![Screenshot of a Godot engine project setup after the PickyPixels plugin has been added to the addons folder. There are three folders. One is called addons, another is called picky-pixels and is within the addons folder, and lastly is a folder at the root level called picky_pixels.](images/project_root.png)
   
 3. **Restart Godot.** Then, enable the plugin by going to **Project->Project Settings**,
   in the **Plugins** tab. You should now see a new editor tab called PickyPixels.
-  ![Screenshot of Godot engine editor tabs, with a new underlined tab called PickyPixels on the far right](images/editor_tabs.png)
+
+![Screenshot of Godot engine editor tabs, with a new underlined tab called PickyPixels on the far right](images/editor_tabs.png)
 
 You are now ready to start using PickyPixels!
 
@@ -122,26 +125,30 @@ steps:
   You can make these with whatever program you'd like, but each texture should be saved as
   PNG files. Add these PNG files anywhere in your project.
   For this example, we will be setting up the apple texture seen at the top:
-  ![Image of four identical pixel-art apples, each within progressively brighter lighting](images/apple_variations.png)
+
+![Image of four identical pixel-art apples, each within progressively brighter lighting](images/apple_variations.png)
 
 2. Click on the "new" icon within the PickyPixels library to create a new texture. This will
   create a new texture. You can right click to see options or double-click to open the editor.
   For this example, we'll rename the new texture item to "apple" and then open the editor by
   clicking "Edit":
-  ![GIF of a series of actions within the PickyPixels library. First, the "new texture" button is clicked, creating a new texture called new_item. Next, this new item is right-clicked, revealing a menu of 3 options: edit, rename, and delete. Rename is selected, and the item is renamed to "apple". Lastly, the item is right-clicked again and "edit" is selected, changing the screen to the PickyPixels editor.](images/new_texture.gif)
+
+![GIF of a series of actions within the PickyPixels library. First, the "new texture" button is clicked, creating a new texture called new_item. Next, this new item is right-clicked, revealing a menu of 3 options: edit, rename, and delete. Rename is selected, and the item is renamed to "apple". Lastly, the item is right-clicked again and "edit" is selected, changing the screen to the PickyPixels editor.](images/new_texture.gif)
 
 3. This brings us to the editor. Within this editor we can configure how many "light levels" this
   texture has, which is just how many variations that this texture has based on how well-lit it is.
   To change the number of light levels, modify the number in the top-right of the editor
   (max of 16). For our example, we are using four light levels:
-  ![GIF of a series of actions within the PickyPixels editor. The mouse cursor moves to a section for number input labeled "light levels". The initial value is 1. The cursor clicks on a button to increase the number three times, bringing the new value of the number to 4.](images/set_light_levels.gif)
+
+![GIF of a series of actions within the PickyPixels editor. The mouse cursor moves to a section for number input labeled "light levels". The initial value is 1. The cursor clicks on a button to increase the number three times, bringing the new value of the number to 4.](images/set_light_levels.gif)
 
 4. Next, drag and drop each texture variation to its corresponding light level. Texture variations
-  for less light should be for light levels with smaller numbers.
-  ![GIF of a series of four actions within the PickyPixels editor. Each one involves dragging and dropping an image from the file explorer to the editor's display area. Once the file is dropped, the image can be seen within the editor. This done four times, and in between, a new light level tab is selected, so that a new file can be drag-and-dropped into the editor for that light level](images/set_textures.gif)
-  Alternatively, you can drag and drop multiple texture variants at once, and they will be loaded
-  in based on alphanumerical order.
-  ![GIF of a series of actions within the PickyPixels editor. First, four PNG files are selected within the file explorer. Next, they are drag-and-dropped into the editor's main display area. Once released, the first image is displayed. The four light levels are clicked on, showing a new image each time, indicating that dragging and dropping multiple files configures multiple light levels](images/set_textures_bulk.gif)
+  for less light should be for light levels with smaller numbers. Or alternatively, you can drag
+  and drop multiple texture variants at once, and they will be loaded in based on alphanumerical order.
+
+![GIF of a series of four actions within the PickyPixels editor. Each one involves dragging and dropping an image from the file explorer to the editor's display area. Once the file is dropped, the image can be seen within the editor. This done four times, and in between, a new light level tab is selected, so that a new file can be drag-and-dropped into the editor for that light level](images/set_textures.gif)
+  
+![GIF of a series of actions within the PickyPixels editor. First, four PNG files are selected within the file explorer. Next, they are drag-and-dropped into the editor's main display area. Once released, the first image is displayed. The four light levels are clicked on, showing a new image each time, indicating that dragging and dropping multiple files configures multiple light levels](images/set_textures_bulk.gif)
 
 5. Lastly, if there are no issues, click "Save" to compile and save the configured texture. This
   will cause your files to be scanned and any changes reimported. If you go back to the library
@@ -157,6 +164,9 @@ Once you have a texture created, you can use this texture in any place you would
 [Sprite2Ds](https://docs.godotengine.org/en/stable/classes/class_sprite2d.html),
 [AnimatedSprite2Ds](https://docs.godotengine.org/en/stable/classes/class_animatedsprite2d.html),
 and [TileSets](https://docs.godotengine.org/en/stable/classes/class_tileset.html#class-tileset).
+Sometimes you need to choose PickyPixels textures via file paths, so in those cases, you can find
+PickyPixels textures within the folder `res://picky_pixels/textures`. You can see the path of a
+PickyPixels texture by hovering over it in the library.
 
 Here is how to add a PickyPixels texture to a Sprite2D node:
 
@@ -212,12 +222,3 @@ it is necessary to have this shader acting on the SubViewportContainer. The gree
 which color ramp to use and the red color determines which color to use from the color ramp. This
 happens for every pixel in the SubViewport per frame. It is fast because it happens in constant
 O(1) time.
-
-<style>
-img {
-  display: block;
-  margin-top: 12px;
-  margin-bottom: 24px;
-  max-width: 600px;
-}
-</style>
