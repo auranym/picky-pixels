@@ -1,5 +1,5 @@
 @tool
-extends Panel
+extends PopupPanel
 
 signal edit_pressed
 signal rename_pressed

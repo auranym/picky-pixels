@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://bu6aptssesab"]
+[gd_scene load_steps=3 format=3 uid="uid://bu6aptssesab"]
 
 [ext_resource type="Script" path="res://addons/picky-pixels/ui/color_palette/color_picker.gd" id="1_pbdti"]
+[ext_resource type="PackedScene" uid="uid://cfvldxh3elegp" path="res://addons/picky-pixels/ui/color_palette/copy_confirm_panel.tscn" id="2_ughso"]
 
 [node name="ColorPicker" type="Control"]
 clip_contents = true
@@ -42,12 +43,9 @@ theme_override_constants/outline_size = 6
 text = "0"
 horizontal_alignment = 1
 
-[node name="HexCodePopup" type="PopupMenu" parent="."]
-size = Vector2i(140, 35)
-item_count = 1
-item_0/text = "Copy hex code"
-item_0/id = 0
+[node name="CopyConfirmPanel" parent="." instance=ExtResource("2_ughso")]
+visible = false
 
 [connection signal="gui_input" from="." to="." method="_on_gui_input"]
 [connection signal="color_changed" from="ColorPickerButton" to="." method="_on_color_picker_button_color_changed"]
-[connection signal="id_pressed" from="HexCodePopup" to="." method="_on_hex_code_popup_id_pressed"]
+[connection signal="pressed" from="CopyConfirmPanel" to="." method="_on_copy_confirm_panel_pressed"]

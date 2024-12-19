@@ -5,7 +5,8 @@ signal color_changed(c: Color)
 
 @onready var _label_node: Label = $Label
 @onready var _color_picker_button = $ColorPickerButton
-@onready var _hex_code_popup = $HexCodePopup
+@onready var _copy_confirm_panel: PopupPanel = $CopyConfirmPanel
+
 
 var _label: String = "0"
 @export var label: String = "0":
@@ -27,7 +28,7 @@ var _color: Color
 			await ready
 		var hex_code = _color.to_html().substr(0, 6)
 		tooltip_text = "#" + hex_code + " (Right click to copy)"
-		_hex_code_popup.set_item_text(0, "Copy hex code (#" + hex_code + ") to clipboard")
+		_copy_confirm_panel.hex_code = hex_code
 		_color_picker_button.color = val
 		color_changed.emit(val)
 
@@ -43,7 +44,7 @@ var _color_locked: bool
 
 
 func _ready():
-	_hex_code_popup.visible = false
+	_copy_confirm_panel.visible = false
 
 
 func _on_color_picker_button_color_changed(c):
@@ -54,11 +55,12 @@ func _on_gui_input(event):
 	if (
 		event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT
 	):
-		_hex_code_popup.position = global_position + Vector2(8, _hex_code_popup.size.y + 8)
-		_hex_code_popup.visible = true
+		_copy_confirm_panel.position = global_position
+		_copy_confirm_panel.visible = true
 
 
-func _on_hex_code_popup_id_pressed(_id):
+func _on_copy_confirm_panel_pressed() -> void:
+	_copy_confirm_panel.visible = false
 	var hex_code = _color.to_html().substr(0, 6)
 	DisplayServer.clipboard_set(hex_code)
 	print("Copied hex code #" + hex_code + " to clipboard.")

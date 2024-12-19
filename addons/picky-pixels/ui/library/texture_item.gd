@@ -140,6 +140,7 @@ func _gui_input(event):
 	if (
 		event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT
 	):
+		texture_item_options.position = global_position + Vector2(0, size.y)
 		texture_item_options.visible = true
 	elif (
 		event is InputEventMouseButton and
@@ -203,13 +204,6 @@ func _on_texture_item_options_rename_pressed() -> void:
 	text_edit.grab_focus()
 
 
-func _on_texture_item_options_focus_exited() -> void:
-	texture_item_options.visible = false
-	if not _mouse_within:
-		panel.visible = false
-
-
-func _on_texture_item_options_mouse_exited() -> void:
-	texture_item_options.visible = false
+func _on_texture_item_options_visibility_changed() -> void:
 	if not _mouse_within:
 		panel.visible = false
