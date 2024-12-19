@@ -33,7 +33,7 @@ const WARNING_TOOLTIP_TEXT = "This texture had issues after recompiling. Edit to
 @onready var no_textures_texture_rect = $NoTexturesTextureRect
 @onready var label = $Label
 @onready var text_edit = $TextEdit
-@onready var texture_item_popup_menu = $TextureItemPopupMenu
+@onready var texture_item_options = $TextureItemOptions
 @onready var warning_texture_rect = $WarningTextureRect
 @onready var _tooltip_text = tooltip_text
 
@@ -43,7 +43,7 @@ var _mouse_within = false
 func _ready():
 	panel.visible = false
 	text_edit.visible = false
-	texture_item_popup_menu.visible = false
+	texture_item_options.visible = false
 	no_textures_texture_rect.texture = get_theme_icon("Sprite2D", "EditorIcons")
 	no_textures_texture_rect.visible = false
 	warning_texture_rect.visible = false
@@ -140,8 +140,7 @@ func _gui_input(event):
 	if (
 		event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT
 	):
-		texture_item_popup_menu.position = global_position + Vector2(8, size.y)
-		texture_item_popup_menu.visible = true
+		texture_item_options.visible = true
 	elif (
 		event is InputEventMouseButton and
 		event.button_index == MOUSE_BUTTON_LEFT and 
@@ -163,7 +162,7 @@ func _on_mouse_entered():
 
 
 func _on_mouse_exited():
-	if not texture_item_popup_menu.visible:
+	if not texture_item_options.visible:
 		panel.visible = false
 	_mouse_within = false
 
@@ -184,15 +183,18 @@ func _on_text_edit_gui_input(event):
 			_hide_text_edit()
 
 
-func _on_texture_item_popup_menu_delete_pressed():
+func _on_texture_item_options_delete_pressed() -> void:
+	texture_item_options.visible = false
 	PickyPixelsManager.get_instance().delete_texture(texture)
 
 
-func _on_texture_item_popup_menu_edit_pressed():
+func _on_texture_item_options_edit_pressed() -> void:
+	texture_item_options.visible = false
 	edit_selected.emit()
 
 
-func _on_texture_item_popup_menu_rename_pressed():
+func _on_texture_item_options_rename_pressed() -> void:
+	texture_item_options.visible = false
 	text_edit.visible = true
 	text_edit.editable = true
 	label.visible = false
@@ -201,6 +203,13 @@ func _on_texture_item_popup_menu_rename_pressed():
 	text_edit.grab_focus()
 
 
-func _on_texture_item_popup_menu_popup_hide():
+func _on_texture_item_options_focus_exited() -> void:
+	texture_item_options.visible = false
+	if not _mouse_within:
+		panel.visible = false
+
+
+func _on_texture_item_options_mouse_exited() -> void:
+	texture_item_options.visible = false
 	if not _mouse_within:
 		panel.visible = false
