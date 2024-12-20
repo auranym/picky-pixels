@@ -3,7 +3,7 @@
 # PickyPixels
 
 Pixel-perfect control over colors and lighting in the [Godot Engine]("https://godotengine.org/")
-(version 4.2 or later).
+(version 4.3).
 
 This plugin is used for game devs who want to make a game using a pixel art with a strict color
 palette, and who want to control how sprites behave based on lighting. With PickyPixels, you can
