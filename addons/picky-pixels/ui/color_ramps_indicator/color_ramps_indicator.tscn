@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bg0bssr8s5nms"]
 
-[ext_resource type="Script" path="res://addons/picky-pixels/ui/color_ramps_indicator/color_ramps_indicator.gd" id="1_2mkei"]
+[ext_resource type="Script" uid="uid://de3b2mnutob63" path="res://addons/picky-pixels/ui/color_ramps_indicator/color_ramps_indicator.gd" id="1_2mkei"]
 
 [node name="ColorRampsIndicator" type="HBoxContainer"]
 offset_right = 193.0
@@ -8,15 +8,16 @@ offset_bottom = 23.0
 tooltip_text = "Color behavior for each pixel at each light level is stored by generating and assigning a color ramp to that pixel. This color ramp encodes the behavior of that pixel for each light level. Since this data is stored in a pixel's color value, there are a limited number of possible values that the color could be, so there is a cap on the number of color ramps.
 
 If you are running out of color ramps, try recompiling, or consider using less colors in your palette."
+theme_override_constants/separation = 8
 script = ExtResource("1_2mkei")
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
-text = "Color Ramps Used:"
+text = "Color ramps used:"
 
 [node name="Indicator" type="Label" parent="."]
 layout_mode = 2
 size_flags_vertical = 0
-text = "203/256"
+text = "214/256"

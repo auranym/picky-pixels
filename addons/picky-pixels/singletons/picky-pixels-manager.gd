@@ -35,14 +35,21 @@ const PROJECT_SHADER_PATH = SHADERS_DIR_PATH + "/main.gdshader"
 const PROJECT_SHADER_MATERIAL_PATH = SHADERS_DIR_PATH + "/main.material"
 const CANVAS_ITEM_SHADER_PATH = SHADERS_DIR_PATH + "/canvas_item.gdshader"
 const CANVAS_ITEM_SHADER_MATERIAL_PATH = SHADERS_DIR_PATH + "/canvas_item.material"
+const DEBUG_TEXTURE_PATH = DIR_PATH + "/debug_texture.png"
 
 # Shader-related constants
 const DEFAULT_SHADER_CODE = "shader_type canvas_item;\nrender_mode unshaded;\nuniform bool in_editor;"
 const MAIN_SHADER_TEMPLATE = preload("res://addons/picky-pixels/shaders/main.gdshader")
 const CANVAS_ITEM_SHADER_TEMPLATE = preload("res://addons/picky-pixels/shaders/canvas_item.gdshader")
 
-# Other constants
-const MAX_NUM_RAMPS = 256
+# Define the max number of ramps.
+# Ramps are encoded using G and B color channels
+# a as base-256 number to identify them, giving 256^2
+# allowed ramps.
+# G is the less significant digit, B is more.
+# i.e., the 1st ramp is identified as B=0, G=1
+# and the 256th ramp is identified as B=1, G=0.
+const MAX_NUM_RAMPS = 256 * 256
 
 # Used for determining whether texture can be compiled with new
 # base_textures or not.
@@ -310,7 +317,10 @@ func compile_texture(resource: PickyPixelsImageTexture, base_textures: Array[Tex
 			# Add ramp to project if it does not exist
 			if ramp_index == -1:
 				ramp_index = project_data.add_ramp(ramp)
-			encoded_image.set_pixel(x, y, Color8(0, ramp_index, 0))
+			# Encode the ramp using G and B channels.
+			var g = ramp_index % 256
+			var b = int(floor(ramp_index / 256))
+			encoded_image.set_pixel(x, y, Color8(0, g, b))
 	
 	# Update project data
 	resource.base_textures = base_textures
@@ -366,6 +376,19 @@ func compile_project_shader():
 	project_shader_material.set_shader_parameter("ramps", ramps_compiled)
 	project_shader_material.set_shader_parameter("ramps_pointers", ramps_pointers_compiled)
 	ResourceSaver.save(project_shader_material)
+	
+	# For debugging purposes
+	_compile_debug_texture()
+
+
+func _compile_debug_texture():
+	var debug_texture = Image.create(16, project_data.ramps.size(), false, Image.FORMAT_RGBA8)
+	for i in project_data.ramps.size():
+		var ramp = project_data.ramps[i]
+		for j in ramp.size():
+			var color = ramp[j]
+			debug_texture.set_pixel(j, i, color)
+	debug_texture.save_png(DEBUG_TEXTURE_PATH)
 
 
 func _load_project_file():
