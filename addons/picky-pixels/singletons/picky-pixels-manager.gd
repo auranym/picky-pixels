@@ -35,9 +35,14 @@ const PROJECT_SHADER_PATH = SHADERS_DIR_PATH + "/main.gdshader"
 const PROJECT_SHADER_MATERIAL_PATH = SHADERS_DIR_PATH + "/main.material"
 const CANVAS_ITEM_SHADER_PATH = SHADERS_DIR_PATH + "/canvas_item.gdshader"
 const CANVAS_ITEM_SHADER_MATERIAL_PATH = SHADERS_DIR_PATH + "/canvas_item.material"
+
+# Shader-related constants
+const DEFAULT_SHADER_CODE = "shader_type canvas_item;\nrender_mode unshaded;\nuniform bool in_editor;"
+const MAIN_SHADER_TEMPLATE = preload("res://addons/picky-pixels/shaders/main.gdshader")
+const CANVAS_ITEM_SHADER_TEMPLATE = preload("res://addons/picky-pixels/shaders/canvas_item.gdshader")
+
 # Other constants
 const MAX_NUM_RAMPS = 256
-const DEFAULT_SHADER_CODE = "shader_type canvas_item;\nrender_mode unshaded;\nuniform bool in_editor;"
 
 # Used for determining whether texture can be compiled with new
 # base_textures or not.
@@ -328,45 +333,6 @@ func compile_project_shader():
 		ResourceSaver.save(project_shader)
 		return
 	
-	var code = "
-shader_type canvas_item;
-render_mode unshaded;
-
-uniform vec4[{colors_size}] colors;
-uniform int[{ramps_size}] ramps;
-uniform int[{ramps_pointers_size}] ramps_pointers;
-
-uniform bool in_editor;
-
-bool is_in_palette(vec4 color) {
-	// Ignore transparency
-	if (color.a < 1.0) {
-		return true;
-	}
-	
-	for (int i = 0; i < colors.length(); i++) {
-		if (length(color - colors[i]) < 0.0001) {
-			return true;
-		}
-	}
-	return false;
-}
-
-void fragment() {
-	if (!in_editor && !is_in_palette(COLOR)) {
-		if (abs(COLOR.a - 1.0) < 0.0001) {
-			vec4 c = texture(TEXTURE, UV);
-			int ramp = int(255.0 * c.g);
-			int ramp_pos = ramps_pointers[2 * ramp];
-			int ramp_size = ramps_pointers[2 * ramp + 1];
-			int light_level = min(int(floor(mix(0.0, float(ramp_size), c.r))), ramp_size-1);
-			
-			COLOR = colors[ramps[ramp_pos+light_level]];
-		}
-	}
-}
-".trim_prefix("\n").trim_suffix("\n")
-	
 	# Generate colors array
 	# Index 0 is always transparency
 	var colors_compiled = [Vector4(0.0, 0.0, 0.0, 0.0)]
@@ -390,7 +356,7 @@ void fragment() {
 			# function returns -1 (and thus, -1 + 1 = 0).
 			ramps_compiled.push_back(project_data.get_color_index(color) +1)
 	
-	project_shader.code = code.format({
+	project_shader.code = MAIN_SHADER_TEMPLATE.code.format({
 		"colors_size": colors_compiled.size(),
 		"ramps_size": ramps_compiled.size(),
 		"ramps_pointers_size": ramps_pointers_compiled.size(),
@@ -501,30 +467,8 @@ func _load_canvas_item_shader_material_file():
 
 
 func _load_new_canvas_item_shader_material():
-	var code = "
-shader_type canvas_item;
-
-uniform bool in_editor = false;
-uniform bool uses_normal_map = false;
-
-void light() {
-	if (in_editor) {
-		LIGHT = vec4(0.0);
-	}
-	else {
-		float cNdotL = 1.0;
-		if (uses_normal_map) {
-			cNdotL = max(0.0, dot(NORMAL, LIGHT_DIRECTION));
-		}
-		float avg = (LIGHT_COLOR.r + LIGHT_COLOR.g + LIGHT_COLOR.b) / 3.0;
-		float r = avg * LIGHT_ENERGY * LIGHT_COLOR.a * cNdotL;
-		LIGHT = vec4(r, 0.0, 0.0, 1.0);
-	}
-}
-".trim_prefix("\n").trim_suffix("\n")
-	
 	var shader = Shader.new()
-	shader.code = code
+	shader.code = CANVAS_ITEM_SHADER_TEMPLATE.code
 	shader.resource_path = CANVAS_ITEM_SHADER_PATH
 	ResourceSaver.save(shader)
 	

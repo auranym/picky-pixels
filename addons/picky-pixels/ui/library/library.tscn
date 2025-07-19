@@ -1,11 +1,12 @@
 [gd_scene load_steps=9 format=3 uid="uid://cd1kje1mqpcuq"]
 
-[ext_resource type="Script" path="res://addons/picky-pixels/ui/library/library.gd" id="1_fod1r"]
+[ext_resource type="Script" uid="uid://bp3pr72cgjgvt" path="res://addons/picky-pixels/ui/library/library.gd" id="1_fod1r"]
 [ext_resource type="PackedScene" uid="uid://dsw4qkdd4tllr" path="res://addons/picky-pixels/ui/library/new_item.tscn" id="3_c5nqn"]
 [ext_resource type="PackedScene" uid="uid://c3uiy7ykq0yr0" path="res://addons/picky-pixels/ui/color_palette/color_palette.tscn" id="3_dkglw"]
 [ext_resource type="PackedScene" uid="uid://daxkcdf38itlf" path="res://addons/picky-pixels/ui/library/shader_item.tscn" id="3_jwu7f"]
-[ext_resource type="Material" uid="uid://dckaf4jcmj5dl" path="res://picky_pixels/shaders/canvas_item.material" id="4_kwyen"]
+[ext_resource type="Material" uid="uid://dckaf4jcmj5dl" path="res://addons/picky-pixels/shaders/canvas_item.material" id="4_kwyen"]
 [ext_resource type="PackedScene" uid="uid://bg0bssr8s5nms" path="res://addons/picky-pixels/ui/color_ramps_indicator/color_ramps_indicator.tscn" id="4_lwhet"]
+
 
 [sub_resource type="Image" id="Image_wqicj"]
 data = {

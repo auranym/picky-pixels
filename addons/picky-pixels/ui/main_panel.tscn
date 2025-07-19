@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://dcurkj3cropgg"]
 
-[ext_resource type="Script" path="res://addons/picky-pixels/ui/main_panel.gd" id="1_c557u"]
+[ext_resource type="Script" uid="uid://k52m3hy7q6j6" path="res://addons/picky-pixels/ui/main_panel.gd" id="1_c557u"]
 [ext_resource type="PackedScene" uid="uid://bojmrkju73ous" path="res://addons/picky-pixels/ui/main_tab_bar/main_tab_bar.tscn" id="2_43ilv"]
-[ext_resource type="Script" path="res://addons/picky-pixels/singletons/picky-pixels-manager.gd" id="4_ef0ww"]
+[ext_resource type="Script" uid="uid://iqgsi2p3so48" path="res://addons/picky-pixels/singletons/picky-pixels-manager.gd" id="4_ef0ww"]
 [ext_resource type="PackedScene" uid="uid://cd1kje1mqpcuq" path="res://addons/picky-pixels/ui/library/library.tscn" id="4_o15ev"]
 
 [node name="MainPanel" type="VBoxContainer"]
@@ -21,19 +21,22 @@ layout_mode = 2
 
 [node name="MainTabBar" parent="HBoxContainer" instance=ExtResource("2_43ilv")]
 layout_mode = 2
+current_tab = 0
 
 [node name="TabContainer" type="TabContainer" parent="."]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+current_tab = 0
 tabs_visible = false
 all_tabs_in_front = true
 drag_to_rearrange_enabled = true
 
 [node name="Library" parent="TabContainer" instance=ExtResource("4_o15ev")]
 layout_mode = 2
+metadata/_tab_index = 0
 
-[node name="PickyPixelsManagerInstance" type="Node" parent="."]
+[node name="PickyPixelsManagerInstance2" type="Node" parent="."]
 script = ExtResource("4_ef0ww")
 
 [connection signal="tab_clicked" from="HBoxContainer/MainTabBar" to="." method="_on_main_tab_bar_tab_clicked"]
