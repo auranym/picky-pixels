@@ -28,7 +28,7 @@ const UNUSABLE_RAMP = []
 		_unusable_ramp_indices_set = {}
 		for i in palette.size():
 			_color_index_map[_color_to_str(palette[i])] = i
-			_unusable_ramp_indices_set[palette[i].g8] = true
+			_unusable_ramp_indices_set[256 * palette[i].b8 + palette[i].g8] = true
 		emit_changed()
 
 ## Ramps that should be processed in decoding colors.
