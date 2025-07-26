@@ -46,15 +46,17 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Config" type="VBoxContainer" parent="Main"]
-custom_minimum_size = Vector2(200, 0)
+custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Main/Config"]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_constants/separation = 6
 
 [node name="LightLevelsConfig" type="HBoxContainer" parent="Main/Config/VBoxContainer"]
 layout_mode = 2
+theme_override_constants/separation = 6
 
 [node name="Label" type="Label" parent="Main/Config/VBoxContainer/LightLevelsConfig"]
 layout_mode = 2
@@ -71,6 +73,32 @@ alignment = 1
 
 [node name="HSeparator" type="HSeparator" parent="Main/Config/VBoxContainer"]
 layout_mode = 2
+
+[node name="EffectsContainer" type="VBoxContainer" parent="Main/Config/VBoxContainer"]
+visible = false
+layout_mode = 2
+
+[node name="LightLevelsConfig" type="HBoxContainer" parent="Main/Config/VBoxContainer/EffectsContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Main/Config/VBoxContainer/EffectsContainer/LightLevelsConfig"]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Dithered  Transition Amount"
+autowrap_mode = 3
+
+[node name="SpinBox" type="SpinBox" parent="Main/Config/VBoxContainer/EffectsContainer/LightLevelsConfig"]
+layout_mode = 2
+size_flags_vertical = 4
+max_value = 8.0
+rounded = true
+alignment = 1
+
+[node name="ShowHideEffects" type="Button" parent="Main/Config/VBoxContainer"]
+layout_mode = 2
+toggle_mode = true
+text = "Show Effects"
 
 [node name="ColorRampsIndicator" parent="Main/Config" instance=ExtResource("4_kxjmn")]
 layout_mode = 2
@@ -105,5 +133,6 @@ text = "Cancel"
 [connection signal="load_multiple_textures" from="Main/LightLevelData/TextureDisplay" to="." method="_on_texture_display_load_multiple_textures"]
 [connection signal="loaded_texture" from="Main/LightLevelData/TextureDisplay" to="." method="_on_texture_display_loaded_texture"]
 [connection signal="value_changed" from="Main/Config/VBoxContainer/LightLevelsConfig/SpinBox" to="." method="_on_light_levels_value_changed"]
+[connection signal="pressed" from="Main/Config/VBoxContainer/ShowHideEffects" to="." method="_on_show_hide_effects_pressed"]
 [connection signal="pressed" from="Buttons/Save" to="." method="_on_save_pressed"]
 [connection signal="pressed" from="Buttons/Cancel" to="." method="_on_cancel_pressed"]

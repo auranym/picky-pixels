@@ -12,6 +12,8 @@ const LIGHT_LEVEL_TAB = preload("res://addons/picky-pixels/ui/texture_editor/lig
 @onready var warning = $Warning
 @onready var save = $Buttons/Save
 @onready var cancel = $Buttons/Cancel
+@onready var effects_container: VBoxContainer = $Main/Config/VBoxContainer/EffectsContainer
+@onready var show_hide_effects: Button = $Main/Config/VBoxContainer/ShowHideEffects
 
 @export var texture: PickyPixelsImageTexture:
 	get: return texture
@@ -209,3 +211,11 @@ func _on_cancel_pressed():
 	_set_light_levels(textures.size())
 	_set_selected_light_level_tab(0)
 	_update()
+
+
+func _on_show_hide_effects_pressed() -> void:
+	if show_hide_effects.button_pressed:
+		show_hide_effects.text = "Hide Effects"
+	else:
+		show_hide_effects.text = "Show Effects"
+	effects_container.visible = show_hide_effects.button_pressed
