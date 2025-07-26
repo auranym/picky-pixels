@@ -1,6 +1,9 @@
 @tool
 extends VBoxContainer
 
+signal made_changes(texture: PickyPixelsImageTexture)
+signal no_changes(texture: PickyPixelsImageTexture)
+
 const LIGHT_LEVEL_TAB = preload("res://addons/picky-pixels/ui/texture_editor/light_level_tab.tscn")
 @onready var color_ramps_indicator = $Main/Config/ColorRampsIndicator
 @onready var light_levels_tabs = $Main/LightLevelData/ScrollContainer/LightLevelsTabs
@@ -30,6 +33,10 @@ var selected_tab: int
 var original_textures: Array[Texture2D] = []
 var textures: Array[Texture2D] = []
 var png_regex: RegEx
+
+
+func has_changes():
+	return textures != original_textures
 
 
 func _ready():
@@ -114,11 +121,12 @@ func _update():
 		return
 	
 	var result = manager.is_valid_base_textures(textures)
+	var is_same_textures = textures == original_textures
 	
 	# If there are no issues, then enable the save button
 	# if there are changes to save.
 	if result == PickyPixelsManager.TexturesStatus.OK:
-		if textures == original_textures:
+		if is_same_textures:
 			save.disabled = false
 			save.tooltip_text = "Recompile texture."
 			cancel.disabled = true
@@ -131,7 +139,7 @@ func _update():
 			cancel.tooltip_text = "Discard changes."
 			warning.visible = false
 	else:
-		var can_cancel = textures != original_textures
+		var can_cancel = not is_same_textures
 		match result:
 			PickyPixelsManager.TexturesStatus.ERR_TEXTURE_NULL:
 				_warn("Light levels must all have textures.", can_cancel)
@@ -143,6 +151,10 @@ func _update():
 				_warn("Saving will create too many color ramps. Try removing a light layer or making textures more similar.", can_cancel)
 			_:
 				_warn("Encountered an unknown issue (Error code: " + str(result) + ").", can_cancel)
+	if is_same_textures:
+		no_changes.emit(texture)
+	else:
+		made_changes.emit(texture)
 
 
 func _on_texture_display_loaded_texture(texture):
