@@ -7,13 +7,14 @@ signal no_changes(texture: PickyPixelsImageTexture)
 const LIGHT_LEVEL_TAB = preload("res://addons/picky-pixels/ui/texture_editor/light_level_tab.tscn")
 @onready var color_ramps_indicator = $Main/Config/ColorRampsIndicator
 @onready var light_levels_tabs = $Main/LightLevelData/ScrollContainer/LightLevelsTabs
-@onready var light_levels_spin_box = $Main/Config/VBoxContainer/LightLevelsConfig/SpinBox
+@onready var light_levels_config: HBoxContainer = $Main/Config/VBoxContainer/LightLevelsConfig
 @onready var texture_display = $Main/LightLevelData/TextureDisplay
 @onready var warning = $VBoxContainer/Warning
 @onready var save = $VBoxContainer/Buttons/Save
 @onready var cancel = $VBoxContainer/Buttons/Cancel
 @onready var effects_container: VBoxContainer = $Main/Config/VBoxContainer/EffectsContainer
 @onready var show_hide_effects: Button = $Main/Config/VBoxContainer/ShowHideEffects
+@onready var dithered_transition_config: VBoxContainer = $Main/Config/VBoxContainer/EffectsContainer/DitheredTransitionConfig
 
 @export var texture: PickyPixelsImageTexture:
 	get: return texture
@@ -45,6 +46,10 @@ func _ready():
 	png_regex = RegEx.new()
 	png_regex.compile(".*\\.png$")
 	
+	# Just in case...
+	effects_container.visible = false
+	show_hide_effects.text = "Show Effects"
+	
 	# Every time there is a data update, reimport the texture resource
 	PickyPixelsManager.get_instance().updated.connect(_update)
 	
@@ -52,7 +57,8 @@ func _ready():
 
 
 func _set_light_levels(value):
-	light_levels_spin_box.set_value_no_signal(value)
+	
+	light_levels_config.value = value
 	
 	# Update light level tabs
 	var value_diff = value - light_levels_tabs.get_child_count()
@@ -194,7 +200,7 @@ func _on_light_level_tab_toggled(index: int):
 		light_levels_tabs.get_child(selected_tab).button_pressed = true
 
 
-func _on_light_levels_value_changed(value):
+func _on_light_levels_config_changed(value: int) -> void:
 	_set_light_levels(value)
 	_update()
 
@@ -219,3 +225,7 @@ func _on_show_hide_effects_pressed() -> void:
 	else:
 		show_hide_effects.text = "Show Effects"
 	effects_container.visible = show_hide_effects.button_pressed
+
+
+func _on_dithered_transition_config_changed(value: int) -> void:
+	pass

@@ -1,0 +1,37 @@
+[gd_scene load_steps=2 format=3 uid="uid://cf8701j5vw0jn"]
+
+[ext_resource type="Script" uid="uid://6xvnmnnhelaj" path="res://addons/picky-pixels/ui/texture_editor/configs/dithered_transition_config.gd" id="1_k04vy"]
+
+[node name="DitheredTransitionConfig" type="VBoxContainer"]
+offset_right = 300.0
+offset_bottom = 44.0
+tooltip_text = "Allows a dithered edge on the transition between textures at different light levels. This can make the transition between textures smoother, depending on your textures."
+theme_override_constants/separation = 0
+script = ExtResource("1_k04vy")
+
+[node name="Label" type="Label" parent="."]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Dithered  transition amount"
+autowrap_mode = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+alignment = 1
+
+[node name="NoneLabel" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+text = "None"
+
+[node name="HSlider" type="HSlider" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+max_value = 10.0
+
+[node name="MaxLabel" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+text = "Max"
+
+[connection signal="value_changed" from="HBoxContainer/HSlider" to="." method="_on_h_slider_value_changed"]

@@ -1,0 +1,24 @@
+[gd_scene load_steps=2 format=3 uid="uid://cel5uowb12v8"]
+
+[ext_resource type="Script" uid="uid://pta6xi2wds02" path="res://addons/picky-pixels/ui/texture_editor/configs/light_levels_config.gd" id="1_yx06j"]
+
+[node name="LightLevelsConfig" type="HBoxContainer"]
+tooltip_text = "\"Light levels\" represent the different levels of light/darkness that your texture will acount for. The textures assigned to lower levels are rendered when there is very little light in the scene, and vice versa."
+theme_override_constants/separation = 6
+script = ExtResource("1_yx06j")
+value = 1
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Light levels"
+
+[node name="SpinBox" type="SpinBox" parent="."]
+layout_mode = 2
+min_value = 1.0
+max_value = 16.0
+value = 1.0
+rounded = true
+alignment = 1
+
+[connection signal="value_changed" from="SpinBox" to="." method="_on_spin_box_value_changed"]
