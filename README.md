@@ -21,13 +21,18 @@ the plugin's UI, and it will handle the rest for you.
 
 ## Future Features
 
-- 3D Support.
-- Effects such as dithering and outlining.
+- More effects, such as outlining and mirroring.
+- Support for normal maps.
+- Live previews in the editor.
 - Updating color palettes for all textures at once.
 - Multiple color palettes.
-- Texture "variations" that can be swapped in real time.
 - Ease-of-use updates based on new Godot features.
-- More color ramps. (See [How it works](#how-it-works) for what this means.)
+- 3D support, including depth-based effects.
+
+## Development To-Do List
+
+- Refactor to increase stability and decrease coupling between project resources and plugin logic.
+- Add confirmation screen before generating a new project (i.e. get "user consent" before creating files).
 
 # Getting Started
 
