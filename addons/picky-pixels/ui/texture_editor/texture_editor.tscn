@@ -76,7 +76,7 @@ text = "Show Effects"
 
 [node name="ColorRampsIndicator" parent="Main/Config" instance=ExtResource("4_kxjmn")]
 layout_mode = 2
-tooltip_text = "Color ramps used: 404 out of 65536.
+tooltip_text = "Color ramps used: 77 out of 65536.
 
 Color behavior for each pixel at each light level is stored by generating and assigning a color ramp to that pixel. This color ramp encodes the behavior of that pixel for each light level. Since this data is stored in a pixel's color value, there are a limited number of possible values that the color could be, so there is a cap on the number of color ramps.
 

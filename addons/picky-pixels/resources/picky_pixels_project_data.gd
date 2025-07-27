@@ -9,8 +9,8 @@ extends Resource
 
 
 const TRANSPARENT_ID = "TRANSPARENT"
-const TRANSPARENT_RAMP = [Color(0.0, 0.0, 0.0, 0.0)]
-const UNUSABLE_RAMP = []
+var TRANSPARENT_RAMP = PickyPixelsRampFactory.create([Color(0.0, 0.0, 0.0, 0.0)], 0)
+var UNUSABLE_RAMP = PickyPixelsRampFactory.create([], 0)
 
 ## Name of the project. Must be unique.
 @export var name: String:
@@ -32,7 +32,10 @@ const UNUSABLE_RAMP = []
 		emit_changed()
 
 ## Ramps that should be processed in decoding colors.
-@export var ramps: Array[Array] = []:
+## Each ramp is a Dictionary with the following values:
+## - colors: Array[Color]
+## - dither_transition_amount: int
+@export var ramps: Array = []:
 	get: return ramps
 	set(val):
 		ramps = val
@@ -40,6 +43,7 @@ const UNUSABLE_RAMP = []
 		for i in ramps.size():
 			_ramp_index_map[_ramp_to_str(ramps[i])] = i
 		emit_changed()
+
 
 # Used for O(1) lookup time.
 # Maps a value to its respective index.
@@ -64,13 +68,14 @@ func _color_to_str(color) -> String:
 func _ramp_to_str(ramp) -> String:
 	var strings = []
 	var all_transparent = true
-	for color in ramp:
+	for color in ramp.colors:
 		var str = _color_to_str(color)
 		if all_transparent and str != TRANSPARENT_ID:
 			all_transparent = false
 		strings.push_back(str)
 	if all_transparent:
 		return TRANSPARENT_ID
+	strings.push_back("d" + str(ramp.dither_transition_amount))
 	return ";".join(strings)
 
 

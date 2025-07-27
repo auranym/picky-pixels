@@ -1,12 +1,14 @@
-[gd_scene load_steps=8 format=3 uid="uid://cd1kje1mqpcuq"]
+[gd_scene load_steps=10 format=3 uid="uid://cd1kje1mqpcuq"]
 
 [ext_resource type="Script" uid="uid://bp3pr72cgjgvt" path="res://addons/picky-pixels/ui/library/library.gd" id="1_fod1r"]
 [ext_resource type="PackedScene" uid="uid://dsw4qkdd4tllr" path="res://addons/picky-pixels/ui/library/new_item.tscn" id="3_c5nqn"]
 [ext_resource type="PackedScene" uid="uid://c3uiy7ykq0yr0" path="res://addons/picky-pixels/ui/color_palette/color_palette.tscn" id="3_dkglw"]
 [ext_resource type="PackedScene" uid="uid://daxkcdf38itlf" path="res://addons/picky-pixels/ui/library/shader_item.tscn" id="3_jwu7f"]
+[ext_resource type="Material" uid="uid://c8070yla83tj8" path="res://picky_pixels/shaders/main.material" id="4_d4135"]
 [ext_resource type="PackedScene" uid="uid://bg0bssr8s5nms" path="res://addons/picky-pixels/ui/color_ramps_indicator/color_ramps_indicator.tscn" id="4_lwhet"]
+[ext_resource type="Material" uid="uid://dsjrqjc0161co" path="res://picky_pixels/shaders/canvas_item.material" id="5_xaak7"]
 
-[sub_resource type="Image" id="Image_7w61f"]
+[sub_resource type="Image" id="Image_yc1bl"]
 data = {
 "data": PackedByteArray(255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 92, 92, 0, 255, 92, 92, 0, 255, 92, 92, 0, 255, 92, 92, 0, 255, 92, 92, 0, 255, 92, 92, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 0, 255, 92, 92, 127, 255, 92, 92, 0, 255, 92, 92, 0, 255, 92, 92, 0, 255, 92, 92, 0, 255, 92, 92, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 0, 255, 93, 93, 255, 255, 92, 92, 127, 255, 92, 92, 0, 255, 92, 92, 0, 255, 92, 92, 0, 255, 92, 92, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 92, 92, 127, 255, 92, 92, 0, 255, 92, 92, 0, 255, 92, 92, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 92, 92, 127, 255, 92, 92, 0, 255, 92, 92, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 92, 92, 0, 255, 92, 92, 0, 255, 92, 92, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 231, 255, 90, 90, 54, 255, 94, 94, 57, 255, 93, 93, 233, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 231, 255, 90, 90, 54, 255, 94, 94, 57, 255, 93, 93, 233, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 0, 255, 93, 93, 0, 255, 91, 91, 0, 255, 91, 91, 0, 255, 91, 91, 42, 255, 90, 90, 0, 255, 94, 94, 0, 255, 91, 91, 42, 255, 93, 93, 233, 255, 92, 92, 232, 255, 93, 93, 41, 255, 90, 90, 0, 255, 94, 94, 0, 255, 91, 91, 42, 255, 93, 93, 233, 255, 92, 92, 232, 255, 92, 92, 0, 255, 92, 92, 0, 255, 91, 91, 0, 255, 91, 91, 0, 255, 91, 91, 0, 255, 91, 91, 45, 255, 93, 93, 44, 255, 91, 91, 0, 255, 91, 91, 42, 255, 91, 91, 42, 255, 93, 93, 0, 255, 91, 91, 45, 255, 93, 93, 44, 255, 91, 91, 0, 255, 91, 91, 42, 255, 91, 91, 42, 255, 91, 91, 0, 255, 91, 91, 0, 255, 91, 91, 0, 255, 91, 91, 0, 255, 91, 91, 45, 255, 92, 92, 235, 255, 92, 92, 234, 255, 89, 89, 43, 255, 91, 91, 0, 255, 91, 91, 0, 255, 91, 91, 45, 255, 92, 92, 235, 255, 92, 92, 234, 255, 89, 89, 43, 255, 91, 91, 0, 255, 91, 91, 0, 255, 91, 91, 0, 255, 91, 91, 0, 255, 92, 92, 0, 255, 92, 92, 0, 255, 92, 92, 235, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 233, 255, 91, 91, 59, 255, 92, 92, 61, 255, 92, 92, 235, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 233, 255, 91, 91, 59, 255, 92, 92, 61, 255, 92, 92, 0, 255, 92, 92, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0, 255, 93, 93, 0),
 "format": "RGBA8",
@@ -15,8 +17,8 @@ data = {
 "width": 16
 }
 
-[sub_resource type="ImageTexture" id="ImageTexture_xdn03"]
-image = SubResource("Image_7w61f")
+[sub_resource type="ImageTexture" id="ImageTexture_ympsj"]
+image = SubResource("Image_yc1bl")
 
 [node name="Library" type="Control"]
 layout_mode = 3
@@ -63,11 +65,13 @@ layout_mode = 2
 layout_mode = 2
 size_flags_horizontal = 4
 tooltip_text = "Drag and drop this material onto a SubViewportContainer's material property to enable dynamic lighting for PickyPixels textures. Nodes within the SubViewport should only be those created with this plugin or use only colors from the color palette. If this material  is missing, dynamic lighting will not work."
+shader_material = ExtResource("4_d4135")
 label_text = "Main Material"
 
 [node name="CanvasItemShaderItem" parent="VBoxContainer/ScrollContainer/VBoxContainer/ShaderContainer" instance=ExtResource("3_jwu7f")]
 layout_mode = 2
 tooltip_text = "Drag and drop this material onto a CanvasItem that uses textures created with this project (such as a Sprite2D). This is required for correctly encode lighting behavior."
+shader_material = ExtResource("5_xaak7")
 label_text = "CanvasItem Material"
 icon = 1
 
@@ -92,7 +96,7 @@ custom_minimum_size = Vector2(0, 35)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
-tooltip_text = "Color ramps used: 404 out of 65536.
+tooltip_text = "Color ramps used: 58 out of 65536.
 
 Color behavior for each pixel at each light level is stored by generating and assigning a color ramp to that pixel. This color ramp encodes the behavior of that pixel for each light level. Since this data is stored in a pixel's color value, there are a limited number of possible values that the color could be, so there is a cap on the number of color ramps.
 
@@ -102,14 +106,14 @@ If you are running out of color ramps, try recompiling, or consider using less c
 layout_mode = 2
 tooltip_text = "Recompile texture encodings and color ramps. May free up space for new ramps."
 text = "Recompile"
-icon = SubResource("ImageTexture_xdn03")
+icon = SubResource("ImageTexture_ympsj")
 
 [node name="LoadPaletteButton" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 0
 tooltip_text = "Load color palette from an image. Project will be recompiled."
 text = "Load palette"
-icon = SubResource("ImageTexture_xdn03")
+icon = SubResource("ImageTexture_ympsj")
 
 [node name="RecompileOverlay" type="Panel" parent="."]
 visible = false
@@ -143,20 +147,12 @@ filters = PackedStringArray("*.png")
 
 [connection signal="mouse_entered" from="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/TextureItem" to="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/TextureItem" method="_on_mouse_entered"]
 [connection signal="mouse_exited" from="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/TextureItem" to="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/TextureItem" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@40348" to="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@40348" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@40348" to="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@40348" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@40355" to="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@40355" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@40355" to="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@40355" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@40362" to="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@40362" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@40362" to="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@40362" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@40369" to="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@40369" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@40369" to="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@40369" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@40376" to="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@40376" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@40376" to="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@40376" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@40383" to="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@40383" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@40383" to="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@40383" method="_on_mouse_exited"]
-[connection signal="mouse_entered" from="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@40390" to="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@40390" method="_on_mouse_entered"]
-[connection signal="mouse_exited" from="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@40390" to="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@40390" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@38677" to="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@38677" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@38677" to="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@38677" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@38684" to="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@38684" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@38684" to="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@38684" method="_on_mouse_exited"]
+[connection signal="mouse_entered" from="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@38691" to="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@38691" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@38691" to="VBoxContainer/ScrollContainer/VBoxContainer/ItemContainer/@Control@38691" method="_on_mouse_exited"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/VBoxContainer/RecompileButton" to="." method="_on_recompile_button_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/VBoxContainer/LoadPaletteButton" to="." method="_on_load_palette_button_pressed"]
 [connection signal="file_selected" from="PaletteFileDialog" to="." method="_on_palette_file_dialog_file_selected"]

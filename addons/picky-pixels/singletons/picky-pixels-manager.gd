@@ -178,8 +178,8 @@ func recompile_project(new_palette: Array[Color] = project_data.palette):
 		await get_tree().process_frame
 
 		var texture = project_textures[i]
-		if is_valid_base_textures(texture.base_textures) == TexturesStatus.OK:
-			compile_texture(texture, texture.base_textures, true)
+		if is_valid_texture_config(texture.base_textures, texture.dither_transition_amount) == TexturesStatus.OK:
+			compile_texture(texture, texture.base_textures, texture.dither_transition_amount, true)
 		else:
 			texture.invalid_textures = true
 	
@@ -246,7 +246,7 @@ func delete_texture(resource: PickyPixelsImageTexture):
 
 
 ## Checks whether the passed base_textures are valid with the current project.
-func is_valid_base_textures(base_textures: Array[Texture2D]) -> TexturesStatus:
+func is_valid_texture_config(base_textures: Array[Texture2D], dither_transition_amount: int) -> TexturesStatus:
 	var texture_size: Vector2
 	
 	# First determine whether all light levels have a texture
@@ -267,7 +267,7 @@ func is_valid_base_textures(base_textures: Array[Texture2D]) -> TexturesStatus:
 	# are used 
 	for x in texture_size.x:
 		for y in texture_size.y:
-			var ramp = []
+			var ramp = PickyPixelsRampFactory.create([], dither_transition_amount)
 			for i in base_textures.size():
 				var color = base_textures[i].get_image().get_pixel(x, y)
 				# Consider anything not opaque as transparent
@@ -277,7 +277,7 @@ func is_valid_base_textures(base_textures: Array[Texture2D]) -> TexturesStatus:
 				elif not project_data.has_color(color):
 					return TexturesStatus.ERR_UNKNOWN_COLOR
 				# If the color is known, add it to the ramp
-				ramp.push_back(color)
+				ramp.colors.push_back(color)
 			# Now add this ramp to the set
 			new_ramps[ramp] = true
 	
@@ -296,7 +296,7 @@ func is_valid_base_textures(base_textures: Array[Texture2D]) -> TexturesStatus:
 ## passed PickyPixelsImageTexture resource. Before calling
 ## this function, you verify base_texture's validity with
 ## is_valid_base_textures().
-func compile_texture(resource: PickyPixelsImageTexture, base_textures: Array[Texture2D], skip_project_update: bool = false):
+func compile_texture(resource: PickyPixelsImageTexture, base_textures: Array[Texture2D], dither_transition_amount: int, skip_project_update: bool = false):
 	if base_textures.size() == 0:
 		return
 	
@@ -306,10 +306,10 @@ func compile_texture(resource: PickyPixelsImageTexture, base_textures: Array[Tex
 	# Generate the encoded image
 	for x in texture_size.x:
 		for y in texture_size.y:
-			var ramp = []
+			var ramp = PickyPixelsRampFactory.create([], dither_transition_amount)
 			for i in base_textures.size():
 				var color = base_textures[i].get_image().get_pixel(x, y)
-				ramp.push_back(color)
+				ramp.colors.push_back(color)
 			# Skip transparency
 			if project_data.is_ramp_transparent(ramp):
 				continue
@@ -324,6 +324,7 @@ func compile_texture(resource: PickyPixelsImageTexture, base_textures: Array[Tex
 	
 	# Update project data
 	resource.base_textures = base_textures
+	resource.dither_transition_amount = dither_transition_amount
 	resource.encoded_texture = ImageTexture.create_from_image(encoded_image)
 	resource.invalid_textures = false
 	ResourceSaver.save(resource)
@@ -351,30 +352,30 @@ func compile_project_shader():
 		colors_compiled.push_back(Vector4(color.r, color.g, color.b, color.a))
 	
 	# Generate ramps and ramp pointers
-	var ramps_pointers_compiled = []
-	var ramps_compiled = []
+	var ramp_color_pointers_compiled = []
+	var ramp_colors_compiled = []
 	for i in project_data.ramps.size():
 		var ramp = project_data.ramps[i]
 		# The 2*n position of ramp pointers is the position of the ramp
-		ramps_pointers_compiled.push_back(ramps_compiled.size())
+		ramp_color_pointers_compiled.push_back(ramp_colors_compiled.size())
 		# The 2*n+1 position is the size of the ramp
-		ramps_pointers_compiled.push_back(ramp.size())
-		for color in ramp:
+		ramp_color_pointers_compiled.push_back(ramp.colors.size())
+		for color in ramp.colors:
 			# Like with compile colors above, index 0 is transparency.
 			# To adjust for this, we add 1 to the associated index.
 			# If the color index map does not have a color string, then this
 			# function returns -1 (and thus, -1 + 1 = 0).
-			ramps_compiled.push_back(project_data.get_color_index(color) +1)
+			ramp_colors_compiled.push_back(project_data.get_color_index(color) +1)
 	
 	project_shader.code = MAIN_SHADER_TEMPLATE.code.format({
 		"colors_size": colors_compiled.size(),
-		"ramps_size": ramps_compiled.size(),
-		"ramps_pointers_size": ramps_pointers_compiled.size(),
+		"ramp_colors_size": ramp_colors_compiled.size(),
+		"ramp_color_pointers_size": ramp_color_pointers_compiled.size(),
 	})
 	ResourceSaver.save(project_shader)
 	project_shader_material.set_shader_parameter("colors", colors_compiled)
-	project_shader_material.set_shader_parameter("ramps", ramps_compiled)
-	project_shader_material.set_shader_parameter("ramps_pointers", ramps_pointers_compiled)
+	project_shader_material.set_shader_parameter("ramp_colors", ramp_colors_compiled)
+	project_shader_material.set_shader_parameter("ramp_color_pointers", ramp_color_pointers_compiled)
 	ResourceSaver.save(project_shader_material)
 	
 	# For debugging purposes
@@ -385,8 +386,8 @@ func _compile_debug_texture():
 	var debug_texture = Image.create(16, project_data.ramps.size(), false, Image.FORMAT_RGBA8)
 	for i in project_data.ramps.size():
 		var ramp = project_data.ramps[i]
-		for j in ramp.size():
-			var color = ramp[j]
+		for j in ramp.colors.size():
+			var color = ramp.colors[j]
 			debug_texture.set_pixel(j, i, color)
 	debug_texture.save_png(DEBUG_TEXTURE_PATH)
 

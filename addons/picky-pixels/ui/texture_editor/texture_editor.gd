@@ -27,6 +27,7 @@ const LIGHT_LEVEL_TAB = preload("res://addons/picky-pixels/ui/texture_editor/lig
 			textures = [null]
 		original_textures = textures.duplicate()
 		
+		dithered_transition_config.value = texture.dither_transition_amount
 		_set_light_levels(textures.size())
 		_set_selected_light_level_tab(0)
 		_update()
@@ -39,7 +40,10 @@ var png_regex: RegEx
 
 
 func has_changes():
-	return textures != original_textures
+	return not (
+		textures == original_textures
+		and texture.dither_transition_amount == dithered_transition_config.value
+	)
 
 
 func _ready():
@@ -128,41 +132,40 @@ func _update():
 		_warn("Missing PickyPixelsImageTexture resource. This is likely due to a plugin bug. Try restarting your project.", false)
 		return
 	
-	var result = manager.is_valid_base_textures(textures)
-	var is_same_textures = textures == original_textures
+	var result = manager.is_valid_texture_config(textures, dithered_transition_config.value)
+	var is_changes = has_changes()
 	
 	# If there are no issues, then enable the save button
 	# if there are changes to save.
 	if result == PickyPixelsManager.TexturesStatus.OK:
-		if is_same_textures:
-			save.disabled = false
-			save.tooltip_text = "Recompile texture."
-			cancel.disabled = true
-			cancel.tooltip_text = "No changes to discard."
-			warning.visible = false
-		else:
+		if is_changes:
 			save.disabled = false
 			save.tooltip_text = ""
 			cancel.disabled = false
 			cancel.tooltip_text = "Discard changes."
 			warning.visible = false
+		else:
+			save.disabled = false
+			save.tooltip_text = "Recompile texture."
+			cancel.disabled = true
+			cancel.tooltip_text = "No changes to discard."
+			warning.visible = false
 	else:
-		var can_cancel = not is_same_textures
 		match result:
 			PickyPixelsManager.TexturesStatus.ERR_TEXTURE_NULL:
-				_warn("Light levels must all have textures.", can_cancel)
+				_warn("Light levels must all have textures.", is_changes)
 			PickyPixelsManager.TexturesStatus.ERR_TEXTURE_SIZE_MISMATCH:
-				_warn("Light level textures must all be the same size.", can_cancel)
+				_warn("Light level textures must all be the same size.", is_changes)
 			PickyPixelsManager.TexturesStatus.ERR_UNKNOWN_COLOR:
-				_warn("All colors must be from the selected project's color palette.", can_cancel)
+				_warn("All colors must be from the selected project's color palette.", is_changes)
 			PickyPixelsManager.TexturesStatus.ERR_NOT_ENOUGH_RAMPS:
-				_warn("Saving will create too many color ramps. Try removing a light layer or making textures more similar.", can_cancel)
+				_warn("Saving will create too many color ramps. Try removing a light layer or making textures more similar.", is_changes)
 			_:
-				_warn("Encountered an unknown issue (Error code: " + str(result) + ").", can_cancel)
-	if is_same_textures:
-		no_changes.emit(texture)
-	else:
+				_warn("Encountered an unknown issue (Error code: " + str(result) + ").", is_changes)
+	if is_changes:
 		made_changes.emit(texture)
+	else:
+		no_changes.emit(texture)
 
 
 func _on_texture_display_loaded_texture(texture):
@@ -205,8 +208,12 @@ func _on_light_levels_config_changed(value: int) -> void:
 	_update()
 
 
+func _on_dithered_transition_config_changed(value: int) -> void:
+	_update()
+
+
 func _on_save_pressed():
-	PickyPixelsManager.get_instance().compile_texture(texture, textures)
+	PickyPixelsManager.get_instance().compile_texture(texture, textures, dithered_transition_config.value)
 	original_textures = textures.duplicate()
 	_set_selected_light_level_tab(0)
 	_update()
@@ -214,6 +221,7 @@ func _on_save_pressed():
 
 func _on_cancel_pressed():
 	textures = original_textures.duplicate()
+	dithered_transition_config.value = texture.dither_transition_amount
 	_set_light_levels(textures.size())
 	_set_selected_light_level_tab(0)
 	_update()
@@ -225,7 +233,3 @@ func _on_show_hide_effects_pressed() -> void:
 	else:
 		show_hide_effects.text = "Show Effects"
 	effects_container.visible = show_hide_effects.button_pressed
-
-
-func _on_dithered_transition_config_changed(value: int) -> void:
-	pass

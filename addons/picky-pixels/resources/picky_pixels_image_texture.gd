@@ -16,6 +16,11 @@ extends ImageTexture
 		if base_textures != null and base_textures.size() > 0:
 			_update_image()
 
+@export var dither_transition_amount: int = 0:
+	get: return dither_transition_amount
+	set(val):
+		dither_transition_amount = val
+
 @export var invalid_textures: bool = false
 
 enum ImageType {
