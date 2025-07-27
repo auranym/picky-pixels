@@ -9,9 +9,9 @@ const LIGHT_LEVEL_TAB = preload("res://addons/picky-pixels/ui/texture_editor/lig
 @onready var light_levels_tabs = $Main/LightLevelData/ScrollContainer/LightLevelsTabs
 @onready var light_levels_spin_box = $Main/Config/VBoxContainer/LightLevelsConfig/SpinBox
 @onready var texture_display = $Main/LightLevelData/TextureDisplay
-@onready var warning = $Warning
-@onready var save = $Buttons/Save
-@onready var cancel = $Buttons/Cancel
+@onready var warning = $VBoxContainer/Warning
+@onready var save = $VBoxContainer/Buttons/Save
+@onready var cancel = $VBoxContainer/Buttons/Cancel
 @onready var effects_container: VBoxContainer = $Main/Config/VBoxContainer/EffectsContainer
 @onready var show_hide_effects: Button = $Main/Config/VBoxContainer/ShowHideEffects
 

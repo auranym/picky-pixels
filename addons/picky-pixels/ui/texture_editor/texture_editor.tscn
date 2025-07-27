@@ -108,23 +108,28 @@ Color behavior for each pixel at each light level is stored by generating and as
 
 If you are running out of color ramps, try recompiling, or consider using less colors in your palette."
 
-[node name="Warning" type="Label" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+alignment = 1
+
+[node name="Warning" type="Label" parent="VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.870588, 0.4, 1)
 text = "Missing PickyPixelsImageTexture resource. This is likely due to a plugin bug. Try restarting your project."
 horizontal_alignment = 1
 
-[node name="Buttons" type="HBoxContainer" parent="."]
+[node name="Buttons" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 alignment = 1
 
-[node name="Save" type="Button" parent="Buttons"]
+[node name="Save" type="Button" parent="VBoxContainer/Buttons"]
 layout_mode = 2
 tooltip_text = "Fix issues before saving."
 disabled = true
 text = "Save"
 
-[node name="Cancel" type="Button" parent="Buttons"]
+[node name="Cancel" type="Button" parent="VBoxContainer/Buttons"]
 layout_mode = 2
 tooltip_text = "No changes to discard."
 disabled = true
@@ -134,5 +139,5 @@ text = "Cancel"
 [connection signal="loaded_texture" from="Main/LightLevelData/TextureDisplay" to="." method="_on_texture_display_loaded_texture"]
 [connection signal="value_changed" from="Main/Config/VBoxContainer/LightLevelsConfig/SpinBox" to="." method="_on_light_levels_value_changed"]
 [connection signal="pressed" from="Main/Config/VBoxContainer/ShowHideEffects" to="." method="_on_show_hide_effects_pressed"]
-[connection signal="pressed" from="Buttons/Save" to="." method="_on_save_pressed"]
-[connection signal="pressed" from="Buttons/Cancel" to="." method="_on_cancel_pressed"]
+[connection signal="pressed" from="VBoxContainer/Buttons/Save" to="." method="_on_save_pressed"]
+[connection signal="pressed" from="VBoxContainer/Buttons/Cancel" to="." method="_on_cancel_pressed"]
