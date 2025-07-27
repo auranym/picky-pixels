@@ -354,6 +354,7 @@ func compile_project_shader():
 	# Generate ramps and ramp pointers
 	var ramp_color_pointers_compiled = []
 	var ramp_colors_compiled = []
+	var ramp_dither_transition_amounts_compiled = []
 	for i in project_data.ramps.size():
 		var ramp = project_data.ramps[i]
 		# The 2*n position of ramp pointers is the position of the ramp
@@ -366,16 +367,19 @@ func compile_project_shader():
 			# If the color index map does not have a color string, then this
 			# function returns -1 (and thus, -1 + 1 = 0).
 			ramp_colors_compiled.push_back(project_data.get_color_index(color) +1)
+		ramp_dither_transition_amounts_compiled.push_back(ramp.dither_transition_amount)
 	
 	project_shader.code = MAIN_SHADER_TEMPLATE.code.format({
 		"colors_size": colors_compiled.size(),
 		"ramp_colors_size": ramp_colors_compiled.size(),
 		"ramp_color_pointers_size": ramp_color_pointers_compiled.size(),
+		"ramp_dither_transition_amounts_size": ramp_dither_transition_amounts_compiled.size()
 	})
 	ResourceSaver.save(project_shader)
 	project_shader_material.set_shader_parameter("colors", colors_compiled)
 	project_shader_material.set_shader_parameter("ramp_colors", ramp_colors_compiled)
 	project_shader_material.set_shader_parameter("ramp_color_pointers", ramp_color_pointers_compiled)
+	project_shader_material.set_shader_parameter("ramp_dither_transition_amounts", ramp_dither_transition_amounts_compiled)
 	ResourceSaver.save(project_shader_material)
 	
 	# For debugging purposes
